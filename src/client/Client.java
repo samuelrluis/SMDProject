@@ -13,7 +13,7 @@ public class Client {
     public static final int MAX_SIZE = 256;
     public static void main(String args[]){
         int createdTCP;
-        System.out.println("Ola mundo");
+        System.out.println("Ola mundo3");
         Socket socketToServer = null;
         PrintWriter pout;
         InputStream in;
