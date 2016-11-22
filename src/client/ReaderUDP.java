@@ -34,7 +34,7 @@ public class ReaderUDP extends Thread{
         while(true){
             try {
                 System.out.println("antes");
-                socket.receive(packet);
+                socket.receive(packet);             //Update content in Packet with the received data
                 System.out.println("depois");
                 portAvailable=true;
                 String msgRecebida = new String(packet.getData(), 0, packet.getLength());

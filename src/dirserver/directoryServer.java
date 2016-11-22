@@ -29,23 +29,21 @@ public class directoryServer {
                 socketServers.receive(packetRead);
                 System.out.println("recebi");
 
-                                HeartBeat beat=new HeartBeat();
+                HeartBeat beat=new HeartBeat();
 
                 ByteArrayInputStream Bin = new ByteArrayInputStream(packetRead.getData());
                 ObjectInputStream in = new ObjectInputStream(Bin);
+
                 try{
                     beat=(HeartBeat) in.readObject();
-
                 }catch (ClassNotFoundException e){
                     System.out.println("Error reading the datagram received");
                 }
 
                 System.out.println(beat.getName()+beat.getTcpPort());
-
                 //TODO falta implementar envio para cliente
-
         ;
-              //  packetWrite = new DatagramPacket(msgRecebida.getBytes(),msgRecebida.length(),InetAddress.getLocalHost(),6003);
+  //              packetWrite = new DatagramPacket(beat.getBytes(),msgRecebida.length(),InetAddress.getLocalHost(),6003);
 //                socketClients.send(packetWrite);
             }
 

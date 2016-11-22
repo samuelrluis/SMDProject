@@ -5,17 +5,16 @@ import java.io.Serializable;
  */
 public class HeartBeat implements Serializable{
     private String name;
-    private int tcpPort;
-
+    private int port; //No server TCP // No Client UDP
 
     public HeartBeat(){
         name="";
-        tcpPort=0;
+        port=0;
     }
 
-    public HeartBeat(String name, int tcpPort) {
+    public HeartBeat(String name, int port) {
         this.name = name;
-        this.tcpPort = tcpPort;
+        this.port = port;
     }
 
     public String getName(){
@@ -23,6 +22,6 @@ public class HeartBeat implements Serializable{
     }
 
     public int getTcpPort(){
-        return tcpPort;
+        return port;
     }
 }

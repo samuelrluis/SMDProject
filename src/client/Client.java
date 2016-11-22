@@ -12,33 +12,33 @@ import java.net.*;
 public class Client {
     public static final int MAX_SIZE = 256;
     public static void main(String args[]){
-        int createdTCP;
-        System.out.println("Ola mundo3");
+
+        //TCP
         Socket socketToServer = null;
         PrintWriter pout;
         InputStream in;
-
+        //UDP
         ReaderUDP thread=null;
         DatagramSocket socket=null;
         DatagramPacket packetWrite=null;
         DatagramPacket packetRead=null;
+
         String msg;
         int serverPort = -1;
         InetAddress serverAddr = null;
 
     try{
-        serverAddr = InetAddress.getByName(args[0]);
-        serverPort = Integer.parseInt(args[1]);
-        socket = new DatagramSocket(6003);
+        serverAddr = InetAddress.getByName(args[0]);    //Get the IP Server
+        serverPort = Integer.parseInt(args[1]);         //Get the Directory Server Port
+        socket = new DatagramSocket();                  //Create the Client Socket
 
-        packetRead= new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
+        //Creating the Packets
+        packetRead = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);      //Creating the packet that will be received from DirServerv
         packetWrite = new DatagramPacket("MensagemCliente".getBytes(), "MensagemCliente".length(), serverAddr, serverPort);
         socket.send(packetWrite);
 
-        thread=new ReaderUDP(packetRead,socket);
+        thread=new ReaderUDP(packetRead,socket);        //Thread that will be reading all the received data from DirServer
         thread.start();
-
-        System.out.println("main");
 
         while(true){
             System.out.print("");
@@ -46,7 +46,6 @@ public class Client {
                 break;
         }
 
-        System.out.println("sai do if");
         socketToServer=new Socket("127.0.0.7",thread.getPort());
         in = socketToServer.getInputStream();
         pout = new PrintWriter(socketToServer.getOutputStream(), true);
@@ -54,8 +53,6 @@ public class Client {
         pout.flush();
 
         System.out.println("mandei msg");
-
-
 /*        socket.receive(packetRead);
         String msgRecebida = new String(packetRead.getData(), 0, packetRead.getLength());
         System.out.println(msgRecebida);*/
@@ -65,7 +62,5 @@ public class Client {
     }catch (IOException e){
         System.out.println("Erro na recepção de datagrama");
     }
-
-
     }
 }
