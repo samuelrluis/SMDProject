@@ -3,7 +3,6 @@ package client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.net.*;
 
 /**
@@ -12,13 +11,15 @@ import java.net.*;
 public class Client {
     public static final int MAX_SIZE = 256;
     public static void main(String args[]){
+        ThreadHeartBeat threadHeartBeat;
+        String name ="Samuel";
 
         //TCP
         Socket socketToServer = null;
         PrintWriter pout;
         InputStream in;
         //UDP
-        ReaderUDP thread=null;
+        ThreadReaderUDP thread=null;
         DatagramSocket socket=null;
         DatagramPacket packetWrite=null;
         DatagramPacket packetRead=null;
@@ -32,12 +33,13 @@ public class Client {
         serverPort = Integer.parseInt(args[1]);         //Get the Directory Server Port
         socket = new DatagramSocket();                  //Create the Client Socket
 
+        //HeartBeat for DirectoryServer
+        threadHeartBeat=new ThreadHeartBeat(serverAddr,serverPort,name,socket.getPort());
+        threadHeartBeat.start();
+
         //Creating the Packets
         packetRead = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);      //Creating the packet that will be received from DirServerv
-        packetWrite = new DatagramPacket("MensagemCliente".getBytes(), "MensagemCliente".length(), serverAddr, serverPort);
-        socket.send(packetWrite);
-
-        thread=new ReaderUDP(packetRead,socket);        //Thread that will be reading all the received data from DirServer
+        thread=new ThreadReaderUDP(packetRead,socket);        //Thread that will be reading all the received data from DirServer
         thread.start();
 
         while(true){
@@ -46,7 +48,7 @@ public class Client {
                 break;
         }
 
-        socketToServer=new Socket("127.0.0.7",thread.getPort());
+        socketToServer=new Socket(serverAddr,thread.getPort());
         in = socketToServer.getInputStream();
         pout = new PrintWriter(socketToServer.getOutputStream(), true);
         pout.println("primeira ligacao TCP");

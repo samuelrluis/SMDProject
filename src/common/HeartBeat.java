@@ -21,7 +21,7 @@ public class HeartBeat implements Serializable{
         return name;
     }
 
-    public int getTcpPort(){
+    public int getPort(){
         return port;
     }
 }

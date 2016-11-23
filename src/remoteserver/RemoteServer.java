@@ -14,7 +14,6 @@ public class RemoteServer {
     InetAddress myAddress=null;
     Socket socketToClient = null;
     int myUdpPort,myTcpPort;
-    HeartBeat myHeartBeat;
     ThreadHeartBeat threadHeartbeat;
     ThreadAnswerClient threadAnswerClient = null;
 
@@ -24,17 +23,20 @@ public class RemoteServer {
         myAddress=address;
         myUdpPort=udp;
         myTcpPort=tcp;
-        myHeartBeat = new HeartBeat(name,myTcpPort);
 
         //TCP-Client
         try{
             serverSocket = new ServerSocket(myTcpPort);
+            createThreadUdp();
+            awaitsForNewClient();
+            createThreadTcp();
+
         }catch(IOException e){
             System.out.println("Error creating the New Socket");
         }
     }
 
-    public void awaitsForNewClient(){
+    private void awaitsForNewClient(){
         try{
             socketToClient=serverSocket.accept();
         }catch(IOException e){
@@ -42,13 +44,13 @@ public class RemoteServer {
         }
     }
 
-    public void createThreadUdp(){
+    private void createThreadUdp(){
         //UDP-Socket to directory Servers
         threadHeartbeat=new ThreadHeartBeat(myAddress,myUdpPort,myTcpPort,this.getName());
         threadHeartbeat.start();
     }
 
-    public void createThreadTcp(){
+    private void createThreadTcp(){
         //TCP-Socket to the Client
         threadAnswerClient=new ThreadAnswerClient(socketToClient);
         threadAnswerClient.start();
@@ -75,10 +77,6 @@ public class RemoteServer {
                 System.out.println("The values of the port in the arguments are wrong");
 
             remServer=new RemoteServer(serverAddr,serverPortToDirectory,serverPortTCP);
-
-            remServer.createThreadUdp();
-            remServer.awaitsForNewClient();
-            remServer.createThreadTcp();
 
         }catch(UnknownHostException e){
             System.out.println("Não foi encontrada a Máquina");

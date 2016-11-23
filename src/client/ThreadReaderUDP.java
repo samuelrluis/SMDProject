@@ -7,14 +7,14 @@ import java.net.DatagramSocket;
 /**
  * Created by Samuel on 02/11/2016.
  */
-public class ReaderUDP extends Thread{
+public class ThreadReaderUDP extends Thread{
     DatagramPacket packet=null;
     DatagramSocket socket=null;
     boolean portAvailable;
     String TCPport;
 
 
-    ReaderUDP(DatagramPacket s,DatagramSocket socket){
+    ThreadReaderUDP(DatagramPacket s, DatagramSocket socket){
         this.packet=s;
         this.socket=socket;
         portAvailable=false;
@@ -33,9 +33,8 @@ public class ReaderUDP extends Thread{
     public void run(){
         while(true){
             try {
-                System.out.println("antes");
+                //TODO Destinada a receber o porto TCP do REMOTE SERVER
                 socket.receive(packet);             //Update content in Packet with the received data
-                System.out.println("depois");
                 portAvailable=true;
                 String msgRecebida = new String(packet.getData(), 0, packet.getLength());
                 TCPport=msgRecebida;
