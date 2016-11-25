@@ -13,17 +13,17 @@ import java.net.*;
 public class ThreadHeartBeat extends Thread {
     HeartBeat myHeartBeat;
     DatagramPacket packetHeartBeat=null;
-    DatagramSocket socketUDP = null;
+    DatagramSocket socketHeartBeat = null;
     ByteArrayOutputStream b0ut;
     ObjectOutputStream out;
 
     ThreadHeartBeat(InetAddress serverAddr, int serverPortToDirectory,String name, int port){
         try{
-            socketUDP = new DatagramSocket();           //Create Socket to send the HeartBeat
+            socketHeartBeat = new DatagramSocket();     //Create Socket to send the HeartBeat
             myHeartBeat=new HeartBeat(name,port);       //Create the HeartBeat Serializable Object
             b0ut = new ByteArrayOutputStream();         //Create an array of byte in OutputStream
             out = new ObjectOutputStream(b0ut);         //Place the ArrayOutputStream in the OBjectOutputSream
-            out.writeObject(myHeartBeat);                //Write the Heartbeat on the object
+            out.writeObject(myHeartBeat);               //Write the Heartbeat on the object
 
             packetHeartBeat=new DatagramPacket(b0ut.toByteArray(),b0ut.size(),serverAddr,serverPortToDirectory); //Create a Packet
 
@@ -37,7 +37,7 @@ public class ThreadHeartBeat extends Thread {
     @Override
     public void run() {
         try {
-            socketUDP.send(packetHeartBeat);    //Send the Packet
+            socketHeartBeat.send(packetHeartBeat);    //Send the Packet
             System.out.println("HeartBeat");
             Thread.sleep(10000);
         } catch (IOException e) {

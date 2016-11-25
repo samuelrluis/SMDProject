@@ -9,7 +9,7 @@ import java.net.*;
  * Created by Samuel on 30/10/2016.
  */
 public class Client {
-    public static final int MAX_SIZE = 256;
+
     public static void main(String args[]){
         ThreadHeartBeat threadHeartBeat;
         String name ="Samuel";
@@ -21,26 +21,37 @@ public class Client {
         //UDP
         ThreadReaderUDP thread=null;
         DatagramSocket socket=null;
-        DatagramPacket packetWrite=null;
-        DatagramPacket packetRead=null;
 
-        String msg;
+
         int serverPort = -1;
         InetAddress serverAddr = null;
 
     try{
         serverAddr = InetAddress.getByName(args[0]);    //Get the IP Server
         serverPort = Integer.parseInt(args[1]);         //Get the Directory Server Port
+
         socket = new DatagramSocket();                  //Create the Client Socket
 
         //HeartBeat for DirectoryServer
         threadHeartBeat=new ThreadHeartBeat(serverAddr,serverPort,name,socket.getPort());
         threadHeartBeat.start();
-
         //Creating the Packets
-        packetRead = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);      //Creating the packet that will be received from DirServerv
-        thread=new ThreadReaderUDP(packetRead,socket);        //Thread that will be reading all the received data from DirServer
+        thread=new ThreadReaderUDP(socket);        //Thread that will be reading all the received data from DirServer
         thread.start();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         while(true){
             System.out.print("");
