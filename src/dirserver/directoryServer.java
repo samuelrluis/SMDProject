@@ -1,21 +1,22 @@
 package dirserver; /**
  * Created by Samuel on 29/10/2016.
  */
-import common.HeartBeat;
 
 import java.net.*;
-import java.io.*;
+import java.util.ArrayList;
 
 import static java.lang.Integer.parseInt;
 
-public class directoryServer {
+public class DirectoryServer {
 
     DatagramSocket socketServers = null;
     DatagramSocket socketClients = null;
     ThreadAnswerHeartBeat threadHbServer = null;
     ThreadAnswerHeartBeat threadHbClients = null;
+    ArrayList<Registries> registries = null;
 
-    directoryServer(){
+    DirectoryServer(){
+        registries=new ArrayList<>();
         createSockets();
         createThreads();
     }
@@ -32,8 +33,8 @@ public class directoryServer {
 
     public void createThreads(){
         //Threads Heartbeat
-        threadHbServer = new ThreadAnswerHeartBeat(socketServers);  //Create Thread To receive HB from Servers
-        threadHbClients = new ThreadAnswerHeartBeat(socketClients); //Create Thread To receive HB from Clients
+        threadHbServer = new ThreadAnswerHeartBeat(socketServers,registries);  //Create Thread To receive HB from Servers
+        threadHbClients = new ThreadAnswerHeartBeat(socketClients,registries); //Create Thread To receive HB from Clients
 
         //Start Threads
         threadHbServer.start();
@@ -41,8 +42,8 @@ public class directoryServer {
     }
 
     public static void main(String[] args) {
-        directoryServer myServer=null;
-        myServer=new directoryServer();
+        DirectoryServer myServer=null;
+        myServer=new DirectoryServer();
     }
 }
 

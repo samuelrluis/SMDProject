@@ -19,13 +19,13 @@ public class ThreadHeartBeat extends Thread {
     ByteArrayOutputStream b0ut;
     ObjectOutputStream out;
 
-    public ThreadHeartBeat(InetAddress serverAddr,int serverPortToDirectory,int serverToTCP,String name){
+    public ThreadHeartBeat(InetAddress serverAddr,int serverPortToDirectory,int uPort ,int tPort,String name){
         try{
-            socketUDP = new DatagramSocket();           //Create Socket to send the HeartBeat
-            heartBeat=new HeartBeat(name,serverToTCP);  //Create the HeartBeat Serializable Object
-            b0ut = new ByteArrayOutputStream();         //Create an array of byte in OutputStream
-            out = new ObjectOutputStream(b0ut);         //Place the ArrayOutputStream in the OBjectOutputSream
-            out.writeObject(heartBeat);                 //Write the Heartbeat on the object
+            socketUDP = new DatagramSocket();                               //Create Socket to send the HeartBeat
+            heartBeat=new HeartBeat(name,uPort,tPort);                      //Create the HeartBeat Serializable Object
+            b0ut = new ByteArrayOutputStream();                             //Create an array of byte in OutputStream
+            out = new ObjectOutputStream(b0ut);                             //Place the ArrayOutputStream in the OBjectOutputSream
+            out.writeObject(heartBeat);                                     //Write the Heartbeat on the object
 
             packetHeartBeat=new DatagramPacket(b0ut.toByteArray(),b0ut.size(),serverAddr,serverPortToDirectory); //Create a Packet
 
