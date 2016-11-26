@@ -11,7 +11,7 @@ import java.net.*;
 public class Client {
 
     public static void main(String args[]){
-        ThreadHeartBeat threadHeartBeat;
+        ThSendHeartBeat threadHeartBeat;
         String name ="Samuel";
 
         //TCP
@@ -19,9 +19,8 @@ public class Client {
         PrintWriter pout;
         InputStream in;
         //UDP
-        ThreadReaderUDP thread=null;
+        ThReaderUDP thread=null;
         DatagramSocket socket=null;
-
 
         int serverPort = -1;
         InetAddress serverAddr = null;
@@ -29,15 +28,16 @@ public class Client {
     try{
         serverAddr = InetAddress.getByName(args[0]);    //Get the IP Server
         serverPort = Integer.parseInt(args[1]);         //Get the Directory Server Port
-
         socket = new DatagramSocket();                  //Create the Client Socket
 
-        //HeartBeat for DirectoryServer
-        threadHeartBeat=new ThreadHeartBeat(serverAddr,serverPort,name,socket.getPort());
-        threadHeartBeat.start();
         //Creating the Packets
-        thread=new ThreadReaderUDP(socket);        //Thread that will be reading all the received data from DirServer
+        thread=new ThReaderUDP(socket);        //Thread that will be reading all the received data from DirServer
         thread.start();
+        //HeartBeat for DirectoryServer
+        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPort,socket.getPort(),name);
+        threadHeartBeat.start();
+
+        socketToServer=new Socket(serverAddr,thread.getPort());
 
 
 
@@ -59,7 +59,7 @@ public class Client {
                 break;
         }
 
-        socketToServer=new Socket(serverAddr,thread.getPort());
+
         in = socketToServer.getInputStream();
         pout = new PrintWriter(socketToServer.getOutputStream(), true);
         pout.println("primeira ligacao TCP");

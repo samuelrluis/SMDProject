@@ -5,23 +5,30 @@ import java.io.Serializable;
  */
 public class HeartBeat implements Serializable{
     private String name;
-    private int port; //No server TCP // No Client UDP
+    private int udpPort;
+    private int tcpPort;
 
     public HeartBeat(){
         name="";
-        port=0;
+        udpPort=0;
+        tcpPort=0;
     }
 
-    public HeartBeat(String name, int port) {
+    public HeartBeat(String name, int uPort,int tPort) {
         this.name = name;
-        this.port = port;
+        this.udpPort = uPort;
+        this.tcpPort = tPort;
     }
 
     public String getName(){
         return name;
     }
 
-    public int getPort(){
-        return port;
+    public int getUdpPort(){
+        return udpPort;
+    }
+
+    public int getTcpPort(){
+        return tcpPort;
     }
 }

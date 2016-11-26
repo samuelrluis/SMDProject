@@ -12,17 +12,18 @@ import common.HeartBeat;
 /**
  * Created by Samuel on 02/11/2016.
  */
-public class ThreadHeartBeat extends Thread {
+public class ThSendHeartBeat extends Thread {
     DatagramPacket packetHeartBeat=null;
-    DatagramSocket socketUDP = null;
+    DatagramSocket socketHeartBeatUDP = null;
     HeartBeat heartBeat;
     ByteArrayOutputStream b0ut;
     ObjectOutputStream out;
 
-    public ThreadHeartBeat(InetAddress serverAddr,int serverPortToDirectory,int serverToTCP,String name){
+    public ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, int uPort , int tPort, String name){
         try{
-            socketUDP = new DatagramSocket();           //Create Socket to send the HeartBeat
-            heartBeat=new HeartBeat(name,serverToTCP);  //Create the HeartBeat Serializable Object
+
+            socketHeartBeatUDP = new DatagramSocket();           //Create Socket to send the HeartBeat
+            heartBeat=new HeartBeat(name,uPort,tPort);  //Create the HeartBeat Serializable Object
             b0ut = new ByteArrayOutputStream();         //Create an array of byte in OutputStream
             out = new ObjectOutputStream(b0ut);         //Place the ArrayOutputStream in the OBjectOutputSream
             out.writeObject(heartBeat);                 //Write the Heartbeat on the object
@@ -39,7 +40,7 @@ public class ThreadHeartBeat extends Thread {
     public void run(){
         while(true) {
             try {
-                socketUDP.send(packetHeartBeat);    //Send the Packet
+                socketHeartBeatUDP.send(packetHeartBeat);    //Send the Packet
                 System.out.println("Enviei");
                 Thread.sleep(10000);
             } catch (IOException e) {
