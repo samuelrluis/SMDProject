@@ -41,7 +41,7 @@ public class Client {
         threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPort,socket.getPort(),name);
         threadHeartBeat.start();
 
-        socketToServer=new Socket(serverAddr,thread.getPort());
+        //socketToServer=new Socket(serverAddr,thread.getPort());
 
 
 
