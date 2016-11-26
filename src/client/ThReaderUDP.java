@@ -7,15 +7,15 @@ import java.net.DatagramSocket;
 /**
  * Created by Samuel on 02/11/2016.
  */
-public class ThreadReaderUDP extends Thread{
-    DatagramPacket packet=null;
+public class ThReaderUDP extends Thread{
+    public static final int MAX_SIZE = 256;
     DatagramSocket socket=null;
+    DatagramPacket packetRead=null;
     boolean portAvailable;
     String TCPport;
 
 
-    ThreadReaderUDP(DatagramPacket s, DatagramSocket socket){
-        this.packet=s;
+    ThReaderUDP(DatagramSocket socket){
         this.socket=socket;
         portAvailable=false;
         TCPport=null;
@@ -25,19 +25,15 @@ public class ThreadReaderUDP extends Thread{
         return portAvailable;
     }
 
-    public int getPort(){
-        return Integer.parseInt(TCPport);
-    }
-
     @Override
     public void run(){
         while(true){
             try {
                 //TODO Destinada a receber o porto TCP do REMOTE SERVER
-                socket.receive(packet);             //Update content in Packet with the received data
+                packetRead = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE); //Creating the packet that will be received from DirServerv
+                socket.receive(packetRead);             //Update content in Packet with the received data
                 portAvailable=true;
-                String msgRecebida = new String(packet.getData(), 0, packet.getLength());
-                TCPport=msgRecebida;
+                String msgRecebida = new String(packetRead.getData(), 0, packetRead.getLength());
                 System.out.println(msgRecebida);
             } catch (IOException e) {
                 e.printStackTrace();

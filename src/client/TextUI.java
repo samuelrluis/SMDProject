@@ -22,14 +22,12 @@ public class TextUI {
         }
 
         if (args[0].toUpperCase().equals("LOGIN"))
-            if (user.verifyLogin(args[1],args[2])==true);
+            if (user.verifyLogin(args[1],args[2])==true)
+                System.out.println("Op Logi");
 
-        if (args[0].toUpperCase().equals("SLIST"));
+        if (args[0].toUpperCase().equals("SLIST")){
 
-
-
-
-
+        }
     }
 
 
