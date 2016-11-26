@@ -13,6 +13,7 @@ public class Client {
     public static void main(String args[]){
         ThreadHeartBeat threadHeartBeat;
         String name ="Samuel";
+        TextUI textUI = new TextUI(args);
 
         //TCP
         Socket socketToServer = null;
@@ -27,6 +28,9 @@ public class Client {
         String msg;
         int serverPort = -1;
         InetAddress serverAddr = null;
+
+
+
 
     try{
         serverAddr = InetAddress.getByName(args[0]);    //Get the IP Server

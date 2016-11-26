@@ -5,16 +5,7 @@ package common;
  */
 public class UserID {
 
-    private Integer id;
     private String username, password;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
