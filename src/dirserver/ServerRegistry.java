@@ -7,9 +7,7 @@ import dirserver.Registries;
  */
 public class ServerRegistry extends Registries {
 
-
-
-    ServerRegistry(String n,int udp,int tcp,int entry){
+    ServerRegistry(String n,int udp,int tcp,long entry){
         name=n;
         udpPort=udp;
         tcpPort=tcp;

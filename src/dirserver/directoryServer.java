@@ -7,12 +7,15 @@ import java.util.ArrayList;
 
 import static java.lang.Integer.parseInt;
 
+
+
 public class DirectoryServer {
 
     DatagramSocket socketServers = null;
     DatagramSocket socketClients = null;
     ThAnswerHeartBeat threadHbServer = null;
     ThAnswerHeartBeat threadHbClients = null;
+    ThManageRegs threadManageRegs = null;
     ArrayList<Registries> registries = null;
 
     DirectoryServer(){
@@ -35,9 +38,12 @@ public class DirectoryServer {
         //Threads Heartbeat
         threadHbServer = new ThAnswerHeartBeat(socketServers,registries);  //Create Thread To receive HB from Servers
         threadHbClients = new ThAnswerHeartBeat(socketClients,registries); //Create Thread To receive HB from Clients
+        threadManageRegs = new ThManageRegs(registries);
         //Start Threads
         threadHbServer.start();
         threadHbClients.start();
+        threadManageRegs.start();
+
     }
 
     public static void main(String[] args) {

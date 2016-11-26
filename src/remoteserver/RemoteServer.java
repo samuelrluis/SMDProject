@@ -5,10 +5,12 @@ package remoteserver;
 
 import java.net.*;
 import java.io.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RemoteServer {
+    static AtomicInteger nextId = new AtomicInteger();
     private String name;
-    private static int id=0;
+    private int id;
     ServerSocket serverSocketTcp = null; //TCP
     DatagramSocket serverSocketUdp = null; //UDP
     InetAddress myAddress=null;
@@ -18,8 +20,8 @@ public class RemoteServer {
     ThAnswerClient threadAnswerClient = null;
 
     RemoteServer(InetAddress address,int udp){
+        id = nextId.incrementAndGet();
         name="RemoteServer" + id + " ";
-        id++;
         myAddress=address;
         myUdpPort=0;
         myTcpPort=0;

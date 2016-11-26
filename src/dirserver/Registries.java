@@ -5,7 +5,7 @@ package dirserver;
  */
 public abstract class Registries {
     String name;
-    int entryTime;
+    long entryTime;
     int udpPort,tcpPort;
 
     public String getName(){
@@ -14,6 +14,6 @@ public abstract class Registries {
 
     @Override
     public String toString() {
-        return name+" "+udpPort+" "+tcpPort;
+        return name+" "+udpPort+" "+tcpPort+" "+entryTime;
     }
 }
