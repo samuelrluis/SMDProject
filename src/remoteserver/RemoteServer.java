@@ -2,7 +2,6 @@
  * Created by Samuel on 29/10/2016.
  */
 package remoteserver;
-import common.HeartBeat;
 
 import java.net.*;
 import java.io.*;
@@ -10,15 +9,15 @@ import java.io.*;
 public class RemoteServer {
     private String name;
     private static int id=0;
-    ServerSocket serverSocket = null; //TCP
+    ServerSocket serverSocketTcp = null; //TCP
+    DatagramSocket serverSocketUdp = null; //UDP
     InetAddress myAddress=null;
     Socket socketToClient = null;
     int myTcpPort,serverDirPort,myUdpPort;
-    ThreadHeartBeat threadHeartbeat;
-    ThreadAnswerClient threadAnswerClient = null;
+    ThSendHeartBeat threadHeartbeat;
+    ThAnswerClient threadAnswerClient = null;
 
     RemoteServer(InetAddress address,int udp){
-
         name="RemoteServer" + id + " ";
         id++;
         myAddress=address;
@@ -29,7 +28,7 @@ public class RemoteServer {
 
     private void awaitsForNewClient(){
         try{
-            socketToClient=serverSocket.accept();
+            socketToClient=serverSocketTcp.accept();
         }catch(IOException e){
             System.out.println("Error creating the New Socket C");
         }
@@ -37,21 +36,27 @@ public class RemoteServer {
 
     private void createThreadUdp(){
         //UDP-Socket to directory Servers
-        threadHeartbeat=new ThreadHeartBeat(myAddress,serverDirPort,myUdpPort,myTcpPort,this.getName());
+        System.out.println("dirport: "+serverDirPort);
+        System.out.println("udpPort: "+myUdpPort);
+        System.out.println("tcpPort: "+myTcpPort);
+        threadHeartbeat=new ThSendHeartBeat(myAddress,serverDirPort,myUdpPort,myTcpPort,this.getName());
         threadHeartbeat.start();
     }
 
     private void createThreadTcp(){
         //TCP-Socket to the Client
-        threadAnswerClient=new ThreadAnswerClient(serverSocket);
+        threadAnswerClient=new ThAnswerClient(serverSocketTcp);
         threadAnswerClient.start();
     }
 
     public void runServer(){
         //TCP-Client
         try{
-            serverSocket = new ServerSocket();
-            myTcpPort=serverSocket.getLocalPort();
+            serverSocketTcp = new ServerSocket();
+            serverSocketUdp = new DatagramSocket();
+            myTcpPort=serverSocketTcp.getLocalPort();
+            myUdpPort=serverSocketUdp.getLocalPort();
+
             createThreadUdp();
 /*            awaitsForNewClient();
             createThreadTcp();*/

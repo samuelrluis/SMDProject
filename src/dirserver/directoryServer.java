@@ -11,8 +11,8 @@ public class DirectoryServer {
 
     DatagramSocket socketServers = null;
     DatagramSocket socketClients = null;
-    ThreadAnswerHeartBeat threadHbServer = null;
-    ThreadAnswerHeartBeat threadHbClients = null;
+    ThAnswerHeartBeat threadHbServer = null;
+    ThAnswerHeartBeat threadHbClients = null;
     ArrayList<Registries> registries = null;
 
     DirectoryServer(){
@@ -33,9 +33,8 @@ public class DirectoryServer {
 
     public void createThreads(){
         //Threads Heartbeat
-        threadHbServer = new ThreadAnswerHeartBeat(socketServers,registries);  //Create Thread To receive HB from Servers
-        threadHbClients = new ThreadAnswerHeartBeat(socketClients,registries); //Create Thread To receive HB from Clients
-
+        threadHbServer = new ThAnswerHeartBeat(socketServers,registries);  //Create Thread To receive HB from Servers
+        threadHbClients = new ThAnswerHeartBeat(socketClients,registries); //Create Thread To receive HB from Clients
         //Start Threads
         threadHbServer.start();
         threadHbClients.start();

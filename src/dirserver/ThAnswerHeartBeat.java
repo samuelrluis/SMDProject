@@ -12,14 +12,14 @@ import java.util.ArrayList;
 /**
  * Created by Samuel on 22/11/2016.
  */
-public class ThreadAnswerHeartBeat extends Thread{
+public class ThAnswerHeartBeat extends Thread{
     public static final int MAX_SIZE = 256;
     DatagramSocket socket=null;
     DatagramPacket packet;
     ArrayList<Registries> regList=null;
 
 
-    ThreadAnswerHeartBeat(DatagramSocket s, ArrayList<Registries> reg){
+    ThAnswerHeartBeat(DatagramSocket s, ArrayList<Registries> reg){
         this.socket=s;
         packet = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
         regList=reg;
@@ -31,15 +31,13 @@ public class ThreadAnswerHeartBeat extends Thread{
         try {
             while(true){
                 socket.receive(packet);
-                System.out.println("recebi HB");
 
                 //Codigo para TCP
                 ByteArrayInputStream Bin = new ByteArrayInputStream(packet.getData());
                 ObjectInputStream in = new ObjectInputStream(Bin);
                 hBeat=(HeartBeat) in.readObject();
-                System.out.println(hBeat.getName()+hBeat.getTcpPort());
                 regList.add(new ServerRegistry(hBeat.getName(),hBeat.getUdpPort(),hBeat.getTcpPort(),0));
-                System.out.println(regList.get(0));
+
             }
         } catch (IOException e) {
             System.out.println("Error Receiving Datagram Packet");

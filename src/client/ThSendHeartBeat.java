@@ -10,14 +10,14 @@ import java.net.*;
 /**
  * Created by Samuel on 22/11/2016.
  */
-public class ThreadHeartBeat extends Thread {
+public class ThSendHeartBeat extends Thread {
     HeartBeat myHeartBeat;
     DatagramPacket packetHeartBeat=null;
     DatagramSocket socketHeartBeat = null;
     ByteArrayOutputStream b0ut;
     ObjectOutputStream out;
 
-    ThreadHeartBeat(InetAddress serverAddr, int serverPortToDirectory, int tcpPort,String name){
+    ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, int tcpPort, String name){
         try{
             socketHeartBeat = new DatagramSocket();                        //Create Socket to send the HeartBeat
             myHeartBeat=new HeartBeat(name,serverPortToDirectory,tcpPort); //Create the HeartBeat Serializable Object

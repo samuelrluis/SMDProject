@@ -7,13 +7,13 @@ import java.net.Socket;
 /**
  * Created by Samuel on 03/11/2016.
  */
-public class ThreadAnswerClient extends Thread {
+public class ThAnswerClient extends Thread {
     public static final int TIMEOUT = 5;
     public static final int MAX_SIZE = 4000;
     ServerSocket socketToClient;
     String msgClient;
 
-    ThreadAnswerClient(ServerSocket socketClient){
+    ThAnswerClient(ServerSocket socketClient){
         socketToClient=socketClient;
     }
 

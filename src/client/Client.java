@@ -11,7 +11,7 @@ import java.net.*;
 public class Client {
 
     public static void main(String args[]){
-        ThreadHeartBeat threadHeartBeat;
+        ThSendHeartBeat threadHeartBeat;
         String name ="Samuel";
 
         //TCP
@@ -19,7 +19,7 @@ public class Client {
         PrintWriter pout;
         InputStream in;
         //UDP
-        ThreadReaderUDP thread=null;
+        ThReaderUDP thread=null;
         DatagramSocket socket=null;
 
         int serverPort = -1;
@@ -31,10 +31,10 @@ public class Client {
         socket = new DatagramSocket();                  //Create the Client Socket
 
         //Creating the Packets
-        thread=new ThreadReaderUDP(socket);        //Thread that will be reading all the received data from DirServer
+        thread=new ThReaderUDP(socket);        //Thread that will be reading all the received data from DirServer
         thread.start();
         //HeartBeat for DirectoryServer
-        threadHeartBeat=new ThreadHeartBeat(serverAddr,serverPort,socket.getPort(),name);
+        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPort,socket.getPort(),name);
         threadHeartBeat.start();
 
         socketToServer=new Socket(serverAddr,thread.getPort());
