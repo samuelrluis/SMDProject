@@ -16,7 +16,7 @@ public class TextUI {
     TextUI(String args[]){
 
         if (args.length <1 || args[0].toUpperCase().equals("HELP")) {
-            //readObjectFromFile("/Users/diogomiguel/GitHub/SMDProject/src/client/manual.txt");
+            readObjectFromFile("..\\src\\client\\manual.txt");
             System.out.println("Manual");
             return;
         }

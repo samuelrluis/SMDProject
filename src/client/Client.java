@@ -44,19 +44,6 @@ public class Client {
         //socketToServer=new Socket(serverAddr,thread.getPort());
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         while(true){
             System.out.print("");
             if(thread.isPortAvailable()==true)

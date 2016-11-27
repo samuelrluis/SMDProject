@@ -9,7 +9,7 @@ import static java.lang.Integer.parseInt;
 
 
 
-public class DirectoryServer {
+ public class DirectoryServer {
 
     DatagramSocket socketServers = null;
     DatagramSocket socketClients = null;
