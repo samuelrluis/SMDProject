@@ -54,7 +54,7 @@ public class RemoteServer {
     public void runServer(){
         //TCP-Client
         try{
-            serverSocketTcp = new ServerSocket(0);
+            serverSocketTcp = new ServerSocket();
             serverSocketUdp = new DatagramSocket();
             myTcpPort=serverSocketTcp.getLocalPort();
             myUdpPort=serverSocketUdp.getLocalPort();
