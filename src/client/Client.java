@@ -20,49 +20,27 @@ public class Client {
         PrintWriter pout;
         InputStream in;
         //UDP
-        ThReaderUDP thread=null;
-        DatagramSocket socket=null;
+        ThReaderUDP thread;
+        DatagramSocket socket;
 
-        int serverPort = -1;
-        InetAddress serverAddr = null;
-
-
-
+        int serverPortHB = -1;
+        int serverPortUDP = -1;
+        InetAddress serverAddr;
 
     try{
-        serverAddr = InetAddress.getByName(args[0]);    //Get the IP Server
-        serverPort = Integer.parseInt(args[1]);         //Get the Directory Server Port
-        socket = new DatagramSocket();                  //Create the Client Socket
+        serverAddr = InetAddress.getByName(args[0]);    //Get the IP Server;
+        serverPortHB = Integer.parseInt(args[1]);       //Get the Directory Server Port for HeartBeats;
+        serverPortUDP = Integer.parseInt(args[2]);      //Get the Directory Server Port to receive data;
+        socket = new DatagramSocket();                  //Create the Client Socket that will read data from DirServer;
 
         //Creating the Packets
         thread=new ThReaderUDP(socket);        //Thread that will be reading all the received data from DirServer
         thread.start();
         //HeartBeat for DirectoryServer
-        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPort,socket.getPort(),name);
+        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,socket.getPort(),name);
         threadHeartBeat.start();
 
         //socketToServer=new Socket(serverAddr,thread.getPort());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        while(true){
-            System.out.print("");
-            if(thread.isPortAvailable()==true)
-                break;
-        }
-
 
         in = socketToServer.getInputStream();
         pout = new PrintWriter(socketToServer.getOutputStream(), true);
