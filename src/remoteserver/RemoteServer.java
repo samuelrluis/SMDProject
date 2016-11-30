@@ -78,8 +78,10 @@ public class RemoteServer {
         int serverPortToDirectory = -1,serverPortTCP=-1;
 
         try{
-            if(args.length!=2)
+            if(args.length!=2) {
                 System.out.println("Sintax Error [SERVICEIP][UDP_SERVICEPORT_TODIRSERVER]");
+                System.exit(0);
+            }
 
             serverAddr = InetAddress.getByName(args[0]);
             serverPortToDirectory = Integer.parseInt(args[1]);

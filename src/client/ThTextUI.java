@@ -3,6 +3,9 @@ package client;
 import common.UserID;
 
 import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -10,18 +13,25 @@ import java.util.StringTokenizer;
  * Created by diogomiguel on 25/11/16.
  */
 public class ThTextUI extends Thread {
+    public static final int MAX_SIZE = 256;
     Client myClient;
     UserID myUserID;
+    DatagramPacket packetToDir = null , packetReadDir = null;
 
     ThTextUI(Client x){
         myClient=x;
+        packetReadDir = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
     }
 
     @Override
     public void run() {
+        DatagramSocket socketToDir=null;
+
         String commandStr;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         myUserID=myClient.getMyUserID();
+
+        socketToDir=myClient.getSocketToDir();
 
         while(true){
             ArrayList<String> argCommand = new ArrayList<>();
@@ -41,7 +51,6 @@ public class ThTextUI extends Thread {
                     break;
                 else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
                     System.out.println("Manual");
-                    readObjectFromFile("..\\manual.txt");
                 }else if(argCommand.get(0).equalsIgnoreCase("USER")){//teste
                     System.out.println(myClient.getMyUserID().toString());
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
@@ -49,7 +58,21 @@ public class ThTextUI extends Thread {
                 }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
                     myUserID.setUsername(argCommand.get(1));
                     myUserID.setPassword(argCommand.get(2));
+
+
+                }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
+                    System.out.println(myClient.getServerAddr().toString() + " " + myClient.getServerDirCommandPort());
+                    packetToDir=new DatagramPacket("SLIST".getBytes(),"SLIST".length(),myClient.getServerAddr(), myClient.getServerPortCommand()); //Create a Packet
+                    socketToDir.send(packetToDir);
+                    socketToDir.receive(packetReadDir);
+                    System.out.println("recebi");
+                    String answer = new String(packetReadDir.getData());
+                    System.out.println(answer);
                 }
+
+
+
+
             } catch (IOException e) {
                 System.out.printf("Não foi encontrado o ficheiro do Manual");
             }
@@ -60,8 +83,7 @@ public class ThTextUI extends Thread {
         Object object = null;
 
         try {
-            InputStream inputStream = new BufferedInputStream(new
-                    FileInputStream(filename));
+            InputStream inputStream = new BufferedInputStream(new FileInputStream(filename));
             ObjectInput objectInput = new ObjectInputStream(inputStream);
             object = objectInput.readObject();
             objectInput.close();
