@@ -37,9 +37,9 @@ public class ThSendHeartBeat extends Thread {
     @Override
     public void run() {
         try {
-            socketHeartBeat.send(packetHeartBeat);    //Send the Packet
+            socketHeartBeat.send(packetHeartBeat);//Send the Packet
             //System.out.println("HeartBeat");
-            Thread.sleep(10000);
+            Thread.sleep(30000);
         } catch (IOException e) {
             System.out.println("Error Sending the Packet with The HeartBeat");
         } catch (InterruptedException e) {

@@ -17,23 +17,31 @@ public class Client {
     ThSendHeartBeat threadHeartBeat;
     ThTextUI threadUI;
     ThReaderUDP threadUDPReader=null;
-    Socket socket=null;
+    DatagramSocket socketToDir=null;
+    Socket socketTCP=null;
     InetAddress serverAddr=null;
-    int serverPort=0;
+    int serverPortHB=-1,serverPortCommand=-1;
     UserID myUserID=null;
 
-    Client(InetAddress serverAddress, Integer serverPort){
-        myUserID=new UserID();
 
-        socket=new Socket();
+    Client(InetAddress serverAddress, Integer serverPort,Integer serverPortCommand){
+        myUserID=new UserID();
         this.serverAddr=serverAddress;
-        this.serverPort=serverPort;
+        this.serverPortHB=serverPort;
+        this.serverPortCommand = serverPortCommand;
+
+        try {
+            socketToDir=new DatagramSocket();
+            socketTCP=new Socket();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     public void createThreads(){
         threadUI = new ThTextUI(this);
         threadUDPReader=new ThReaderUDP();        //Thread that will be reading all the received data from DirServer
-        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPort,socket.getPort(),"xpto");
+        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,socketTCP.getPort(),"xpto");
         //TODO THREAD HEARTBEAT SO E CRIADA E LANÇADA QUANDO O UTILIZADOR SE AUTENTICA
     }
 
@@ -47,17 +55,38 @@ public class Client {
         return myUserID;
     }
 
+    public DatagramSocket getSocketToDir() {
+        return socketToDir;
+    }
+
+    public InetAddress getServerAddr() {
+        return serverAddr;
+    }
+
+    public int getServerDirCommandPort() {
+        return serverPortHB;
+    }
+
+    public int getServerPortCommand(){
+        return serverPortCommand;
+    }
+
     public static void main(String args[]){
         Client thisClient;
         InetAddress serverAddr=null;
-        int serverPort = -1;
+        int serverPortHB = -1 , serverPortCommand=-1;
 
         try {
+            if(args.length!=3){
+                System.out.println("Sintax Error [DIRIP][UDP_PORT_FOR HB][UDP_PORT_FOR_COMMAND]");
+                System.exit(0);
+            }
+
             serverAddr = InetAddress.getByName(args[0]);    //Get the IP Server
-            serverPort = Integer.parseInt(args[1]);         //Get the Directory Server Port
+            serverPortHB = Integer.parseInt(args[1]);       //Get the Directory Server Port for HB
+            serverPortCommand = Integer.parseInt(args[2]);  //Get the Directory Server Port for Commands
 
-            thisClient = new Client(serverAddr, serverPort);
-
+            thisClient = new Client(serverAddr, serverPortHB,serverPortCommand);
             thisClient.createThreads();
             thisClient.startThreads();
 
