@@ -3,6 +3,7 @@ package client;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.SocketException;
 
 /**
  * Created by Samuel on 02/11/2016.
@@ -15,10 +16,14 @@ public class ThReaderUDP extends Thread{
     String TCPport;
 
 
-    ThReaderUDP(DatagramSocket socket){
-        this.socket=socket;
-        portAvailable=false;
-        TCPport=null;
+    ThReaderUDP(){
+
+        try {
+            socket=new DatagramSocket();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public boolean isPortAvailable(){
