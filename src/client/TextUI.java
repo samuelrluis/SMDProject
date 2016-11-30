@@ -3,6 +3,7 @@ package client;
 import common.UserID;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Created by diogomiguel on 25/11/16.
@@ -13,21 +14,26 @@ public class TextUI {
     String args[];
     UserID user;
 
-    TextUI(String args[]){
+    TextUI(ArrayList<String> args[]){
 
-        if (args.length <1 || args[0].toUpperCase().equals("HELP")) {
-            //readObjectFromFile("/Users/diogomiguel/GitHub/SMDProject/src/client/manual.txt");
+        if (args.length <1 || args.equals("HELP")) {
+            readObjectFromFile("..\\src\\client\\manual.txt");
             System.out.println("Manual");
             return;
         }
 
-        if (args[0].toUpperCase().equals("LOGIN"))
-            if (user.verifyLogin(args[1],args[2])==true)
-                System.out.println("Op Logi");
+        //if (args[0].toUpperCase().equals("LOGIN"))
+        //    if (user.verifyLogin(args[1],args[2])==true)
+        //        System.out.println("Op Logi");
 
-        if (args[0].toUpperCase().equals("SLIST")){
+        //if (args[0].toUpperCase().equals("SLIST")){
 
-        }
+        //}
+    }
+
+    public static void showTheAnswer (){
+        // Trata respostas do Serv
+
     }
 
 
