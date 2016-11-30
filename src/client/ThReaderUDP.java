@@ -25,10 +25,6 @@ public class ThReaderUDP extends Thread{
         return portAvailable;
     }
 
-    public int getPort(){
-        return Integer.parseInt(TCPport);
-    }
-
     @Override
     public void run(){
         while(true){

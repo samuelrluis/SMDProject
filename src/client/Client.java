@@ -13,6 +13,7 @@ public class Client {
     public static void main(String args[]){
         ThSendHeartBeat threadHeartBeat;
         String name ="Samuel";
+        TextUI textUI = new TextUI(args);
 
         //TCP
         Socket socketToServer = null;
@@ -24,6 +25,9 @@ public class Client {
 
         int serverPort = -1;
         InetAddress serverAddr = null;
+
+
+
 
     try{
         serverAddr = InetAddress.getByName(args[0]);    //Get the IP Server
@@ -37,7 +41,7 @@ public class Client {
         threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPort,socket.getPort(),name);
         threadHeartBeat.start();
 
-        socketToServer=new Socket(serverAddr,thread.getPort());
+        //socketToServer=new Socket(serverAddr,thread.getPort());
 
 
 
