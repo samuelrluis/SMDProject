@@ -8,7 +8,7 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 public class UserID {
     private int udpHB,udpReader,tcp;
     private String username, password;
-    private Boolean login;
+    private Boolean login , connected;
 
     public UserID(){
         username="x";

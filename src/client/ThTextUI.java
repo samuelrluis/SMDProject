@@ -26,7 +26,6 @@ public class ThTextUI extends Thread {
     @Override
     public void run() {
         DatagramSocket socketToDir=null;
-
         String commandStr;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         myUserID=myClient.getMyUserID();
@@ -56,8 +55,8 @@ public class ThTextUI extends Thread {
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
 
                 }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
-                    myUserID.setUsername(argCommand.get(1));
-                    myUserID.setPassword(argCommand.get(2));
+                    myUserID.setUsername(argCommand.get(1));// test
+                    myUserID.setPassword(argCommand.get(2));// test
 
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
