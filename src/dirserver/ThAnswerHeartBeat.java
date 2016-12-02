@@ -16,12 +16,12 @@ public class ThAnswerHeartBeat extends Thread{
     public static final int MAX_SIZE = 256;
     DatagramSocket socket=null;
     DatagramPacket packet;
-    ArrayList<Registries> regList=null;
+    ArrayList<Registries> regListServer=null;
 
     ThAnswerHeartBeat(DatagramSocket s, ArrayList<Registries> reg){
         this.socket=s;
         packet = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
-        regList=reg;
+        regListServer=reg;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ThAnswerHeartBeat extends Thread{
                 ByteArrayInputStream Bin = new ByteArrayInputStream(packet.getData());
                 ObjectInputStream in = new ObjectInputStream(Bin);
                 hBeat=(HeartBeat) in.readObject();
-                regList.add(new ServerRegistry(hBeat.getName(),hBeat.getUdpPort(),hBeat.getTcpPort(),System.nanoTime()));
+                regListServer.add(new ServerRegistry(hBeat.getName(),hBeat.getUdpPort(),hBeat.getTcpPort(),System.nanoTime()));
 
             }
         } catch (IOException e) {
