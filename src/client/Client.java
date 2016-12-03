@@ -74,6 +74,7 @@ public class Client {
     public static void main(String args[]){
         Client thisClient;
         InetAddress serverAddr=null;
+
         int serverPortHB = -1 , serverPortCommand=-1;
 
         try {

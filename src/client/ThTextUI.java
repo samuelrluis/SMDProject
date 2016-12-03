@@ -50,13 +50,27 @@ public class ThTextUI extends Thread {
                     break;
                 else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
                     System.out.println("Manual");
+                    break;
                 }else if(argCommand.get(0).equalsIgnoreCase("USER")){//teste
                     System.out.println(myClient.getMyUserID().toString());
+                    break;
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
+                    break;
 
                 }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
+<<<<<<< HEAD
                     myUserID.setUsername(argCommand.get(1));// test
                     myUserID.setPassword(argCommand.get(2));// test
+=======
+<<<<<<< HEAD
+                    myUserID.setUsername(argCommand.get(1));
+                    myUserID.setPassword(argCommand.get(2));
+=======
+                    myUserID.setUsername(argCommand.get(1));// test
+                    myUserID.setPassword(argCommand.get(2));// test
+                    break;
+>>>>>>> origin/master
+>>>>>>> master
 
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
@@ -67,6 +81,7 @@ public class ThTextUI extends Thread {
                     System.out.println("recebi");
                     String answer = new String(packetReadDir.getData());
                     System.out.println(answer);
+                    break;
                 }
 
 
