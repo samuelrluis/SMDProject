@@ -40,7 +40,6 @@ public class ThTextUI extends Thread {
             System.out.flush();
             try {
                 commandStr = br.readLine();
-
             StringTokenizer tok = new StringTokenizer(commandStr," ");
 
             while (tok.hasMoreTokens()){
@@ -48,22 +47,25 @@ public class ThTextUI extends Thread {
                 argCommand.add(token);
             }
                 if(argCommand.get(0).equalsIgnoreCase("EXIT"))
-                    break;
+                    continue;
+
                 else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
-                    System.out.println("Manual");
-                    break;
-                }else if(argCommand.get(0).equalsIgnoreCase("USER")){//teste
+                    try {
+                        System.out.println(readObjectFromFile("../SMDProject/src/client/manual.txt"));
+                    }catch (Exception e){}
+                    continue;
+
+                }else if(argCommand.get(0).equalsIgnoreCase("USER")){  //teste
                     System.out.println(myClient.getMyUserID().toString());
-                    break;
+                    continue;
+
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
-                    break;
+                    continue;
 
                 }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
                     myUserID.setUsername(argCommand.get(1));// test
                     myUserID.setPassword(argCommand.get(2));// test
-                    break;
-
-
+                    continue;
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
                     System.out.println(myClient.getServerAddr().toString() + " " + myClient.getServerDirCommandPort());
@@ -73,18 +75,42 @@ public class ThTextUI extends Thread {
                     System.out.println("recebi");
                     String answer = new String(packetReadDir.getData());
                     System.out.println(answer);
-                    break;
+                    continue;
+                }
+                else{
+                    System.out.println("Command not found");
+                    continue;
                 }
 
-
-
-
             } catch (IOException e) {
-                System.out.printf("Não foi encontrado o ficheiro do Manual");
+                System.out.printf("File not found");
             }
+        }
+
+
+    }
+
+    private String readObjectFromFile(String file) throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            String everything = sb.toString();
+            return everything;
+        } finally {
+            br.close();
         }
     }
 
+
+
+/*//*
     public static Object readObjectFromFile(String filename) {
         Object object = null;
 
@@ -98,4 +124,9 @@ public class ThTextUI extends Thread {
         }
         return object;
     }
+    */
+
+
+
+
 }
