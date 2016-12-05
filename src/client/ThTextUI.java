@@ -53,27 +53,6 @@ public class ThTextUI extends Thread {
                 argCommand.add(token);
             }
                 if(argCommand.get(0).equalsIgnoreCase("EXIT"))
-<<<<<<< HEAD
-                    System.exit(0);
-                else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
-                    System.out.println("Manual");
-                    fileReader();
-                }else if(argCommand.get(0).equalsIgnoreCase("USER")){//teste
-                    System.out.println(myClient.getMyUserID().toString());
-                }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
-                    if (argCommand.size()!=3) {
-                        System.out.println("Please enter your USERNAME and PASSWORD as:");
-                        System.out.println("> login username password");
-                    }
-
-
-                }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
-
-                    myUserID.setUsername(argCommand.get(1));// test
-                    myUserID.setPassword(argCommand.get(2));// test
-
-
-=======
                     continue;
 
                 else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
@@ -87,7 +66,7 @@ public class ThTextUI extends Thread {
                 }else if(argCommand.get(0).equalsIgnoreCase("USER")){  //teste
                     System.out.println(myClient.getMyUserID().toString());
                     continue;
->>>>>>> master
+
 
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
                     continue;
@@ -137,23 +116,6 @@ public class ThTextUI extends Thread {
             }
         }
 
-<<<<<<< HEAD
-    public static void fileReader() {
-
-        Path wiki_path = Paths.get("/Users/diogomiguel/GitHub/SMDProject/src/client/", "manual.txt");
-
-        Charset charset = Charset.forName("ISO-8859-1");
-        try {
-            List<String> lines = Files.readAllLines(wiki_path, charset);
-
-            for (String line : lines) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-
-=======
 
     }
 
@@ -173,7 +135,7 @@ public class ThTextUI extends Thread {
         } finally {
             br.close();
         }
->>>>>>> master
+
     }
 
 }
