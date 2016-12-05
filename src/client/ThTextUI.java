@@ -16,6 +16,7 @@ public class ThTextUI extends Thread {
     public static final int MAX_SIZE = 256;
     Client myClient;
     UserID myUserID;
+
     DatagramPacket packetToDir = null , packetReadDir = null;
 
     ThTextUI(Client x){
@@ -26,7 +27,6 @@ public class ThTextUI extends Thread {
     @Override
     public void run() {
         DatagramSocket socketToDir=null;
-
         String commandStr;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         myUserID=myClient.getMyUserID();
@@ -52,7 +52,9 @@ public class ThTextUI extends Thread {
                 else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
                     try {
                         System.out.println(readObjectFromFile("../SMDProject/src/client/manual.txt"));
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        System.out.println("File not found");
+                    }
                     continue;
 
                 }else if(argCommand.get(0).equalsIgnoreCase("USER")){  //teste
@@ -62,12 +64,31 @@ public class ThTextUI extends Thread {
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
                     continue;
 
-                }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
-                    myUserID.setUsername(argCommand.get(1));// test
-                    myUserID.setPassword(argCommand.get(2));// test
-                    continue;
+                }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+                    if (myClient.getRegistedFlag() == false) {
+                        try {
+                            myUserID.setUsername(argCommand.get(1));
+                            myUserID.setPassword(argCommand.get(2));
+
+                        } catch (Exception e) {
+                            System.out.println("You need to define Username and Password");
+                            continue;
+                        }
+                        packetToDir = new DatagramPacket(("REGISTER" +" "+ argCommand.get(1)+" "+ argCommand.get(2)).getBytes(),("REGISTER" +" "+ argCommand.get(1)+" "+ argCommand.get(2)).length(),myClient.getServerAddr(), myClient.getServerPortCommand());
+                        myClient.setRegistedFlagTrue();
+                        socketToDir.send(packetToDir);
+                        socketToDir.receive(packetReadDir);
+                        String answer = new String(packetReadDir.getData());
+                        System.out.println(answer);
+                        continue;
+                    }
+                    else {
+                        System.out.println("You are already registered");
+                        continue;
+                    }
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
+                    /*
                     System.out.println(myClient.getServerAddr().toString() + " " + myClient.getServerDirCommandPort());
                     packetToDir=new DatagramPacket("SLIST".getBytes(),"SLIST".length(),myClient.getServerAddr(), myClient.getServerPortCommand()); //Create a Packet
                     socketToDir.send(packetToDir);
@@ -75,6 +96,7 @@ public class ThTextUI extends Thread {
                     System.out.println("recebi");
                     String answer = new String(packetReadDir.getData());
                     System.out.println(answer);
+                    */
                     continue;
                 }
                 else{
@@ -107,26 +129,5 @@ public class ThTextUI extends Thread {
             br.close();
         }
     }
-
-
-
-/*//*
-    public static Object readObjectFromFile(String filename) {
-        Object object = null;
-
-        try {
-            InputStream inputStream = new BufferedInputStream(new FileInputStream(filename));
-            ObjectInput objectInput = new ObjectInputStream(inputStream);
-            object = objectInput.readObject();
-            objectInput.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return object;
-    }
-    */
-
-
-
 
 }
