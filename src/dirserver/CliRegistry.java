@@ -1,27 +1,23 @@
 package dirserver;
 
-import dirserver.Registries;
-
 import java.io.*;
 
 /**
- * Created by Samuel on 25/11/2016.
+ * Created by MarceloCortesao on 05/12/16.
  */
-public class ServerRegistry extends Registries{
+public class CliRegistry extends Registries implements Serializable  {
 
-    ServerRegistry(String n,int udp,int tcp,long entry){
-        name=n;
+
+    CliRegistry(String LogAndPass,int udp,int tcp,long entry){
+
+        name = LogAndPass;
         udpPort=udp;
         tcpPort=tcp;
         entryTime=entry;
+
     }
 
-}
-
-
-
-/*
-* public void writeObjectToFile() {
+    public void writeObjectToFile() {
         try {
             OutputStream outputStream = new
                     BufferedOutputStream(new FileOutputStream("../SMDProject/src/dirserver/saveCliRegistry.txt"));
@@ -35,5 +31,11 @@ public class ServerRegistry extends Registries{
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+    }
+
 }
-* */
+
+
+
+
+
