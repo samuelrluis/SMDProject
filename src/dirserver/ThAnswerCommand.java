@@ -43,7 +43,7 @@ public class ThAnswerCommand extends Thread {
                 System.out.println(argCommand.get(1));//teste
                 System.out.println(argCommand.get(2));//teste
                 if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
-                    ServerRegistry cli = new ServerRegistry(argCommand.get(1)+argCommand.get(2),111,222,333); // teste, guardar udp/tcp/entry certos
+                    CliRegistry cli = new CliRegistry(argCommand.get(1)+argCommand.get(2),111,222,333); // teste, guardar udp/tcp/entry certos
                     cli.writeObjectToFile();
                     packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(),packetRead.getPort()); //Create a Packet
                     socket.send(packetWrite);
