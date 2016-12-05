@@ -22,6 +22,7 @@ public class Client {
     InetAddress serverAddr=null;
     int serverPortHB=-1,serverPortCommand=-1;
     UserID myUserID=null;
+    boolean registedFlag = false;
 
 
     Client(InetAddress serverAddress, Integer serverPort,Integer serverPortCommand){
@@ -69,6 +70,15 @@ public class Client {
 
     public int getServerPortCommand(){
         return serverPortCommand;
+    }
+
+    public void setRegistedFlagTrue(){
+        this.registedFlag=true;
+        return;
+    }
+
+    public boolean getRegistedFlag(){
+        return this.registedFlag;
     }
 
     public static void main(String args[]){
