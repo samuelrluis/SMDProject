@@ -6,7 +6,12 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -32,10 +37,11 @@ public class ThTextUI extends Thread {
 
         socketToDir=myClient.getSocketToDir();
 
+
         while(true){
             ArrayList<String> argCommand = new ArrayList<>();
             int x=0;
-            System.out.println("Command: ");
+            System.out.print("> ");
             System.out.flush();
             try {
                 commandStr = br.readLine();
@@ -47,22 +53,24 @@ public class ThTextUI extends Thread {
                 argCommand.add(token);
             }
                 if(argCommand.get(0).equalsIgnoreCase("EXIT"))
-                    break;
+                    System.exit(0);
                 else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
                     System.out.println("Manual");
-                    break;
+                    leFicheiro();
                 }else if(argCommand.get(0).equalsIgnoreCase("USER")){//teste
                     System.out.println(myClient.getMyUserID().toString());
-                    break;
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
-                    break;
+                    if (argCommand.size()!=3) {
+                        System.out.println("Please enter your USERNAME and PASSWORD as:");
+                        System.out.println("> login username password");
+                    }
+
 
                 }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
 
                     myUserID.setUsername(argCommand.get(1));// test
                     myUserID.setPassword(argCommand.get(2));// test
 
-                    break;
 
 
 
@@ -74,7 +82,6 @@ public class ThTextUI extends Thread {
                     System.out.println("recebi");
                     String answer = new String(packetReadDir.getData());
                     System.out.println(answer);
-                    break;
                 }
 
 
@@ -86,17 +93,37 @@ public class ThTextUI extends Thread {
         }
     }
 
-    public static Object readObjectFromFile(String filename) {
-        Object object = null;
+    public static void leFicheiro() {
 
+        Path wiki_path = Paths.get("/Users/diogomiguel/GitHub/SMDProject/src/client/", "manual.txt");
+
+        Charset charset = Charset.forName("ISO-8859-1");
         try {
-            InputStream inputStream = new BufferedInputStream(new FileInputStream(filename));
-            ObjectInput objectInput = new ObjectInputStream(inputStream);
-            object = objectInput.readObject();
-            objectInput.close();
-        } catch (Exception e) {
+            List<String> lines = Files.readAllLines(wiki_path, charset);
+
+            for (String line : lines) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
             System.out.println(e);
         }
-        return object;
+
     }
+
+//    public static List<String> readAllLines(Path path, Charset cs)
+//            throws IOException
+
+//    public static Object readObjectFromFile(String filename) {
+//        Object object = null;
+//
+//        try {
+//            InputStream inputStream = new BufferedInputStream(new FileInputStream(filename));
+//            ObjectInput objectInput = new ObjectInputStream(inputStream);
+//            object = objectInput.readObject();
+//            objectInput.close();
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return object;
+//    }
 }

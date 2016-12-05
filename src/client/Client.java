@@ -89,7 +89,7 @@ public class Client {
 
             thisClient = new Client(serverAddr, serverPortHB,serverPortCommand);
             thisClient.createThreads();
-            thisClient.startThreads();
+            thisClient.startThreads(); // Run the UI / UDP Reader / HeartBeat
 
         }catch (IOException e){
             System.out.println("Erro na recepção de datagrama");
