@@ -54,9 +54,9 @@ public class ThTextUI extends Thread {
             }
                 if(argCommand.get(0).equalsIgnoreCase("EXIT"))
                     System.exit(0);
-                else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
+                else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
                     System.out.println("Manual");
-                    leFicheiro();
+                    fileReader();
                 }else if(argCommand.get(0).equalsIgnoreCase("USER")){//teste
                     System.out.println(myClient.getMyUserID().toString());
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
@@ -93,7 +93,7 @@ public class ThTextUI extends Thread {
         }
     }
 
-    public static void leFicheiro() {
+    public static void fileReader() {
 
         Path wiki_path = Paths.get("/Users/diogomiguel/GitHub/SMDProject/src/client/", "manual.txt");
 
@@ -110,20 +110,4 @@ public class ThTextUI extends Thread {
 
     }
 
-//    public static List<String> readAllLines(Path path, Charset cs)
-//            throws IOException
-
-//    public static Object readObjectFromFile(String filename) {
-//        Object object = null;
-//
-//        try {
-//            InputStream inputStream = new BufferedInputStream(new FileInputStream(filename));
-//            ObjectInput objectInput = new ObjectInputStream(inputStream);
-//            object = objectInput.readObject();
-//            objectInput.close();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return object;
-//    }
 }
