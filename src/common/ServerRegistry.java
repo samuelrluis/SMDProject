@@ -15,7 +15,6 @@ public class ServerRegistry extends Registries{
         tcpPort=tcp;
         entryTime=entry;
     }
-
 }
 
 

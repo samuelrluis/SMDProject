@@ -22,14 +22,16 @@ public class Client {
     InetAddress serverAddr=null;
     int serverPortHB=-1,serverPortCommand=-1;
     CliRegistry myUserID=null;
-    boolean registedFlag = false;
+    Controller myController=null;
 
+    boolean registedFlag = false;
 
     Client(InetAddress serverAddress, Integer serverPort,Integer serverPortCommand){
         myUserID=new CliRegistry();
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
+        myController=new Controller(this);
 
         try {
             socketToDir=new DatagramSocket();
@@ -42,14 +44,21 @@ public class Client {
     public void createThreads(){
         threadUI = new ThTextUI(this);
         threadUDPReader=new ThReaderUDP();        //Thread that will be reading all the received data from DirServer
-        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,socketTCP.getPort(),"xpto");
         //TODO THREAD HEARTBEAT SO E CRIADA E LANÇADA QUANDO O UTILIZADOR SE AUTENTICA
     }
 
     public void startThreads(){
         threadUI.start();
         threadUDPReader.start();
+        //threadHeartBeat.start();
+    }
+    public void startThreadHB(){
+        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,socketTCP.getPort(),myUserID.getName());
         threadHeartBeat.start();
+    }
+
+    public Controller getController() {
+        return myController;
     }
 
     public CliRegistry getMyUserID() {

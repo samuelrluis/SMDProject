@@ -18,6 +18,7 @@ public class ThManageRegs extends Thread {
     public void run() {
         while(true){
             if(regList.size()>0){
+                System.out.println("Registos");
                 for(int i=0;i<regList.size();i++){
                     System.out.println(regList.get(i));
                 }

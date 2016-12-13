@@ -17,30 +17,24 @@ public class ThTextUI extends Thread {
     public static final int MAX_SIZE = 1024;
     Client myClient;
     CliRegistry myUserID;
-    String answer;
-
-    DatagramPacket packetToDir = null , packetReadDir = null;
+    Controller myController;
 
     ThTextUI(Client x){
         myClient=x;
-        packetReadDir = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
+        myController=x.getController();
+        myUserID=myClient.getMyUserID();
     }
 
     @Override
     public void run() {
-        DatagramSocket socketToDir=null;
         String commandStr;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        myUserID=myClient.getMyUserID();
-
-        socketToDir=myClient.getSocketToDir();
 
         while(true){
             ArrayList<String> argCommand = new ArrayList<>();
             int x=0;
             System.out.println("Command: ");
             System.out.flush();
-
 
             try {
                 commandStr = br.readLine();
@@ -53,84 +47,42 @@ public class ThTextUI extends Thread {
 
                 if(argCommand.get(0).equalsIgnoreCase("EXIT"))
                     continue;
-
                 else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
-                    System.out.println(readObjectFromFile("../SMDProject/src/client/manual.txt"));
-                    continue;
-                }else if(argCommand.get(0).equalsIgnoreCase("USER")){  //teste
-                    System.out.println(myClient.getMyUserID().toString());
+                    System.out.println(myController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
                     continue;
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
+                    //TODO implementar login dentro do controlador da mesma forma poderando sempre o uso da classe controlador se necessário
                     continue;
                 }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                     if (myClient.getRegistedFlag() == false) {
-
-                        try {
-                            myUserID.setUserAndPass(argCommand.get(1)+argCommand.get(2));
-                        } catch (Exception e) {
-                            System.out.println("You need to define Username and Password");
-                            continue;
+                        if(argCommand.size()==3)
+                            myController.regClient(argCommand.get(1).toString(),argCommand.get(2).toString());
+                        else{
+                            System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
                         }
-                        packetToDir=null;
-                        String command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
-                        packetToDir = new DatagramPacket(command.getBytes(),command.length(),myClient.getServerAddr(), myClient.getServerPortCommand());
-                        myClient.setRegistedFlagTrue();
-                        socketToDir.send(packetToDir);
-                        socketToDir.receive(packetReadDir);
-                        answer = new String(packetReadDir.getData(),0,packetReadDir.getLength());
+
+                        myController.sendPacket(argCommand);
+                        String answer=myController.receiveAnswerPacket();
                         System.out.println(answer);
-                        continue;
-                    }
-                    else {
+
+                    } else {
                         System.out.println("You are already registered");
                         continue;
                     }
-
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
-                    //TODO falta implmentar funcao enviarDatagram("Command");
-
-                    String command = new String("SLIST");
-                    packetToDir=null;
-                    packetToDir = new DatagramPacket(command.getBytes(),command.length(),myClient.getServerAddr(), myClient.getServerPortCommand());
-                    socketToDir.send(packetToDir);
-                    socketToDir.receive(packetReadDir);
-                    answer = new String(packetReadDir.getData(),0,packetReadDir.getLength());
+                    myController.sendPacket(argCommand);
+                    String answer=myController.receiveAnswerPacket();
                     System.out.println(answer);
-                    continue;
-                }
-                else{
+                } else{
                     System.out.println("Command not found");
                     continue;
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
                     continue;
             } catch (Exception e) {
-                System.out.printf("File not found");
-                continue;
+                e.printStackTrace();
             }
         }
-
-
     }
-
-    private String readObjectFromFile(String file) throws Exception {
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            String everything = sb.toString();
-            return everything;
-        } finally {
-            br.close();
-        }
-    }
-
 }

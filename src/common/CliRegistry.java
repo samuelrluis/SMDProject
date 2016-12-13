@@ -8,6 +8,8 @@ import java.io.*;
  * Created by MarceloCortesao on 05/12/16.
  */
 public class CliRegistry extends Registries implements Serializable  {
+
+    private String name,password;
     private int udpHB,udpReader,tcp;
     private Boolean login;
 
@@ -18,25 +20,35 @@ public class CliRegistry extends Registries implements Serializable  {
         tcp=0;
         login=false;
     }
-    public CliRegistry(String LogAndPass,int udpHB,int udpReader,int tcp ){
 
-        name = LogAndPass;
-        udpHB =udpHB;
-        udpReader=udpReader;
-        tcp=tcp;
+    public CliRegistry(String name,String password,int udpHB,int udpReader,int tcp ){
+        this.name = name;
+
+        udpHB = udpHB;
+        udpReader = udpReader;
+        tcp = tcp;
     }
+
     public String getUsername() {
         return name;
     }
 
-    //Setters
-    public void setUserAndPass(String userAndPass) {
-        this.name = userAndPass;
+    public Boolean getLogin() {
+        return login;
     }
 
-    //public void setPassword(String password) {
-        //this.password = password;
-    //}
+    //Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setLogin(Boolean login) {
+        this.login = login;
+    }
 
     public void setUdpHB(int udpHB) {
         this.udpHB = udpHB;
@@ -53,14 +65,6 @@ public class CliRegistry extends Registries implements Serializable  {
     @Override
     public String toString() {
         return "usernameAndPass"+ name + " " + udpHB + " " + udpReader + " " + tcp;
-    }
-
-    public boolean verifyLogin(String username, String password){
-
-        if(username.toUpperCase().equals(this.name.toUpperCase())==true)
-            return true;
-        return false;
-
     }
 
     public void writeObjectToFile() {
