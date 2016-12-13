@@ -1,6 +1,7 @@
 package client;
 
-import common.UserID;
+import common.CliRegistry;
+
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -13,9 +14,10 @@ import java.util.StringTokenizer;
  * Created by diogomiguel on 25/11/16.
  */
 public class ThTextUI extends Thread {
-    public static final int MAX_SIZE = 256;
+    public static final int MAX_SIZE = 1024;
     Client myClient;
-    UserID myUserID;
+    CliRegistry myUserID;
+    String answer;
 
     DatagramPacket packetToDir = null , packetReadDir = null;
 
@@ -38,47 +40,44 @@ public class ThTextUI extends Thread {
             int x=0;
             System.out.println("Command: ");
             System.out.flush();
+
+
             try {
                 commandStr = br.readLine();
-            StringTokenizer tok = new StringTokenizer(commandStr," ");
+                StringTokenizer tok = new StringTokenizer(commandStr," ");
 
-            while (tok.hasMoreTokens()){
-                String token = tok.nextToken();
-                argCommand.add(token);
-            }
+                while (tok.hasMoreTokens()){
+                    String token = tok.nextToken();
+                    argCommand.add(token);
+                }
+
                 if(argCommand.get(0).equalsIgnoreCase("EXIT"))
                     continue;
 
                 else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
-                    try {
-                        System.out.println(readObjectFromFile("../SMDProject/src/client/manual.txt"));
-                    }catch (Exception e){
-                        System.out.println("File not found");
-                    }
+                    System.out.println(readObjectFromFile("../SMDProject/src/client/manual.txt"));
                     continue;
-
                 }else if(argCommand.get(0).equalsIgnoreCase("USER")){  //teste
                     System.out.println(myClient.getMyUserID().toString());
                     continue;
-
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
                     continue;
-
                 }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                     if (myClient.getRegistedFlag() == false) {
-                        try {
-                            myUserID.setUsername(argCommand.get(1));
-                            myUserID.setPassword(argCommand.get(2));
 
+                        try {
+                            myUserID.setUserAndPass(argCommand.get(1)+argCommand.get(2));
                         } catch (Exception e) {
                             System.out.println("You need to define Username and Password");
                             continue;
                         }
-                        packetToDir = new DatagramPacket(("REGISTER" +" "+ argCommand.get(1)+" "+ argCommand.get(2)).getBytes(),("REGISTER" +" "+ argCommand.get(1)+" "+ argCommand.get(2)).length(),myClient.getServerAddr(), myClient.getServerPortCommand());
+                        packetToDir=null;
+                        String command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
+                        packetToDir = new DatagramPacket(command.getBytes(),command.length(),myClient.getServerAddr(), myClient.getServerPortCommand());
                         myClient.setRegistedFlagTrue();
                         socketToDir.send(packetToDir);
                         socketToDir.receive(packetReadDir);
-                        String answer = new String(packetReadDir.getData());
+                        answer = new String(packetReadDir.getData(),0,packetReadDir.getLength());
                         System.out.println(answer);
                         continue;
                     }
@@ -88,15 +87,15 @@ public class ThTextUI extends Thread {
                     }
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
-                    /*
-                    System.out.println(myClient.getServerAddr().toString() + " " + myClient.getServerDirCommandPort());
-                    packetToDir=new DatagramPacket("SLIST".getBytes(),"SLIST".length(),myClient.getServerAddr(), myClient.getServerPortCommand()); //Create a Packet
+                    //TODO falta implmentar funcao enviarDatagram("Command");
+
+                    String command = new String("SLIST");
+                    packetToDir=null;
+                    packetToDir = new DatagramPacket(command.getBytes(),command.length(),myClient.getServerAddr(), myClient.getServerPortCommand());
                     socketToDir.send(packetToDir);
                     socketToDir.receive(packetReadDir);
-                    System.out.println("recebi");
-                    String answer = new String(packetReadDir.getData());
+                    answer = new String(packetReadDir.getData(),0,packetReadDir.getLength());
                     System.out.println(answer);
-                    */
                     continue;
                 }
                 else{
@@ -105,7 +104,11 @@ public class ThTextUI extends Thread {
                 }
 
             } catch (IOException e) {
+                e.printStackTrace();
+                    continue;
+            } catch (Exception e) {
                 System.out.printf("File not found");
+                continue;
             }
         }
 

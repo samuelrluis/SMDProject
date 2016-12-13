@@ -2,6 +2,8 @@ package dirserver; /**
  * Created by Samuel on 29/10/2016.
  */
 
+import common.Registries;
+
 import java.net.*;
 import java.util.ArrayList;
 
@@ -38,7 +40,7 @@ import static java.lang.Integer.parseInt;
         //Threads Heartbeat
         threadHbServer = new ThAnswerHeartBeat(socketServers,registries);  //Create Thread To receive HB from Servers
         threadHbClients = new ThAnswerHeartBeat(socketClientsHB,registries); //Create Thread To receive HB from Clients
-        threadCommand = new ThAnswerCommand(socketClientsCommand); // Create Thread to Receive and Answer Commands from Clients
+        threadCommand = new ThAnswerCommand(socketClientsCommand, this); // Create Thread to Receive and Answer Commands from Clients
         threadManageRegs = new ThManageRegs(registries);
 
         //Start Threads
@@ -48,11 +50,33 @@ import static java.lang.Integer.parseInt;
         threadManageRegs.start();
     }
 
+     //TODO passar este metodo para a class DirServer
+     public String getListServ(){
+         int x=0;
+         String List = null;
+         try {
+             int regSize = registries.size();
+             while (x==regSize) {
+                 List += "1" + registries.get(x).getName() + "\t";
+                 x++;
+             }
+         }catch(Exception e){
+             return  "No Server's Connected";
+         }
+         if (List==null)
+             return "No Server's Connected";
+         return List;
+     }
+
+
+
     public static void main(String[] args) {
         DirectoryServer myServer=null;
         myServer=new DirectoryServer();
     }
 }
+
+
 
 
 

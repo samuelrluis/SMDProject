@@ -1,6 +1,6 @@
 package client;
 
-import common.UserID;
+import common.CliRegistry;
 
 import java.io.*;
 import java.net.*;
@@ -21,12 +21,12 @@ public class Client {
     Socket socketTCP=null;
     InetAddress serverAddr=null;
     int serverPortHB=-1,serverPortCommand=-1;
-    UserID myUserID=null;
+    CliRegistry myUserID=null;
     boolean registedFlag = false;
 
 
     Client(InetAddress serverAddress, Integer serverPort,Integer serverPortCommand){
-        myUserID=new UserID();
+        myUserID=new CliRegistry();
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
@@ -52,7 +52,7 @@ public class Client {
         threadHeartBeat.start();
     }
 
-    public UserID getMyUserID() {
+    public CliRegistry getMyUserID() {
         return myUserID;
     }
 

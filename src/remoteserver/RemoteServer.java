@@ -7,10 +7,13 @@ import java.net.*;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
+
 public class RemoteServer {
+  public   static int id=0; //TODO o ID nao esta a gerar automaticamente
     static AtomicInteger nextId = new AtomicInteger();
     private String name;
-    private int id;
+    //private int id;
     ServerSocket serverSocketTcp = null; //TCP
     DatagramSocket serverSocketUdp = null; //UDP
     InetAddress myAddress=null;
@@ -21,11 +24,12 @@ public class RemoteServer {
 
     RemoteServer(InetAddress address,int udp){
         id = nextId.incrementAndGet();
-        name="RemoteServer" + id + " ";
+        name="RemoteServer" + id;
         myAddress=address;
         myUdpPort=0;
         myTcpPort=0;
         serverDirPort=udp;
+        id++;
     }
 
     private void awaitsForNewClient(){

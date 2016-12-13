@@ -1,5 +1,7 @@
 package dirserver;
 
+import common.Registries;
+
 import java.util.ArrayList;
 
 /**
@@ -26,5 +28,13 @@ public class ThManageRegs extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+    public String getListServ (){
+        int x=0;
+        String List = null;
+        while(regList.get(x)!=null){
+            List += regList.get(x).getName()+ "\t";
+        }
+        return List;
     }
 }
