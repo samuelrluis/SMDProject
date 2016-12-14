@@ -1,6 +1,9 @@
 package dirserver;
 
+
 import common.HeartBeat;
+import common.Registries;
+import common.ServerRegistry;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,13 +33,11 @@ public class ThAnswerHeartBeat extends Thread{
         try {
             while(true){
                 socket.receive(packet);
-
                 //Codigo para TCP
                 ByteArrayInputStream Bin = new ByteArrayInputStream(packet.getData());
                 ObjectInputStream in = new ObjectInputStream(Bin);
                 hBeat=(HeartBeat) in.readObject();
                 regList.add(new ServerRegistry(hBeat.getName(),hBeat.getUdpPort(),hBeat.getTcpPort(),System.nanoTime()));
-
             }
         } catch (IOException e) {
             System.out.println("Error Receiving Datagram Packet");
@@ -45,3 +46,4 @@ public class ThAnswerHeartBeat extends Thread{
         }
     }
 }
+

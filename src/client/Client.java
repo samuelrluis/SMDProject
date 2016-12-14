@@ -1,6 +1,6 @@
 package client;
 
-import common.UserID;
+import common.CliRegistry;
 
 import java.io.*;
 import java.net.*;
@@ -21,14 +21,17 @@ public class Client {
     Socket socketTCP=null;
     InetAddress serverAddr=null;
     int serverPortHB=-1,serverPortCommand=-1;
-    UserID myUserID=null;
+    CliRegistry myUserID=null;
+    Controller myController=null;
 
+    boolean registedFlag = false;
 
     Client(InetAddress serverAddress, Integer serverPort,Integer serverPortCommand){
-        myUserID=new UserID();
+        myUserID=new CliRegistry();
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
+        myController=new Controller(this);
 
         try {
             socketToDir=new DatagramSocket();
@@ -41,17 +44,24 @@ public class Client {
     public void createThreads(){
         threadUI = new ThTextUI(this);
         threadUDPReader=new ThReaderUDP();        //Thread that will be reading all the received data from DirServer
-        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,socketTCP.getPort(),"xpto");
         //TODO THREAD HEARTBEAT SO E CRIADA E LANÇADA QUANDO O UTILIZADOR SE AUTENTICA
     }
 
     public void startThreads(){
         threadUI.start();
         threadUDPReader.start();
+        //threadHeartBeat.start();
+    }
+    public void startThreadHB(){
+        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,socketTCP.getPort(),myUserID.getName());
         threadHeartBeat.start();
     }
 
-    public UserID getMyUserID() {
+    public Controller getController() {
+        return myController;
+    }
+
+    public CliRegistry getMyUserID() {
         return myUserID;
     }
 
@@ -69,6 +79,15 @@ public class Client {
 
     public int getServerPortCommand(){
         return serverPortCommand;
+    }
+
+    public void setRegistedFlagTrue(){
+        this.registedFlag=true;
+        return;
+    }
+
+    public boolean getRegistedFlag(){
+        return this.registedFlag;
     }
 
     public static void main(String args[]){

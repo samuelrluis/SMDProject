@@ -1,6 +1,7 @@
 package client;
 
-import common.UserID;
+import common.CliRegistry;
+
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -13,83 +14,75 @@ import java.util.StringTokenizer;
  * Created by diogomiguel on 25/11/16.
  */
 public class ThTextUI extends Thread {
-    public static final int MAX_SIZE = 256;
+    public static final int MAX_SIZE = 1024;
     Client myClient;
-    UserID myUserID;
-    DatagramPacket packetToDir = null , packetReadDir = null;
+    CliRegistry myUserID;
+    Controller myController;
 
     ThTextUI(Client x){
         myClient=x;
-        packetReadDir = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
+        myController=x.getController();
+        myUserID=myClient.getMyUserID();
     }
 
     @Override
     public void run() {
-        DatagramSocket socketToDir=null;
-
         String commandStr;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        myUserID=myClient.getMyUserID();
-
-        socketToDir=myClient.getSocketToDir();
 
         while(true){
             ArrayList<String> argCommand = new ArrayList<>();
             int x=0;
             System.out.println("Command: ");
             System.out.flush();
+
             try {
                 commandStr = br.readLine();
+                StringTokenizer tok = new StringTokenizer(commandStr," ");
 
-            StringTokenizer tok = new StringTokenizer(commandStr," ");
-
-            while (tok.hasMoreTokens()){
-                String token = tok.nextToken();
-                argCommand.add(token);
-            }
-                if(argCommand.get(0).equalsIgnoreCase("EXIT"))
-                    break;
-                else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
-                    System.out.println("Manual");
-                }else if(argCommand.get(0).equalsIgnoreCase("USER")){//teste
-                    System.out.println(myClient.getMyUserID().toString());
-                }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
-
-                }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
-                    myUserID.setUsername(argCommand.get(1));
-                    myUserID.setPassword(argCommand.get(2));
-
-
-                }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
-                    System.out.println(myClient.getServerAddr().toString() + " " + myClient.getServerDirCommandPort());
-                    packetToDir=new DatagramPacket("SLIST".getBytes(),"SLIST".length(),myClient.getServerAddr(), myClient.getServerPortCommand()); //Create a Packet
-                    socketToDir.send(packetToDir);
-                    socketToDir.receive(packetReadDir);
-                    System.out.println("recebi");
-                    String answer = new String(packetReadDir.getData());
-                    System.out.println(answer);
+                while (tok.hasMoreTokens()){
+                    String token = tok.nextToken();
+                    argCommand.add(token);
                 }
 
+                if(argCommand.get(0).equalsIgnoreCase("EXIT"))
+                    continue;
+                else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
+                    System.out.println(myController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
+                    continue;
+                }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
+                    //TODO implementar login dentro do controlador da mesma forma poderando sempre o uso da classe controlador se necessário
+                    continue;
+                }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+                    if (myClient.getRegistedFlag() == false) {
+                        if(argCommand.size()==3)
+                            myController.regClient(argCommand.get(1).toString(),argCommand.get(2).toString());
+                        else{
+                            System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
+                        }
 
+                        myController.sendPacket(argCommand);
+                        String answer=myController.receiveAnswerPacket();
+                        System.out.println(answer);
 
-
+                    } else {
+                        System.out.println("You are already registered");
+                        continue;
+                    }
+                }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
+                    myController.sendPacket(argCommand);
+                    String answer=myController.receiveAnswerPacket();
+                    System.out.println(answer);
+                } else{
+                    System.out.println("Command not found");
+                    continue;
+                }
             } catch (IOException e) {
-                System.out.printf("Não foi encontrado o ficheiro do Manual");
+                e.printStackTrace();
+                    continue;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-    }
-
-    public static Object readObjectFromFile(String filename) {
-        Object object = null;
-
-        try {
-            InputStream inputStream = new BufferedInputStream(new FileInputStream(filename));
-            ObjectInput objectInput = new ObjectInputStream(inputStream);
-            object = objectInput.readObject();
-            objectInput.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return object;
     }
 }
