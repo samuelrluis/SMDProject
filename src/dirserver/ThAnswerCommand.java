@@ -44,7 +44,7 @@ public class ThAnswerCommand extends Thread {
                 }
                 //---------------------- trata comandos
                 if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
-                    CliRegistry cli = new CliRegistry(argCommand.get(1),argCommand.get(2),111,222,333);
+                    CliRegistry cli = new CliRegistry(argCommand.get(1),argCommand.get(2),111,333,333);
                     cli.writeObjectToFile();
                     packetWrite = new DatagramPacket("Registered successfully\0".getBytes(), "Registered successfully\0".length(), packetRead.getAddress(),packetRead.getPort()); //Create a Packet
                     socket.send(packetWrite);

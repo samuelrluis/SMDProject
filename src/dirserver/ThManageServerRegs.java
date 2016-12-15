@@ -9,23 +9,20 @@ import java.util.ArrayList;
 /**
  * Created by Samuel on 26/11/2016.
  */
-public class ThManageRegs extends Thread {
-    ArrayList<CliRegistry> cliRegistries = null;
+public class ThManageServerRegs extends Thread {
     ArrayList<ServerRegistry> serverRegistries = null;
 
-    ThManageRegs(ArrayList<CliRegistry> regClients, ArrayList<ServerRegistry> regServers){
-        cliRegistries=regClients;
+    ThManageServerRegs(ArrayList<ServerRegistry> regServers){
         serverRegistries=regServers;
-
     }
 
     @Override
     public void run() {
         while(true){
-            if(regList.size()>0){
-                System.out.println("Registos");
-                for(int i=0;i<regList.size();i++){
-                    System.out.println(regList.get(i));
+            if(serverRegistries.size()>0){
+                System.out.println("Registos Server");
+                for(int i=0;i<serverRegistries.size();i++){
+                    System.out.println(serverRegistries.get(i));
                 }
             }
             try {
