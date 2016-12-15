@@ -51,25 +51,46 @@ public class ThTextUI extends Thread {
                     System.out.println(myController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
                     continue;
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
-                    //TODO implementar login dentro do controlador da mesma forma poderando sempre o uso da classe controlador se necessário
-                    continue;
+                    if(myClient.getLoginFlag()==false) {
+                        if (argCommand.size() == 3) {
+                            myController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                            myController.sendPacket(argCommand);
+                            String answer=myController.receiveAnswerPacket();
+                            System.out.println(answer);
+                            //TODO fazer setLoginFlagTrue so se houver um retorno positivo
+                            myClient.setloginFlagTrue();
+                        }
+                        else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND LOGIN");
+                        }
+                        continue;
+                    }
+                    else {
+                        System.out.println("You are already Logged");
+                        continue;
+                    }
                 }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                     if (myClient.getRegistedFlag() == false) {
-                        if(argCommand.size()==3)
-                            myController.regClient(argCommand.get(1).toString(),argCommand.get(2).toString());
+                        if(argCommand.size()==3) {
+                            myController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                            myController.sendPacket(argCommand);
+                            String answer=myController.receiveAnswerPacket();
+                            System.out.println(answer);
+                            continue;
+                        }
                         else{
                             System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
                         }
-
-                        myController.sendPacket(argCommand);
-                        String answer=myController.receiveAnswerPacket();
-                        System.out.println(answer);
-
                     } else {
                         System.out.println("You are already registered");
                         continue;
                     }
+
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
+                    if(myClient.getRegistedFlag()==false){
+                       System.out.println("To use this command you need to be logged in");
+                       continue;
+                    }
                     myController.sendPacket(argCommand);
                     String answer=myController.receiveAnswerPacket();
                     System.out.println(answer);

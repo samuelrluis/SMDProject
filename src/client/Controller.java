@@ -23,10 +23,8 @@ public class Controller {
     public String receiveAnswerPacket(){
         DatagramSocket socketToDir;
         DatagramPacket packetReadDir;
-
         packetReadDir = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
         socketToDir=myClient.getSocketToDir();
-
 
         try {
             socketToDir.receive(packetReadDir);
@@ -41,13 +39,14 @@ public class Controller {
         DatagramSocket socketToDir;
         DatagramPacket packetToDir;
         String command=null;
-
         socketToDir=myClient.getSocketToDir();
 
         if(argCommand.get(0).equalsIgnoreCase("SLIST"))
             command = new String("SLIST");
         else if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
+        else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
+            command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
 
         packetToDir = new DatagramPacket(command.getBytes(),command.length(),myClient.getServerAddr(), myClient.getServerPortCommand());
 
@@ -61,11 +60,19 @@ public class Controller {
     public void regClient(String name, String pass){
         myClient.myUserID.setName(name);
         myClient.myUserID.setPassword(pass);
-
+        myClient.setRegistedFlagTrue();
         System.out.println("reg client name: " + name + myClient.myUserID.getName());
-
         myClient.startThreadHB();   //The HeartBeat Thread will start only when the userID is prepared
+        return;
     }
+
+    public void loginClient(String name,String pass){
+        myClient.myUserID.setName(name);
+        myClient.myUserID.setPassword(pass);
+        myClient.setRegistedFlagTrue();
+        return;
+    }
+
 
     public String readObjectFromFile(String file) throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(file));

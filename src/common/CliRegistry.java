@@ -29,8 +29,8 @@ public class CliRegistry extends Registries implements Serializable  {
         tcp = tcp;
     }
 
-    public String getUsername() {
-        return name;
+    public String getName() {
+        return this.name;
     }
 
     public Boolean getLogin() {

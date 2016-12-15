@@ -53,19 +53,13 @@ import static java.lang.Integer.parseInt;
      //TODO passar este metodo para a class DirServer
      public String getListServ(){
          int x=0;
-         String List = null;
-         try {
-             int regSize = registries.size();
-             while (x==regSize) {
-                 List += "1" + registries.get(x).getName() + "\t";
-                 x++;
+         StringBuilder List = new StringBuilder();
+         for(int i = 0;i<registries.size();i++) {
+             List.append(registries.get(i).getName()+"\n");
              }
-         }catch(Exception e){
-             return  "No Server's Connected";
-         }
          if (List==null)
              return "No Server's Connected";
-         return List;
+         return List.toString();
      }
 
 
