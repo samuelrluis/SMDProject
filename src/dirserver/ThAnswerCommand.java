@@ -48,8 +48,15 @@ public class ThAnswerCommand extends Thread {
                     cli.writeObjectToFile();
                     packetWrite = new DatagramPacket("Registered successfully\0".getBytes(), "Registered successfully\0".length(), packetRead.getAddress(),packetRead.getPort()); //Create a Packet
                     socket.send(packetWrite);
-//                    System.out.println(answer);// test
+//                   System.out.println(answer);// test
                     continue;
+                }
+                else if(argCommand.get(0).equalsIgnoreCase("LOGIN")) {
+                    //TODO falta implementar a verificaçao no ficheiro de registos
+                    packetWrite = new DatagramPacket("Login successfully\0".getBytes(), "Login successfully\0".length(), packetRead.getAddress(),packetRead.getPort());
+                    socket.send(packetWrite);
+                    continue;
+
                 }
                 else if(argCommand.get(0).equalsIgnoreCase("SLIST")){
                     System.out.println(ServL.getListServ());

@@ -23,8 +23,8 @@ public class Client {
     int serverPortHB=-1,serverPortCommand=-1;
     CliRegistry myUserID=null;
     Controller myController=null;
-
     boolean registedFlag = false;
+    boolean loginFlag = false;
 
     Client(InetAddress serverAddress, Integer serverPort,Integer serverPortCommand){
         myUserID=new CliRegistry();
@@ -52,6 +52,7 @@ public class Client {
         threadUDPReader.start();
         //threadHeartBeat.start();
     }
+
     public void startThreadHB(){
         threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,socketTCP.getPort(),myUserID.getName());
         threadHeartBeat.start();
@@ -86,8 +87,17 @@ public class Client {
         return;
     }
 
+    public void setloginFlagTrue(){
+        this.loginFlag=true;
+        return;
+    }
+
     public boolean getRegistedFlag(){
         return this.registedFlag;
+    }
+
+    public boolean getLoginFlag(){
+        return this.loginFlag;
     }
 
     public static void main(String args[]){
