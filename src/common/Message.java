@@ -7,10 +7,15 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
     String command;
+    ClientHeartBeat hBeat;
 
-    public Message(String command) {
-        this.command=command;
+    public ClientHeartBeat gethBeat() {
+        return hBeat;
+    }
 
+    public Message(String command, ClientHeartBeat hBeat) {
+        this.command = command;
+        this.hBeat = hBeat;
     }
 
     public String getCommand() {

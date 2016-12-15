@@ -1,6 +1,7 @@
 package client;
 
 import common.CliRegistry;
+import common.ClientHeartBeat;
 
 import java.io.*;
 import java.net.*;
@@ -27,7 +28,7 @@ public class Client {
     boolean loginFlag = false;
 
     Client(InetAddress serverAddress, Integer serverPort,Integer serverPortCommand){
-        myUserID=new CliRegistry();
+        myUserID=new CliRegistry(new ClientHeartBeat(),0);
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
@@ -54,7 +55,7 @@ public class Client {
     }
 
     public void startThreadHB(){
-        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,socketTCP.getPort(),myUserID.getName(),myUserID.getPassword());
+        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,this);
         threadHeartBeat.start();
     }
 

@@ -6,38 +6,25 @@ import java.io.*;
  * Created by MarceloCortesao on 05/12/16.
  */
 public class CliRegistry extends Registry implements Serializable  {
-
-    private String name,password;
-    private int udpHB,udpReader,tcp;
     private Boolean login;
-
+    private ClientHeartBeat hBeat;
 
     public CliRegistry(){
-        name="User";
-        udpHB=0;
-        udpReader=0;
-        tcp=0;
-        login=false;
+        hBeat = null;
+        login = false;
     }
 
-    public CliRegistry(String name,String password,int udpHB,int tcp,long entry){
-        this.name = name;
-        this.udpHB = udpHB;
-        this.udpReader = udpReader;
-        this.tcp = tcp;
+    public CliRegistry(ClientHeartBeat hBeat,long entry){
+        this.hBeat = hBeat;
         this.entryTime = entry;
     }
 
     public String getName() {
-        return this.name;
+        return this.hBeat.getName();
     }
 
     public String getPassword() {
-        return password;
-    }
-
-    public Boolean getLogin() {
-        return login;
+        return this.hBeat.getPassword();
     }
 
     //Setters
@@ -46,28 +33,16 @@ public class CliRegistry extends Registry implements Serializable  {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.hBeat.setPassword(password);
     }
 
-    public void setLogin(Boolean login) {
-        this.login = login;
-    }
-
-    public void setUdpHB(int udpHB) {
-        this.udpHB = udpHB;
-    }
-
-    public void setUdpReader(int udpReader) {
-        this.udpReader = udpReader;
-    }
-
-    public void setTcp(int tcp) {
-        this.tcp = tcp;
+    public ClientHeartBeat gethBeat() {
+        return hBeat;
     }
 
     @Override
     public String toString() {
-        return "usernameAndPass"+ name + " " + udpHB + " " + udpReader + " " + tcp;
+        return "usernameAndPass"+ name + " " + this.hBeat.getUdpPort() + " " + this.hBeat.getTcpPort();
     }
 
     public void writeObjectToFile() {

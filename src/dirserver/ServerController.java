@@ -26,10 +26,15 @@ public class ServerController {
         packetRead=Serv.getPacket();
     }
 
+    private void updateRegistries(){
+
+    }
+
     private void receivedCommand(Message message){
         ArrayList<String> argCommand=new ArrayList<>();
 
         String commandStr = message.getCommand();
+        ClientHeartBeat hBeat = message.gethBeat();
         StringTokenizer tok = new StringTokenizer(commandStr," ");
 
         while (tok.hasMoreTokens()){
@@ -39,11 +44,10 @@ public class ServerController {
         //---------------------- trata comandos
         try{
             if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
-                CliRegistry cli = new CliRegistry(argCommand.get(1),argCommand.get(2),111,333,333);
+                CliRegistry cli = new CliRegistry(hBeat,333);
                 cli.writeObjectToFile();
                 packetWrite = new DatagramPacket("Registered successfully\0".getBytes(), "Registered successfully\0".length(), packetRead.getAddress(),packetRead.getPort()); //Create a Packet
                 socket.send(packetWrite);
-//                   System.out.println(answer);// test
             }
             else if(argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 //TODO falta implementar a verificaçao no ficheiro de registos
@@ -64,13 +68,13 @@ public class ServerController {
         ArrayList <CliRegistry> cliRegistries = Serv.getCliRegistries();
 
         if(cliRegistries.size()==0)
-            cliRegistries.add(new CliRegistry(hBeat.getName(), hBeat.getPassword(), hBeat.getUdpPort(), hBeat.getTcpPort(), System.nanoTime()));
+            cliRegistries.add(new CliRegistry(hBeat, System.nanoTime()));
         else{
             for (int i = 0; i < cliRegistries.size(); i++) {
                 if (cliRegistries.get(i).getName().equalsIgnoreCase(hBeat.getName()))
                     cliRegistries.get(i).setEntryTime();
                 else
-                    cliRegistries.add(new CliRegistry(hBeat.getName(),hBeat.getPassword(), hBeat.getUdpPort(), hBeat.getTcpPort(), System.nanoTime()));
+                    cliRegistries.add(new CliRegistry(hBeat, System.nanoTime()));
             }
         }
     }
@@ -79,19 +83,20 @@ public class ServerController {
         ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
 
         if(serverRegistries.size()==0)
-            serverRegistries.add(new ServerRegistry(hBeat.getName(), hBeat.getUdpPort(), hBeat.getTcpPort(), System.nanoTime()));
+            serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
         else{
             for (int i = 0; i < serverRegistries.size(); i++) {
-                if (serverRegistries.get(i).getName().equalsIgnoreCase(hBeat.getName()))
+                if (serverRegistries.get(i).gethBeat().getName().equalsIgnoreCase(hBeat.getName())){
                     serverRegistries.get(i).setEntryTime();
-                else{
-                    serverRegistries.add(new ServerRegistry(hBeat.getName(), hBeat.getUdpPort(), hBeat.getTcpPort(), System.nanoTime()));
+                } else{
+                    serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
                 }
             }
         }
     }
 
     public void answeringDatagram(){
+        //This is the principal function in our DirServer Controller;
         while(true){
             try{
                 socket.receive(packetRead);

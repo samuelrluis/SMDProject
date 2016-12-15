@@ -18,10 +18,10 @@ public class ThSendHeartBeat extends Thread {
     private ByteArrayOutputStream b0ut;
     private ObjectOutputStream out;
 
-    ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, int tcpPort, String name,String password){
+    ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, Client myClient){
         try{
             socketHeartBeat = new DatagramSocket();                        //Create Socket to send the HeartBeat
-            myHeartBeat=new ClientHeartBeat(name,password,serverPortToDirectory,tcpPort); //Create the HeartBeat Serializable Object
+            myHeartBeat = myClient.getMyUserID().gethBeat();               //Create the HeartBeat Serializable Object
             b0ut = new ByteArrayOutputStream();                            //Create an array of byte in OutputStream
             out = new ObjectOutputStream(b0ut);                            //Place the ArrayOutputStream in the OBjectOutputSream
             out.writeObject(myHeartBeat);                                  //Write the Heartbeat on the object

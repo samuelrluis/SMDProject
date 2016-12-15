@@ -54,7 +54,7 @@ public class Controller {
         //TODO Create a message serializable here
 
         try {
-            Message msg=new Message(command);
+            Message msg = new Message(command,myClient.getMyUserID().gethBeat());
             b0ut = new ByteArrayOutputStream();
             out = new ObjectOutputStream(b0ut);
             out.writeObject(msg);
