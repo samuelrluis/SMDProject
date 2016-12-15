@@ -1,6 +1,8 @@
 package dirserver;
 
+import common.CliRegistry;
 import common.Registries;
+import common.ServerRegistry;
 
 import java.util.ArrayList;
 
@@ -8,10 +10,13 @@ import java.util.ArrayList;
  * Created by Samuel on 26/11/2016.
  */
 public class ThManageRegs extends Thread {
-    ArrayList<Registries> regList=null;
+    ArrayList<CliRegistry> cliRegistries = null;
+    ArrayList<ServerRegistry> serverRegistries = null;
 
-    ThManageRegs(ArrayList<Registries> reg){
-        regList=reg;
+    ThManageRegs(ArrayList<CliRegistry> regClients, ArrayList<ServerRegistry> regServers){
+        cliRegistries=regClients;
+        serverRegistries=regServers;
+
     }
 
     @Override
@@ -29,13 +34,5 @@ public class ThManageRegs extends Thread {
                 e.printStackTrace();
             }
         }
-    }
-    public String getListServ (){
-        int x=0;
-        String List = null;
-        while(regList.get(x)!=null){
-            List += regList.get(x).getName()+ "\t";
-        }
-        return List;
     }
 }

@@ -20,7 +20,7 @@ public class ThSendHeartBeat extends Thread {
     ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, int tcpPort, String name){
         try{
             socketHeartBeat = new DatagramSocket();                        //Create Socket to send the HeartBeat
-            myHeartBeat=new HeartBeat(name,serverPortToDirectory,tcpPort); //Create the HeartBeat Serializable Object
+            myHeartBeat=new HeartBeat(name,"client",serverPortToDirectory,tcpPort); //Create the HeartBeat Serializable Object
             b0ut = new ByteArrayOutputStream();                            //Create an array of byte in OutputStream
             out = new ObjectOutputStream(b0ut);                            //Place the ArrayOutputStream in the OBjectOutputSream
             out.writeObject(myHeartBeat);                                  //Write the Heartbeat on the object

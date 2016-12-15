@@ -21,7 +21,7 @@ public class CliRegistry extends Registries implements Serializable  {
         login=false;
     }
 
-    public CliRegistry(String name,String password,int udpHB,int udpReader,int tcp ){
+    public CliRegistry(String name,String password,int udpHB,int udpReader,int tcp,long entry){
         this.name = name;
 
         udpHB = udpHB;
@@ -70,7 +70,7 @@ public class CliRegistry extends Registries implements Serializable  {
     public void writeObjectToFile() {
         try {
             OutputStream outputStream = new
-                    BufferedOutputStream(new FileOutputStream("../SMDProject/src/dirserver/saveCliRegistry.obj"));
+                    BufferedOutputStream(new FileOutputStream("../SMDProject/src/dirserver/saveCliRegistry.txt"));
             ObjectOutput objectOutput = new
                     ObjectOutputStream(outputStream);
             objectOutput.writeObject(this);
