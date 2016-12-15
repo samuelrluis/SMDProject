@@ -3,8 +3,9 @@ package common;
 /**
  * Created by Samuel on 25/11/2016.
  */
-public abstract class Registries {
+public abstract class Registry {
     String name;
+    long entryTime;
 
     public String getName(){
         return name;
@@ -13,5 +14,9 @@ public abstract class Registries {
     @Override
     public String toString() {
         return name;
+    }
+
+    public void setEntryTime() {
+        this.entryTime = System.nanoTime();
     }
 }

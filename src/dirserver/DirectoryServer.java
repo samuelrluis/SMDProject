@@ -4,72 +4,76 @@ package dirserver; /**
 
 import common.CliRegistry;
 import common.ServerRegistry;
-
 import java.net.*;
 import java.util.ArrayList;
 
-import static java.lang.Integer.parseInt;
 
  public class DirectoryServer {
-
-    private DatagramSocket socketServers = null,socketClientsHB = null,socketClientsCommand = null;
-    private ThAnswerHeartBeat threadHbServer = null, threadHbClients = null;
-    private ThAnswerCommand threadCommand = null;
-    private ThManageServerRegs threadManageRegs = null;
+    public static final int MAX_SIZE = 256;
+    private DatagramSocket socketUDP=null;
     private ArrayList<CliRegistry> cliRegistries = null;
     private ArrayList<ServerRegistry> serverRegistries = null;
     private ServerController Scontroller = null;
+    private DatagramPacket packet = null;
 
-    DirectoryServer(){
+     public DirectoryServer(){
+        createSocket();
+        createPacket();
         Scontroller=new ServerController(this);
         cliRegistries=new ArrayList<>();
         serverRegistries=new ArrayList<>();
-        createSockets();
-        createThreads();
+
     }
 
-    public void createSockets(){
-        //Creating Sockets
+    public void createSocket(){
+        //Creating SocketUDP
         try {
-            //TODO PASSAR ESTES PORTOS COMO ARGUMENTO
-            socketServers = new DatagramSocket(6001);
-            socketClientsHB = new DatagramSocket(6002);
-            socketClientsCommand = new DatagramSocket(6003);
-
+            socketUDP = new DatagramSocket(6001);
         } catch (SocketException e) {
             System.out.println("Error Creating Sockets");
         }
     }
 
-    public void createThreads(){
+    public void createPacket(){
+        packet = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
+    }
+
+     public DatagramSocket getSocketUDP() {
+         return socketUDP;
+     }
+
+     public DatagramPacket getPacket() {
+         return packet;
+     }
+
+
+// public void createThreads(){
         //Threads Heartbeat
-        threadHbServer = new ThAnswerHeartBeat(socketServers,cliRegistries,serverRegistries);  //Create Thread To receive HB from Servers
+
+        /*threadHbServer = new ThAnswerHeartBeat(socketServers,cliRegistries,serverRegistries);  //Create Thread To receive HB from Servers
         threadHbClients = new ThAnswerHeartBeat(socketClientsHB,cliRegistries,serverRegistries); //Create Thread To receive HB from Clients
         threadCommand = new ThAnswerCommand(socketClientsCommand, this); // Create Thread to Receive and Answer Commands from Clients
-        threadManageRegs = new ThManageServerRegs(serverRegistries);
+        threadManageServRegs = new ThManageServerRegs(serverRegistries); // Create Thread that will Manage the Server Registry
+        threadManageCliRegs = new ThManageClientRegs(cliRegistries); //Create Thread that will Manage the Client Registry*/
 
-        //Start Threads
+/*        //Start Threads
         threadHbServer.start();
         threadHbClients.start();
         threadCommand.start();
-        threadManageRegs.start();
+        threadManageServRegs.start();
+        threadManageCliRegs.start();
+    }
+*/;
+
+    public void runDirServeR(){
+        Scontroller.answeringDatagram();
     }
 
-/*     //TODO passar este metodo para a class DirServer
-     public String getListServ(){
-         int x=0;
-         StringBuilder List = new StringBuilder();
-         for(int i = 0;i<registries.size();i++) {
-             List.append(i+":"+registries.get(i).getName()+"\n");
-             }
-         if (List==null)
-             return "No Server's Connected";
-         return List.toString();
-     }*/
-
-    public static void main(String[] args) {
+    public static void main(String args[]) {
         DirectoryServer myServer=null;
         myServer=new DirectoryServer();
+
+        myServer.runDirServeR();
     }
 
      public ArrayList<ServerRegistry> getServerRegistries() {

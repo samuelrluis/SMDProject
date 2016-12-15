@@ -7,8 +7,6 @@ import java.net.*;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
-
 public class RemoteServer {
     private String name;
     ServerSocket serverSocketTcp = null; //TCP

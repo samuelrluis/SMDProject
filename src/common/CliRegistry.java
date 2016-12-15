@@ -1,17 +1,16 @@
 package common;
 
-import common.Registries;
-
 import java.io.*;
 
 /**
  * Created by MarceloCortesao on 05/12/16.
  */
-public class CliRegistry extends Registries implements Serializable  {
+public class CliRegistry extends Registry implements Serializable  {
 
     private String name,password;
     private int udpHB,udpReader,tcp;
     private Boolean login;
+
 
     public CliRegistry(){
         name="User";
@@ -23,14 +22,18 @@ public class CliRegistry extends Registries implements Serializable  {
 
     public CliRegistry(String name,String password,int udpHB,int tcp,long entry){
         this.name = name;
-
-        udpHB = udpHB;
-        udpReader = udpReader;
-        tcp = tcp;
+        this.udpHB = udpHB;
+        this.udpReader = udpReader;
+        this.tcp = tcp;
+        this.entryTime = entry;
     }
 
     public String getName() {
         return this.name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public Boolean getLogin() {

@@ -15,9 +15,9 @@ import java.util.StringTokenizer;
  */
 public class ThTextUI extends Thread {
     public static final int MAX_SIZE = 1024;
-    Client myClient;
-    CliRegistry myUserID;
-    Controller myController;
+    private Client myClient;
+    private CliRegistry myUserID;
+    private Controller myController;
 
     ThTextUI(Client x){
         myClient=x;

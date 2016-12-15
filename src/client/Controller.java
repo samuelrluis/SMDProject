@@ -1,9 +1,10 @@
 package client;
 
+import common.ClientHeartBeat;
+import common.Message;
+
 import javax.xml.crypto.Data;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import static client.ThTextUI.MAX_SIZE;
  * Created by Samuel on 13/12/2016.
  */
 public class Controller {
-    Client myClient;
+    private Client myClient;
 
     Controller(Client x){
         myClient=x;
@@ -38,6 +39,8 @@ public class Controller {
     public void sendPacket(ArrayList<String> argCommand){
         DatagramSocket socketToDir;
         DatagramPacket packetToDir;
+        ByteArrayOutputStream b0ut;
+        ObjectOutputStream out;
         String command=null;
         socketToDir=myClient.getSocketToDir();
 
@@ -48,9 +51,16 @@ public class Controller {
         else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
 
-        packetToDir = new DatagramPacket(command.getBytes(),command.length(),myClient.getServerAddr(), myClient.getServerPortCommand());
+        //TODO Create a message serializable here
 
         try {
+            Message msg=new Message(command);
+            b0ut = new ByteArrayOutputStream();
+            out = new ObjectOutputStream(b0ut);
+            out.writeObject(msg);
+
+            packetToDir = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), myClient.getServerPortCommand());
+
             socketToDir.send(packetToDir);
         } catch (IOException e) {
             e.printStackTrace();
@@ -61,7 +71,6 @@ public class Controller {
         myClient.myUserID.setName(name);
         myClient.myUserID.setPassword(pass);
         myClient.setRegistedFlagTrue();
-        System.out.println("reg client name: " + name + myClient.myUserID.getName());
         myClient.startThreadHB();   //The HeartBeat Thread will start only when the userID is prepared
         return;
     }
@@ -72,7 +81,6 @@ public class Controller {
         myClient.setRegistedFlagTrue();
         return;
     }
-
 
     public String readObjectFromFile(String file) throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(file));
