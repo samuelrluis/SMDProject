@@ -21,7 +21,7 @@ public class CliRegistry extends Registries implements Serializable  {
         login=false;
     }
 
-    public CliRegistry(String name,String password,int udpHB,int udpReader,int tcp,long entry){
+    public CliRegistry(String name,String password,int udpHB,int tcp,long entry){
         this.name = name;
 
         udpHB = udpHB;

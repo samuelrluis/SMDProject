@@ -3,7 +3,6 @@ package dirserver; /**
  */
 
 import common.CliRegistry;
-import common.Registries;
 import common.ServerRegistry;
 
 import java.net.*;
@@ -13,14 +12,16 @@ import static java.lang.Integer.parseInt;
 
  public class DirectoryServer {
 
-    DatagramSocket socketServers = null,socketClientsHB = null,socketClientsCommand = null;
-    ThAnswerHeartBeat threadHbServer = null, threadHbClients = null;
-    ThAnswerCommand threadCommand = null;
-    ThManageRegs threadManageRegs = null;
-    ArrayList<CliRegistry> cliRegistries = null;
-    ArrayList<ServerRegistry> serverRegistries = null;
+    private DatagramSocket socketServers = null,socketClientsHB = null,socketClientsCommand = null;
+    private ThAnswerHeartBeat threadHbServer = null, threadHbClients = null;
+    private ThAnswerCommand threadCommand = null;
+    private ThManageServerRegs threadManageRegs = null;
+    private ArrayList<CliRegistry> cliRegistries = null;
+    private ArrayList<ServerRegistry> serverRegistries = null;
+    private ServerController Scontroller = null;
 
     DirectoryServer(){
+        Scontroller=new ServerController(this);
         cliRegistries=new ArrayList<>();
         serverRegistries=new ArrayList<>();
         createSockets();
@@ -45,7 +46,7 @@ import static java.lang.Integer.parseInt;
         threadHbServer = new ThAnswerHeartBeat(socketServers,cliRegistries,serverRegistries);  //Create Thread To receive HB from Servers
         threadHbClients = new ThAnswerHeartBeat(socketClientsHB,cliRegistries,serverRegistries); //Create Thread To receive HB from Clients
         threadCommand = new ThAnswerCommand(socketClientsCommand, this); // Create Thread to Receive and Answer Commands from Clients
-        threadManageRegs = new ThManageRegs(cliRegistries,serverRegistries);
+        threadManageRegs = new ThManageServerRegs(serverRegistries);
 
         //Start Threads
         threadHbServer.start();
@@ -70,6 +71,22 @@ import static java.lang.Integer.parseInt;
         DirectoryServer myServer=null;
         myServer=new DirectoryServer();
     }
+
+     public ArrayList<ServerRegistry> getServerRegistries() {
+         return serverRegistries;
+     }
+
+     public ArrayList<CliRegistry> getCliRegistries() {
+         return cliRegistries;
+     }
+
+     public String getListServ(){
+        return Scontroller.getListServ();
+    }
+
+     public String getListClient(){
+         return Scontroller.getListClients();
+     }
 }
 
 
