@@ -1,12 +1,10 @@
-package dirserver;
+package common;
 
 /**
  * Created by Samuel on 25/11/2016.
  */
 public abstract class Registries {
     String name;
-    long entryTime;
-    int udpPort,tcpPort;
 
     public String getName(){
         return name;
@@ -14,6 +12,6 @@ public abstract class Registries {
 
     @Override
     public String toString() {
-        return name+" "+udpPort+" "+tcpPort+" "+entryTime;
+        return name;
     }
 }
