@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 /**
  * Created by Samuel on 30/10/2016.
  */
-public class Client {
+class Client {
     //threads
     ThSendHeartBeat threadHeartBeat;
     ThTextUI threadUI;

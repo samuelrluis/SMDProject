@@ -16,8 +16,12 @@ import static java.lang.Integer.parseInt;
     ThAnswerCommand threadCommand = null;
     ThManageRegs threadManageRegs = null;
     ArrayList<Registries> registries = null;
+    ServerController SController=null;
+
+
 
     DirectoryServer(){
+        SController = new ServerController(this);
         registries=new ArrayList<>();
         createSockets();
         createThreads();
@@ -49,21 +53,7 @@ import static java.lang.Integer.parseInt;
         threadCommand.start();
         threadManageRegs.start();
     }
-
-     //TODO passar este metodo para a class DirServer
-     public String getListServ(){
-         int x=0;
-         StringBuilder List = new StringBuilder();
-         for(int i = 0;i<registries.size();i++) {
-             List.append(registries.get(i).getName()+"\n");
-             }
-         if (List==null)
-             return "No Server's Connected";
-         return List.toString();
-     }
-
-
-
+    public String getListServ(){return SController.getListServ();}
     public static void main(String[] args) {
         DirectoryServer myServer=null;
         myServer=new DirectoryServer();

@@ -70,7 +70,7 @@ public class CliRegistry extends Registries implements Serializable  {
     public void writeObjectToFile() {
         try {
             OutputStream outputStream = new
-                    BufferedOutputStream(new FileOutputStream("../SMDProject/src/dirserver/saveCliRegistry.txt"));
+                    BufferedOutputStream(new FileOutputStream("../SMDProject/src/dirserver/saveCliRegistry.obj"));
             ObjectOutput objectOutput = new
                     ObjectOutputStream(outputStream);
             objectOutput.writeObject(this);
