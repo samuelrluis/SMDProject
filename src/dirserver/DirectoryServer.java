@@ -2,7 +2,9 @@ package dirserver; /**
  * Created by Samuel on 29/10/2016.
  */
 
+import common.CliRegistry;
 import common.Registries;
+import common.ServerRegistry;
 
 import java.net.*;
 import java.util.ArrayList;
@@ -15,10 +17,12 @@ import static java.lang.Integer.parseInt;
     ThAnswerHeartBeat threadHbServer = null, threadHbClients = null;
     ThAnswerCommand threadCommand = null;
     ThManageRegs threadManageRegs = null;
-    ArrayList<Registries> registries = null;
+    ArrayList<CliRegistry> cliRegistries = null;
+    ArrayList<ServerRegistry> serverRegistries = null;
 
     DirectoryServer(){
-        registries=new ArrayList<>();
+        cliRegistries=new ArrayList<>();
+        serverRegistries=new ArrayList<>();
         createSockets();
         createThreads();
     }
@@ -38,10 +42,10 @@ import static java.lang.Integer.parseInt;
 
     public void createThreads(){
         //Threads Heartbeat
-        threadHbServer = new ThAnswerHeartBeat(socketServers,registries);  //Create Thread To receive HB from Servers
-        threadHbClients = new ThAnswerHeartBeat(socketClientsHB,registries); //Create Thread To receive HB from Clients
+        threadHbServer = new ThAnswerHeartBeat(socketServers,cliRegistries,serverRegistries);  //Create Thread To receive HB from Servers
+        threadHbClients = new ThAnswerHeartBeat(socketClientsHB,cliRegistries,serverRegistries); //Create Thread To receive HB from Clients
         threadCommand = new ThAnswerCommand(socketClientsCommand, this); // Create Thread to Receive and Answer Commands from Clients
-        threadManageRegs = new ThManageRegs(registries);
+        threadManageRegs = new ThManageRegs(cliRegistries,serverRegistries);
 
         //Start Threads
         threadHbServer.start();
@@ -50,19 +54,17 @@ import static java.lang.Integer.parseInt;
         threadManageRegs.start();
     }
 
-     //TODO passar este metodo para a class DirServer
+/*     //TODO passar este metodo para a class DirServer
      public String getListServ(){
          int x=0;
          StringBuilder List = new StringBuilder();
          for(int i = 0;i<registries.size();i++) {
-             List.append(registries.get(i).getName()+"\n");
+             List.append(i+":"+registries.get(i).getName()+"\n");
              }
          if (List==null)
              return "No Server's Connected";
          return List.toString();
-     }
-
-
+     }*/
 
     public static void main(String[] args) {
         DirectoryServer myServer=null;

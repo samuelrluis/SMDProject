@@ -1,9 +1,7 @@
 package dirserver;
 
 
-import common.HeartBeat;
-import common.Registries;
-import common.ServerRegistry;
+import common.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,14 +15,16 @@ import java.util.ArrayList;
  */
 public class ThAnswerHeartBeat extends Thread{
     public static final int MAX_SIZE = 256;
-    DatagramSocket socket=null;
-    DatagramPacket packet;
-    ArrayList<Registries> regList=null;
+    private DatagramSocket socket=null;
+    private DatagramPacket packet;
+    private ArrayList<CliRegistry> cliRegistries=null;
+    private ArrayList<ServerRegistry> serverRegistries=null;
 
-    ThAnswerHeartBeat(DatagramSocket s, ArrayList<Registries> reg){
+    ThAnswerHeartBeat(DatagramSocket s, ArrayList<CliRegistry> regCli,ArrayList<ServerRegistry> regServ){
         this.socket=s;
         packet = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
-        regList=reg;
+        cliRegistries=regCli;
+        serverRegistries=regServ;
     }
 
     @Override
@@ -37,7 +37,19 @@ public class ThAnswerHeartBeat extends Thread{
                 ByteArrayInputStream Bin = new ByteArrayInputStream(packet.getData());
                 ObjectInputStream in = new ObjectInputStream(Bin);
                 hBeat=(HeartBeat) in.readObject();
-                regList.add(new ServerRegistry(hBeat.getName(),hBeat.getUdpPort(),hBeat.getTcpPort(),System.nanoTime()));
+
+                if(hBeat.getType().equalsIgnoreCase("server")){
+                    ServerHeartBeat sHBeat=(ServerHeartBeat)hBeat;
+                    serverRegistries.add(new ServerRegistry(sHBeat.getName(),sHBeat.getUdpPort(),sHBeat.getTcpPort(),System.nanoTime()));
+                }
+
+                else if(hBeat.getType().equalsIgnoreCase("client")){
+                    ClientHeartBeat cHBeat=(ClientHeartBeat) hBeat;
+                    cliRegistries.add(new CliRegistry(cHBeat.getName(),cHBeat.getPassword(),cHBeat.getUdpPort(),cHBeat.getTcpPort(),System.nanoTime()));
+
+
+                }
+
             }
         } catch (IOException e) {
             System.out.println("Error Receiving Datagram Packet");

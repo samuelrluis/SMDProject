@@ -7,6 +7,8 @@ public class HeartBeat implements Serializable{
     private String name;
     private int udpPort;
     private int tcpPort;
+    private String type;
+    private String password;
 
     public HeartBeat(){
         name="";
@@ -14,14 +16,19 @@ public class HeartBeat implements Serializable{
         tcpPort=0;
     }
 
-    public HeartBeat(String name, int uPort,int tPort) {
+    public HeartBeat(String name, String type, int uPort, int tPort) {
         this.name = name;
         this.udpPort = uPort;
         this.tcpPort = tPort;
+        this.type=type;
     }
 
     public String getName(){
         return name;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public int getUdpPort(){

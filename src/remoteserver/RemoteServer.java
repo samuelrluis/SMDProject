@@ -10,9 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class RemoteServer {
-    private static int idS = 0;
     private String name;
-    private int id;
     ServerSocket serverSocketTcp = null; //TCP
     DatagramSocket serverSocketUdp = null; //UDP
     InetAddress myAddress=null;
@@ -21,9 +19,8 @@ public class RemoteServer {
     ThSendHeartBeat threadHeartbeat;
     ThAnswerClient threadAnswerClient = null;
 
-    RemoteServer(InetAddress address,int udp){
-        id = idS++;
-        name="RemoteServer" + id;
+    RemoteServer(String name,InetAddress address,int udp){
+        this.name=name;
         myAddress=address;
         myUdpPort=0;
         myTcpPort=0;
@@ -80,18 +77,19 @@ public class RemoteServer {
         int serverPortToDirectory = -1,serverPortTCP=-1;
 
         try{
-            if(args.length!=2) {
+            if(args.length!=3) {
                 System.out.println("Sintax Error [SERVICEIP][UDP_SERVICEPORT_TODIRSERVER]");
                 System.exit(0);
             }
 
-            serverAddr = InetAddress.getByName(args[0]);
-            serverPortToDirectory = Integer.parseInt(args[1]);
+            String name = args[0];
+            serverAddr = InetAddress.getByName(args[1]);
+            serverPortToDirectory = Integer.parseInt(args[2]);
 
             if(serverPortToDirectory<0 )
                 System.out.println("The values of the port in the arguments are wrong");
 
-            remServer=new RemoteServer(serverAddr,serverPortToDirectory);
+            remServer=new RemoteServer(name,serverAddr,serverPortToDirectory);
             remServer.runServer();
 
         }catch(UnknownHostException e){
