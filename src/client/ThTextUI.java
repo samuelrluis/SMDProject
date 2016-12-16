@@ -94,6 +94,14 @@ public class ThTextUI extends Thread {
                     myController.sendPacket(argCommand);
                     String answer=myController.receiveAnswerPacket();
                     System.out.println(answer);
+                } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
+                if(myClient.getRegistedFlag()==false){
+                        System.out.println("To use this command you need to be logged in");
+                        continue;
+                    }
+                    myController.sendPacket(argCommand);
+                    String answer=myController.receiveAnswerPacket();
+                    System.out.println(answer);
                 } else{
                     System.out.println("Command not found");
                     continue;

@@ -45,6 +45,8 @@ public class Controller {
 
         if(argCommand.get(0).equalsIgnoreCase("SLIST"))
             command = new String("SLIST");
+        else if(argCommand.get(0).equalsIgnoreCase("CLIST"))
+            command = new String("CLIST");
         else if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
