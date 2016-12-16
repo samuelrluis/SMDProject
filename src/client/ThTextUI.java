@@ -15,9 +15,9 @@ import java.util.StringTokenizer;
  */
 public class ThTextUI extends Thread {
     public static final int MAX_SIZE = 1024;
-    Client myClient;
-    CliRegistry myUserID;
-    Controller myController;
+    private Client myClient;
+    private CliRegistry myUserID;
+    private Controller myController;
 
     ThTextUI(Client x){
         myClient=x;
@@ -78,9 +78,9 @@ public class ThTextUI extends Thread {
                             System.out.println(answer);
                             continue;
                         }
-                        else{
+                        else
                             System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
-                        }
+
                     } else {
                         System.out.println("You are already registered");
                         continue;

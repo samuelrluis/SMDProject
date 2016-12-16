@@ -1,40 +1,30 @@
 package common;
 
-import common.Registries;
-
 import java.io.*;
 
 /**
  * Created by MarceloCortesao on 05/12/16.
  */
-public class CliRegistry extends Registries implements Serializable  {
-
-    private String name,password;
-    private int udpHB,udpReader,tcp;
+public class CliRegistry extends Registry implements Serializable  {
     private Boolean login;
+    private ClientHeartBeat hBeat;
 
     public CliRegistry(){
-        name="User";
-        udpHB=0;
-        udpReader=0;
-        tcp=0;
-        login=false;
+        hBeat = null;
+        login = false;
     }
 
-    public CliRegistry(String name,String password,int udpHB,int tcp,long entry){
-        this.name = name;
-
-        udpHB = udpHB;
-        udpReader = udpReader;
-        tcp = tcp;
+    public CliRegistry(ClientHeartBeat hBeat,long entry){
+        this.hBeat = hBeat;
+        this.entryTime = entry;
     }
 
     public String getName() {
-        return this.name;
+        return this.hBeat.getName();
     }
 
-    public Boolean getLogin() {
-        return login;
+    public String getPassword() {
+        return this.hBeat.getPassword();
     }
 
     //Setters
@@ -43,28 +33,16 @@ public class CliRegistry extends Registries implements Serializable  {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.hBeat.setPassword(password);
     }
 
-    public void setLogin(Boolean login) {
-        this.login = login;
-    }
-
-    public void setUdpHB(int udpHB) {
-        this.udpHB = udpHB;
-    }
-
-    public void setUdpReader(int udpReader) {
-        this.udpReader = udpReader;
-    }
-
-    public void setTcp(int tcp) {
-        this.tcp = tcp;
+    public ClientHeartBeat gethBeat() {
+        return hBeat;
     }
 
     @Override
     public String toString() {
-        return "usernameAndPass"+ name + " " + udpHB + " " + udpReader + " " + tcp;
+        return "usernameAndPass"+ name + " " + this.hBeat.getUdpPort() + " " + this.hBeat.getTcpPort();
     }
 
     public void writeObjectToFile() {
@@ -83,6 +61,9 @@ public class CliRegistry extends Registries implements Serializable  {
         }
     }
 
+    public void sethBeat(ClientHeartBeat hBeat) {
+        this.hBeat = hBeat;
+    }
 }
 
 
