@@ -33,7 +33,6 @@ public class ThAnswerClient extends Thread {
             //msgClient = in.readLine();
 
             System.out.println("Recebido: " + msgClient);
-
             System.out.println("thread concluida");
 
         } catch(IOException e){

@@ -51,14 +51,14 @@ public class RemoteServer {
     public void runServer(){
         //TCP-Client
         try{
-            serverSocketTcp = new ServerSocket();
+            serverSocketTcp = new ServerSocket(0);
             serverSocketUdp = new DatagramSocket();
             myTcpPort=serverSocketTcp.getLocalPort();
             myUdpPort=serverSocketUdp.getLocalPort();
 
             createThreadUdp();
-/*            awaitsForNewClient();
-            createThreadTcp();*/
+            awaitsForNewClient();
+            createThreadTcp();
 
         }catch(IOException e){
             System.out.println("Error creating the New Socket X");
@@ -72,7 +72,7 @@ public class RemoteServer {
     public static void main(String[] args) {
         RemoteServer remServer;
         InetAddress serverAddr = null;
-        int serverPortToDirectory = -1,serverPortTCP=-1;
+        int serverPortToDirectory = -1;
 
         try{
             if(args.length!=3) {

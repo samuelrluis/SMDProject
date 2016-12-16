@@ -25,10 +25,6 @@ public class ServerController {
         packetRead=Serv.getPacket();
     }
 
-    private void updateRegistries(){
-
-    }
-
     private void receivedCommand(Msg message){
         ArrayList<String> argCommand=new ArrayList<>();
 
@@ -63,12 +59,18 @@ public class ServerController {
                 packetWrite =new DatagramPacket((Serv.getListClient()).getBytes(),(Serv.getListClient()).length(),packetRead.getAddress(),packetRead.getPort());
                 socket.send(packetWrite);
             }
-
-
+            else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
+                ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
+                int wantedServerTcp = serverRegistries.get((Integer.parseInt(argCommand.get(2)))).gethBeat().getTcpPort();
+                String wantedServer = wantedServerTcp+"";
+                packetWrite =new DatagramPacket(wantedServer.getBytes(),wantedServer.length(),packetRead.getAddress(),packetRead.getPort());
+                socket.send(packetWrite);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
         int i=0;
