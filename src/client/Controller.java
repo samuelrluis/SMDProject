@@ -1,9 +1,8 @@
 package client;
 
 import common.ClientHeartBeat;
-import common.Message;
+import common.Msg;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -52,32 +51,31 @@ public class Controller {
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
 
         //TODO Create a message serializable here
-
         try {
-            Message msg = new Message(command,myClient.getMyUserID().gethBeat());
+            Msg msg = new Msg(command,myClient.getMyUserID().gethBeat()); //Create Serializable Msg
             b0ut = new ByteArrayOutputStream();
             out = new ObjectOutputStream(b0ut);
             out.writeObject(msg);
+            out.flush();
 
             packetToDir = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), myClient.getServerPortCommand());
-
             socketToDir.send(packetToDir);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void regClient(String name, String pass){
-        myClient.myUserID.setName(name);
-        myClient.myUserID.setPassword(pass);
+        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name,pass,myClient.getServerPortHB()));
         myClient.setRegistedFlagTrue();
         myClient.startThreadHB();   //The HeartBeat Thread will start only when the userID is prepared
         return;
     }
 
     public void loginClient(String name,String pass){
-        myClient.myUserID.setName(name);
-        myClient.myUserID.setPassword(pass);
+        myClient.getMyUserID().setName(name);
+        myClient.getMyUserID().setPassword(pass);
         myClient.setRegistedFlagTrue();
         return;
     }

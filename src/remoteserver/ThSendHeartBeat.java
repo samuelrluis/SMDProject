@@ -22,7 +22,6 @@ public class ThSendHeartBeat extends Thread {
 
     public ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, int uPort , int tPort, String name){
         try{
-
             socketHeartBeatUDP = new DatagramSocket();  //Create Socket to send the HeartBeat
             heartBeat=new ServerHeartBeat(name,uPort,tPort); //Create the HeartBeat Serializable Object
             b0ut = new ByteArrayOutputStream();         //Create an array of byte in OutputStream
@@ -44,6 +43,7 @@ public class ThSendHeartBeat extends Thread {
                 socketHeartBeatUDP.send(packetHeartBeat);    //Send the Packet
                 System.out.println("Enviei");
                 Thread.sleep(10000);
+                //TODO isto é para alterar para 30secs
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {

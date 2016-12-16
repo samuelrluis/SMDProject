@@ -15,20 +15,24 @@ import java.util.StringTokenizer;
  */
 public class Client {
     //threads
-    ThSendHeartBeat threadHeartBeat;
-    ThTextUI threadUI;
-    ThReaderUDP threadUDPReader=null;
-    DatagramSocket socketToDir=null;
-    Socket socketTCP=null;
-    InetAddress serverAddr=null;
-    int serverPortHB=-1,serverPortCommand=-1;
-    CliRegistry myUserID=null;
-    Controller myController=null;
-    boolean registedFlag = false;
-    boolean loginFlag = false;
+    private ThSendHeartBeat threadHeartBeat;
+    private ThTextUI threadUI;
+    private ThReaderUDP threadUDPReader=null;
+    private DatagramSocket socketToDir=null;
+    private Socket socketTCP=null;
+    private InetAddress serverAddr=null;
+    private int serverPortHB=-1,serverPortCommand=-1;
+    private CliRegistry myUserID=null;
+    private Controller myController=null;
+    private boolean registedFlag = false;
+    private boolean loginFlag = false;
 
-    Client(InetAddress serverAddress, Integer serverPort,Integer serverPortCommand){
-        myUserID=new CliRegistry(new ClientHeartBeat(),0);
+    public int getServerPortHB() {
+        return serverPortHB;
+    }
+
+    Client(InetAddress serverAddress, Integer serverPort, Integer serverPortCommand){
+        myUserID=new CliRegistry();
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
@@ -44,7 +48,7 @@ public class Client {
 
     public void createThreads(){
         threadUI = new ThTextUI(this);
-        threadUDPReader=new ThReaderUDP();        //Thread that will be reading all the received data from DirServer
+        threadUDPReader=new ThReaderUDP();//Thread that will be reading all the received data from DirServer
         //TODO THREAD HEARTBEAT SO E CRIADA E LANÇADA QUANDO O UTILIZADOR SE AUTENTICA
     }
 

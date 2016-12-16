@@ -61,6 +61,9 @@ public class CliRegistry extends Registry implements Serializable  {
         }
     }
 
+    public void sethBeat(ClientHeartBeat hBeat) {
+        this.hBeat = hBeat;
+    }
 }
 
 

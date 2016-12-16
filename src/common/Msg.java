@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Samuel on 15/12/2016.
  */
-public class Message implements Serializable {
+public class Msg implements Serializable {
     String command;
     ClientHeartBeat hBeat;
 
@@ -13,7 +13,7 @@ public class Message implements Serializable {
         return hBeat;
     }
 
-    public Message(String command, ClientHeartBeat hBeat) {
+    public Msg(String command, ClientHeartBeat hBeat) {
         this.command = command;
         this.hBeat = hBeat;
     }

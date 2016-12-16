@@ -2,7 +2,6 @@ package dirserver;
 
 import common.*;
 
-import javax.xml.crypto.Data;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -30,7 +29,7 @@ public class ServerController {
 
     }
 
-    private void receivedCommand(Message message){
+    private void receivedCommand(Msg message){
         ArrayList<String> argCommand=new ArrayList<>();
 
         String commandStr = message.getCommand();
@@ -55,7 +54,7 @@ public class ServerController {
                 socket.send(packetWrite);
             }
             else if(argCommand.get(0).equalsIgnoreCase("SLIST")){
-                System.out.println("List de Servers" + Serv.getListServ());
+                System.out.println("List de Servers \n" + Serv.getListServ());
                 packetWrite =new DatagramPacket((Serv.getListServ()).getBytes(),(Serv.getListServ()).length(),packetRead.getAddress(),packetRead.getPort());
                 socket.send(packetWrite);
             }
@@ -80,16 +79,25 @@ public class ServerController {
     }
 
     private void receiveHeartBeatServer(ServerHeartBeat hBeat ){
+        String aux;
         ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
+
 
         if(serverRegistries.size()==0)
             serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
+
         else{
             for (int i = 0; i < serverRegistries.size(); i++) {
-                if (serverRegistries.get(i).gethBeat().getName().equalsIgnoreCase(hBeat.getName())){
+                aux=serverRegistries.get(i).getName();
+/*                System.out.println(aux);
+                System.out.println(serverRegistries.get(i).getName());*/
+
+                if (serverRegistries.get(i).getName().equalsIgnoreCase(hBeat.getName())){
                     serverRegistries.get(i).setEntryTime();
+                    break;
                 } else{
                     serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
+                    int x=0;
                 }
             }
         }
@@ -102,19 +110,21 @@ public class ServerController {
                 socket.receive(packetRead);
                 ByteArrayInputStream Bin = new ByteArrayInputStream(packetRead.getData());
                 ObjectInputStream in = new ObjectInputStream(Bin);
-
+                in.close();
                 Object message = in.readObject();
 
                 if(message instanceof ServerHeartBeat)
                     receiveHeartBeatServer((ServerHeartBeat) message); //This will receive th HB from Server
                 else if(message instanceof ClientHeartBeat)
                     receivedHeartBeatClient((ClientHeartBeat) message); //This will receive th HB from Client
-                else if(message instanceof Message)
-                    receivedCommand((Message) message);
+                else if(message instanceof Msg)
+                    receivedCommand((Msg) message);
 
-            } catch (IOException e) {
+            } catch (IOException e){
                 e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+                System.out.println("IO");
+            } catch (ClassNotFoundException e){
+                System.out.printf("Class");
                 e.printStackTrace();
             }
         }
@@ -123,12 +133,14 @@ public class ServerController {
     public String getListServ(){
         int x=0;
         StringBuilder List = new StringBuilder();
-        for(int i = 0;i<Serv.getServerRegistries().size();i++) {
-            List.append(Serv.getServerRegistries().get(i).getName()+"\n");
-        }
-        if (List==null)
+
+        if(Serv.getServerRegistries().size()>0){
+            for(int i = 0;i<Serv.getServerRegistries().size();i++) {
+                List.append(Serv.getServerRegistries().get(i).getName()+"\n");
+            }
+            return List.toString();
+        }else
             return "No Server's Connected";
-        return List.toString();
     }
 
     public String getListClients(){

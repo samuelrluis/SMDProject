@@ -78,9 +78,9 @@ public class ThTextUI extends Thread {
                             System.out.println(answer);
                             continue;
                         }
-                        else{
+                        else
                             System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
-                        }
+
                     } else {
                         System.out.println("You are already registered");
                         continue;

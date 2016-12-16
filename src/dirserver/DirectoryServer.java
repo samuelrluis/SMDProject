@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
  public class DirectoryServer {
-    public static final int MAX_SIZE = 256;
+    public static final int MAX_SIZE = 1024;
     private DatagramSocket socketUDP=null;
     private ArrayList<CliRegistry> cliRegistries = null;
     private ArrayList<ServerRegistry> serverRegistries = null;
@@ -22,7 +22,6 @@ import java.util.ArrayList;
         Scontroller=new ServerController(this);
         cliRegistries=new ArrayList<>();
         serverRegistries=new ArrayList<>();
-
     }
 
     public void createSocket(){
@@ -46,26 +45,7 @@ import java.util.ArrayList;
          return packet;
      }
 
-
-// public void createThreads(){
-        //Threads Heartbeat
-
-        /*threadHbServer = new ThAnswerHeartBeat(socketServers,cliRegistries,serverRegistries);  //Create Thread To receive HB from Servers
-        threadHbClients = new ThAnswerHeartBeat(socketClientsHB,cliRegistries,serverRegistries); //Create Thread To receive HB from Clients
-        threadCommand = new ThAnswerCommand(socketClientsCommand, this); // Create Thread to Receive and Answer Commands from Clients
-        threadManageServRegs = new ThManageServerRegs(serverRegistries); // Create Thread that will Manage the Server Registry
-        threadManageCliRegs = new ThManageClientRegs(cliRegistries); //Create Thread that will Manage the Client Registry*/
-
-/*        //Start Threads
-        threadHbServer.start();
-        threadHbClients.start();
-        threadCommand.start();
-        threadManageServRegs.start();
-        threadManageCliRegs.start();
-    }
-*/;
-
-    public void runDirServeR(){
+     public void runDirServeR(){
         Scontroller.answeringDatagram();
     }
 

@@ -4,17 +4,10 @@ import java.io.Serializable;
  * Created by Samuel on 15/11/2016.
  */
 public class HeartBeat implements Serializable{
-    private String name;
-    private int udpPort;
-    private int tcpPort;
-    private String type;
-    private String password;
-
-    public HeartBeat(){
-        name="";
-        udpPort=0;
-        tcpPort=0;
-    }
+    protected String name;
+    protected int udpPort;
+    protected int tcpPort;
+    protected String type;
 
     public HeartBeat(String name, String type, int uPort, int tPort) {
         this.name = name;
