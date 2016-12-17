@@ -13,13 +13,14 @@ import java.net.Socket;
 public class ThAnswerClient extends Thread {
     public static final int TIMEOUT = 5;
     public static final int MAX_SIZE = 4000;
-    ServerSocket socketTCP;
-    Socket socketToClient;
-    String msgClient;
+    private ServerSocket socketTCP;
+    private Socket socketToClient;
+    private String msgClient;
     private Msg msg;
 
-    ThAnswerClient(ServerSocket socket){
-        socketTCP=socket;
+    ThAnswerClient(ServerSocket socket,Socket socketToClient){
+        this.socketTCP=socket;
+        this.socketToClient=socketToClient;
     }
 
     @Override
@@ -30,19 +31,14 @@ public class ThAnswerClient extends Thread {
         byte []fileChunck = new byte[MAX_SIZE];
 
         try{
-            socketToClient = socketTCP.accept();
-            socketToClient.setSoTimeout(1000*TIMEOUT);
+            socketTCP.setSoTimeout(1000*TIMEOUT);
+            System.out.println("My port is: " + socketTCP.getLocalPort());
 
+            //Read Message from CLient
             in = new ObjectInputStream(socketToClient.getInputStream());
-           // in = new BufferedReader(new InputStreamReader(socketToClient.getInputStream()));
-            //out = socketToClient.getOutputStream();
-
             msg = (Msg) in.readObject();
 
             System.out.println("recebi mensagem de" + msg.gethBeat().getName());
-
-            System.out.println("Recebido: " + msgClient);
-            System.out.println("thread concluida");
 
         } catch(IOException e){
             System.out.println("Ocorreu a excepcao de E/S: \n\t" + e);

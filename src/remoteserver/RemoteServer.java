@@ -25,12 +25,14 @@ public class RemoteServer {
         serverDirPort=udp;
     }
 
-    private void awaitsForNewClient(){
+    private Socket awaitsForNewClient(){
         try{
             socketToClient=serverSocketTcp.accept();
+            return socketToClient;
         }catch(IOException e){
             System.out.println("Error creating the New Socket C");
         }
+        return null;
     }
 
     private void createThreadUdp(){
@@ -42,9 +44,9 @@ public class RemoteServer {
         threadHeartbeat.start();
     }
 
-    private void createThreadTcp(){
+    private void createThreadTcp(Socket socketToClient){
         //TCP-Socket to the Client
-        threadAnswerClient=new ThAnswerClient(serverSocketTcp);
+        threadAnswerClient=new ThAnswerClient(serverSocketTcp,socketToClient);
         threadAnswerClient.start();
     }
 
@@ -57,8 +59,8 @@ public class RemoteServer {
             myUdpPort=serverSocketUdp.getLocalPort();
 
             createThreadUdp();
-            awaitsForNewClient();
-            createThreadTcp();
+            Socket socketToClient=awaitsForNewClient();
+            createThreadTcp(socketToClient);
 
         }catch(IOException e){
             System.out.println("Error creating the New Socket X");
