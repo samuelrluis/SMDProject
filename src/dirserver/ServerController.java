@@ -25,10 +25,6 @@ public class ServerController {
         packetRead=Serv.getPacket();
     }
 
-    private void updateRegistries(){
-
-    }
-
     private void receivedCommand(Msg message){
         ArrayList<String> argCommand=new ArrayList<>();
 
@@ -54,8 +50,20 @@ public class ServerController {
                 socket.send(packetWrite);
             }
             else if(argCommand.get(0).equalsIgnoreCase("SLIST")){
-                System.out.println("List de Servers \n" + Serv.getListServ());
+                System.out.println("List of Servers \n" + Serv.getListServ());
                 packetWrite =new DatagramPacket((Serv.getListServ()).getBytes(),(Serv.getListServ()).length(),packetRead.getAddress(),packetRead.getPort());
+                socket.send(packetWrite);
+            }
+            else if(argCommand.get(0).equalsIgnoreCase("CLIST")){
+                System.out.println("List of Clients \n" + Serv.getListClient());
+                packetWrite =new DatagramPacket((Serv.getListClient()).getBytes(),(Serv.getListClient()).length(),packetRead.getAddress(),packetRead.getPort());
+                socket.send(packetWrite);
+            }
+            else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
+                ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
+                int wantedServerTcp = serverRegistries.get((Integer.parseInt(argCommand.get(2)))).gethBeat().getTcpPort();
+                String wantedServer = wantedServerTcp+"";
+                packetWrite =new DatagramPacket(wantedServer.getBytes(),wantedServer.length(),packetRead.getAddress(),packetRead.getPort());
                 socket.send(packetWrite);
             }
         } catch (IOException e) {
@@ -63,45 +71,52 @@ public class ServerController {
         }
     }
 
-    private void receivedHeartBeatClient(ClientHeartBeat hBeat){
-        ArrayList <CliRegistry> cliRegistries = Serv.getCliRegistries();
 
-        if(cliRegistries.size()==0)
-            cliRegistries.add(new CliRegistry(hBeat, System.nanoTime()));
+    private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
+        int i=0;
+        Boolean foundReg=false;
+        ArrayList<CliRegistry> cliRegestries = Serv.getCliRegistries();
+        if(cliRegestries.size()==0)
+            cliRegestries.add(new CliRegistry(hBeat, System.nanoTime()));
+
         else{
-            for (int i = 0; i < cliRegistries.size(); i++) {
-                if (cliRegistries.get(i).getName().equalsIgnoreCase(hBeat.getName()))
-                    cliRegistries.get(i).setEntryTime();
-                else
-                    cliRegistries.add(new CliRegistry(hBeat, System.nanoTime()));
+            while(i<cliRegestries.size()) {
+                if (cliRegestries.get(i).gethBeat().getName().equalsIgnoreCase(hBeat.getName())) {
+                    cliRegestries.get(i).setEntryTime();
+                    foundReg = true;
+                    break;
+                } else
+                    i++;
             }
+
+            if(foundReg==false)
+                cliRegestries.add(new CliRegistry(hBeat, System.nanoTime()));
         }
     }
 
     private void receiveHeartBeatServer(ServerHeartBeat hBeat ){
-        String aux;
+        int i=0;
+        Boolean foundReg=false;
         ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
-
 
         if(serverRegistries.size()==0)
             serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
 
         else{
-            for (int i = 0; i < serverRegistries.size(); i++) {
-                aux=serverRegistries.get(i).getName();
-/*                System.out.println(aux);
-                System.out.println(serverRegistries.get(i).getName());*/
-
-                if (serverRegistries.get(i).getName().equalsIgnoreCase(hBeat.getName())){
+            while(i<serverRegistries.size()) {
+                if (serverRegistries.get(i).gethBeat().getName().equalsIgnoreCase(hBeat.getName())) {
                     serverRegistries.get(i).setEntryTime();
+                    foundReg = true;
                     break;
-                } else{
-                    serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
-                    int x=0;
-                }
+                } else
+                    i++;
+            }
+
+            if(foundReg==false)
+                serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
             }
         }
-    }
+
 
     public void answeringDatagram(){
         //This is the principal function in our DirServer Controller;
@@ -150,8 +165,7 @@ public class ServerController {
             List.append(Serv.getCliRegistries().get(i).getName()+"\n");
         }
         if (List==null)
-            return "No Server's Connected";
+            return "No Clients Connected";
         return List.toString();
     }
-
 }

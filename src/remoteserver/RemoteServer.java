@@ -26,11 +26,18 @@ public class RemoteServer {
     }
 
     private void awaitsForNewClient(){
-        try{
-            socketToClient=serverSocketTcp.accept();
-        }catch(IOException e){
-            System.out.println("Error creating the New Socket C");
-        }
+
+            while (true) {
+                try {
+                    socketToClient = serverSocketTcp.accept();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                ThAnswerClient thread = new ThAnswerClient(serverSocketTcp, socketToClient);
+                thread.start();
+                System.out.println("after thread");
+            }
     }
 
     private void createThreadUdp(){
@@ -42,23 +49,22 @@ public class RemoteServer {
         threadHeartbeat.start();
     }
 
-    private void createThreadTcp(){
+    private void createThreadTcp(Socket socketToClient){
         //TCP-Socket to the Client
-        threadAnswerClient=new ThAnswerClient(serverSocketTcp);
+        threadAnswerClient=new ThAnswerClient(serverSocketTcp,socketToClient);
         threadAnswerClient.start();
     }
 
     public void runServer(){
         //TCP-Client
         try{
-            serverSocketTcp = new ServerSocket();
+            serverSocketTcp = new ServerSocket(0);
             serverSocketUdp = new DatagramSocket();
             myTcpPort=serverSocketTcp.getLocalPort();
             myUdpPort=serverSocketUdp.getLocalPort();
 
             createThreadUdp();
-/*            awaitsForNewClient();
-            createThreadTcp();*/
+            awaitsForNewClient();
 
         }catch(IOException e){
             System.out.println("Error creating the New Socket X");
@@ -72,7 +78,7 @@ public class RemoteServer {
     public static void main(String[] args) {
         RemoteServer remServer;
         InetAddress serverAddr = null;
-        int serverPortToDirectory = -1,serverPortTCP=-1;
+        int serverPortToDirectory = -1;
 
         try{
             if(args.length!=3) {

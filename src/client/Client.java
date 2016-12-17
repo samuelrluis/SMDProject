@@ -49,13 +49,11 @@ public class Client {
     public void createThreads(){
         threadUI = new ThTextUI(this);
         threadUDPReader=new ThReaderUDP();//Thread that will be reading all the received data from DirServer
-        //TODO THREAD HEARTBEAT SO E CRIADA E LANÇADA QUANDO O UTILIZADOR SE AUTENTICA
     }
 
     public void startThreads(){
         threadUI.start();
         threadUDPReader.start();
-        //threadHeartBeat.start();
     }
 
     public void startThreadHB(){
@@ -73,6 +71,10 @@ public class Client {
 
     public DatagramSocket getSocketToDir() {
         return socketToDir;
+    }
+
+    public Socket getSocketTCP() {
+        return socketTCP;
     }
 
     public InetAddress getServerAddr() {

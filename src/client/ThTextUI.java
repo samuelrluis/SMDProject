@@ -71,25 +71,46 @@ public class ThTextUI extends Thread {
                     }
                 }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                     if (myClient.getRegistedFlag() == false) {
-                        if(argCommand.size()==3) {
+                        if (argCommand.size() == 3) {
                             myController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
                             myController.sendPacket(argCommand);
-                            String answer=myController.receiveAnswerPacket();
+                            String answer = myController.receiveAnswerPacket();
                             System.out.println(answer);
                             continue;
-                        }
-                        else
+                        } else
                             System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
 
                     } else {
                         System.out.println("You are already registered");
                         continue;
                     }
+                }
+
+                else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
+                        if(myClient.getRegistedFlag()==false) {
+                            System.out.println("To use this command you need to be logged in");
+                            continue;
+                        }
+                        myController.sendPacket(argCommand);
+                        String answer=myController.receiveAnswerPacket();
+                        System.out.println(answer);
+                        if(myController.connectToRemServer(answer))
+                            System.out.printf("Connection to " + argCommand.get(1) + argCommand.get(2) + "Succeded" );
+                        else
+                            System.out.printf("You can't connect to that server");
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
                     if(myClient.getRegistedFlag()==false){
                        System.out.println("To use this command you need to be logged in");
                        continue;
+                    }
+                    myController.sendPacket(argCommand);
+                    String answer=myController.receiveAnswerPacket();
+                    System.out.println(answer);
+                } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
+                if(myClient.getRegistedFlag()==false){
+                        System.out.println("To use this command you need to be logged in");
+                        continue;
                     }
                     myController.sendPacket(argCommand);
                     String answer=myController.receiveAnswerPacket();

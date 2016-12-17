@@ -1,5 +1,8 @@
 package remoteserver;
 
+import common.Msg;
+import sun.plugin2.message.Message;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,34 +13,37 @@ import java.net.Socket;
 public class ThAnswerClient extends Thread {
     public static final int TIMEOUT = 5;
     public static final int MAX_SIZE = 4000;
-    ServerSocket socketToClient;
-    String msgClient;
+    private ServerSocket socketTCP;
+    private Socket socketToClient;
+    private String msgClient;
+    private Msg msg;
 
-    ThAnswerClient(ServerSocket socketClient){
-        socketToClient=socketClient;
+    ThAnswerClient(ServerSocket socket,Socket socketToClient){
+        this.socketTCP=socket;
+        this.socketToClient=socketToClient;
     }
 
     @Override
     public void run() {
 
-        BufferedReader in;
+        ObjectInputStream in;
         OutputStream out;
         byte []fileChunck = new byte[MAX_SIZE];
 
         try{
-            socketToClient.setSoTimeout(1000*TIMEOUT);
+            socketTCP.setSoTimeout(1000*TIMEOUT);
+            System.out.println("My port is: " + socketTCP.getLocalPort());
 
-/*            in = new BufferedReader(new InputStreamReader(socketToClient.getInputStream()));
-            out = socketToClient.getOutputStream();*/
+            //Read Message from CLient
+            in = new ObjectInputStream(socketToClient.getInputStream());
+            msg = (Msg) in.readObject();
 
-            //msgClient = in.readLine();
-
-            System.out.println("Recebido: " + msgClient);
-
-            System.out.println("thread concluida");
+            System.out.println("recebi mensagem de" + msg.gethBeat().getName());
 
         } catch(IOException e){
             System.out.println("Ocorreu a excepcao de E/S: \n\t" + e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
         try{
