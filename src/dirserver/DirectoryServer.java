@@ -49,13 +49,6 @@ import java.util.ArrayList;
         Scontroller.answeringDatagram();
     }
 
-    public static void main(String args[]) {
-        DirectoryServer myServer=null;
-        myServer=new DirectoryServer();
-
-        myServer.runDirServeR();
-    }
-
      public ArrayList<ServerRegistry> getServerRegistries() {
          return serverRegistries;
      }
@@ -65,12 +58,20 @@ import java.util.ArrayList;
      }
 
      public String getListServ(){
-        return Scontroller.getListServ();
-    }
+         return Scontroller.getListServ();
+     }
 
      public String getListClient(){
          return Scontroller.getListClients();
      }
+
+
+    public static void main(String args[]) {
+        DirectoryServer myServer=null;
+        myServer=new DirectoryServer();
+
+        myServer.runDirServeR();
+    }
 }
 
 

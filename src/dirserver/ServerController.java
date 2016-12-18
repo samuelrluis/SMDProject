@@ -71,7 +71,6 @@ public class ServerController {
         }
     }
 
-
     private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
         int i=0;
         Boolean foundReg=false;
@@ -116,7 +115,6 @@ public class ServerController {
                 serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
             }
         }
-
 
     public void answeringDatagram(){
         //This is the principal function in our DirServer Controller;
