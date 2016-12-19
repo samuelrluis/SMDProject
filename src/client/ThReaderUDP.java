@@ -17,7 +17,6 @@ public class ThReaderUDP extends Thread{
 
 
     ThReaderUDP(){
-
         try {
             socket=new DatagramSocket();
         } catch (SocketException e) {

@@ -1,6 +1,7 @@
 package client;
 
-import common.UserID;
+import common.CliRegistry;
+
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -18,25 +19,21 @@ import java.util.StringTokenizer;
  * Created by diogomiguel on 25/11/16.
  */
 public class ThTextUI extends Thread {
-    public static final int MAX_SIZE = 256;
-    Client myClient;
-    UserID myUserID;
-
-    DatagramPacket packetToDir = null , packetReadDir = null;
+    public static final int MAX_SIZE = 1024;
+    private Client myClient;
+    private CliRegistry myUserID;
+    private Controller myController;
 
     ThTextUI(Client x){
         myClient=x;
-        packetReadDir = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
+        myController=x.getController();
+        myUserID=myClient.getMyUserID();
     }
 
     @Override
     public void run() {
-        DatagramSocket socketToDir=null;
         String commandStr;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        myUserID=myClient.getMyUserID();
-
-        socketToDir=myClient.getSocketToDir();
 
 
         while(true){
@@ -44,98 +41,102 @@ public class ThTextUI extends Thread {
             int x=0;
             System.out.print("> ");
             System.out.flush();
+
             try {
                 commandStr = br.readLine();
-            StringTokenizer tok = new StringTokenizer(commandStr," ");
+                StringTokenizer tok = new StringTokenizer(commandStr," ");
 
-            while (tok.hasMoreTokens()){
-                String token = tok.nextToken();
-                argCommand.add(token);
-            }
+                while (tok.hasMoreTokens()){
+                    String token = tok.nextToken();
+                    argCommand.add(token);
+                }
+
                 if(argCommand.get(0).equalsIgnoreCase("EXIT"))
                     continue;
-
                 else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
-                    try {
-                        System.out.println(readObjectFromFile("../SMDProject/src/client/manual.txt"));
-                    }catch (Exception e){
-                        System.out.println("File not found");
-                    }
+                    System.out.println(myController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
                     continue;
-
-                }else if(argCommand.get(0).equalsIgnoreCase("USER")){  //teste
-                    System.out.println(myClient.getMyUserID().toString());
-                    continue;
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> master
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
-                    continue;
-
-                }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-                    if (myClient.getRegistedFlag() == false) {
-                        try {
-                            myUserID.setUsername(argCommand.get(1));
-                            myUserID.setPassword(argCommand.get(2));
-
-                        } catch (Exception e) {
-                            System.out.println("You need to define Username and Password");
-                            continue;
+                    if(myClient.getLoginFlag()==false) {
+                        if (argCommand.size() == 3) {
+                            myController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                            myController.sendPacket(argCommand);
+                            String answer=myController.receiveAnswerPacket();
+                            System.out.println(answer);
+                            //TODO fazer setLoginFlagTrue so se houver um retorno positivo
+                            myClient.setloginFlagTrue();
                         }
-                        packetToDir = new DatagramPacket(("REGISTER" +" "+ argCommand.get(1)+" "+ argCommand.get(2)).getBytes(),("REGISTER" +" "+ argCommand.get(1)+" "+ argCommand.get(2)).length(),myClient.getServerAddr(), myClient.getServerPortCommand());
-                        myClient.setRegistedFlagTrue();
-                        socketToDir.send(packetToDir);
-                        socketToDir.receive(packetReadDir);
-                        String answer = new String(packetReadDir.getData());
-                        System.out.println(answer);
+                        else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND LOGIN");
+                        }
                         continue;
                     }
                     else {
+                        System.out.println("You are already Logged");
+                        continue;
+                    }
+                }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+                    if (myClient.getRegistedFlag() == false) {
+                        if (argCommand.size() == 3) {
+                            myController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                            myController.sendPacket(argCommand);
+                            String answer = myController.receiveAnswerPacket();
+                            System.out.println(answer);
+                            continue;
+                        } else
+                            System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
+
+                    } else {
                         System.out.println("You are already registered");
                         continue;
                     }
+                }
+
+                else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
+                        if(myClient.getRegistedFlag()==false) {
+                            System.out.println("To use this command you need to be logged in");
+                            continue;
+                        }
+                        myController.sendPacket(argCommand);
+                        String answer=myController.receiveAnswerPacket();
+                        System.out.println(answer);
+                        if(myController.connectToRemServer(answer))
+                            System.out.printf("Connection to " + argCommand.get(1) + argCommand.get(2) + "Succeded" );
+                        else
+                            System.out.printf("You can't connect to that server");
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
-                    /*
-                    System.out.println(myClient.getServerAddr().toString() + " " + myClient.getServerDirCommandPort());
-                    packetToDir=new DatagramPacket("SLIST".getBytes(),"SLIST".length(),myClient.getServerAddr(), myClient.getServerPortCommand()); //Create a Packet
-                    socketToDir.send(packetToDir);
-                    socketToDir.receive(packetReadDir);
-                    System.out.println("recebi");
-                    String answer = new String(packetReadDir.getData());
+                    if(myClient.getRegistedFlag()==false){
+                       System.out.println("To use this command you need to be logged in");
+                       continue;
+                    }
+                    myController.sendPacket(argCommand);
+                    String answer=myController.receiveAnswerPacket();
                     System.out.println(answer);
-                    */
-                    continue;
-                }
-                else{
+                } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
+                if(myClient.getRegistedFlag()==false){
+                        System.out.println("To use this command you need to be logged in");
+                        continue;
+                    }
+                    myController.sendPacket(argCommand);
+                    String answer=myController.receiveAnswerPacket();
+                    System.out.println(answer);
+                } else{
                     System.out.println("Command not found");
                     continue;
                 }
-
             } catch (IOException e) {
-                System.out.printf("File not found");
+                e.printStackTrace();
+                    continue;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
-
     }
-
-    private String readObjectFromFile(String file) throws Exception {
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            String everything = sb.toString();
-            return everything;
-        } finally {
-            br.close();
-        }
-
-    }
-
 }
