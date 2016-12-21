@@ -73,7 +73,7 @@ public class Controller {
     }
 
     public void regClient(String name, String pass){
-        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name,pass,myClient.getServerPortHB()));
+        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB()));
         myClient.setRegistedFlagTrue();
         myClient.startThreadHB();   //The HeartBeat Thread will start only when the userID is prepared
         return;

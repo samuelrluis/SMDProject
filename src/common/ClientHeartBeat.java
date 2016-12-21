@@ -10,10 +10,9 @@ import java.net.InetAddress;
 public class ClientHeartBeat extends HeartBeat implements Serializable {
     private String nameAndPassword;
 
-    public ClientHeartBeat(String name,String nameAndPassword,int hBport) {
+    public ClientHeartBeat(String nameAndPassword,int hBport) {
         //TODO falta ir buscar o porto TCP
-        super(name,"client",hBport,0);
-        this.nameAndPassword=nameAndPassword;
+        super(nameAndPassword,"client",hBport,0);
     }
 
     public void setNameAndPassword(String password) {
