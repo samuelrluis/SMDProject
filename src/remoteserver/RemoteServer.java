@@ -24,9 +24,8 @@ public class RemoteServer {
         myTcpPort=0;
         serverDirPort=udp;
     }
-
+//TODO e preciso arrumar estas funçoes no controlador
     private void awaitsForNewClient(){
-
             while (true) {
                 try {
                     socketToClient = serverSocketTcp.accept();
