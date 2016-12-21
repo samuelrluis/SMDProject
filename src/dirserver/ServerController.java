@@ -3,6 +3,7 @@ package dirserver;
 import common.*;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -41,12 +42,18 @@ public class ServerController {
             if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
                 CliRegistry cli = new CliRegistry(hBeat,333);
                 cli.writeObjectToFile();
-                packetWrite = new DatagramPacket("Registered successfully\0".getBytes(), "Registered successfully\0".length(), packetRead.getAddress(),packetRead.getPort()); //Create a Packet
+                packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(),packetRead.getPort()); //Create a Packet
                 socket.send(packetWrite);
             }
             else if(argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 //TODO falta implementar a verificaçao no ficheiro de registos
-                packetWrite = new DatagramPacket("Login successfully\0".getBytes(), "Login successfully\0".length(), packetRead.getAddress(),packetRead.getPort());
+                CliRegistry cli = new CliRegistry();
+                if(cli.checkCliOnFile(argCommand.get(1)+argCommand.get(2))==true) {
+                    packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
+                }
+                else if(cli.checkCliOnFile(argCommand.get(1)+argCommand.get(2))==false) {
+                    packetWrite = new DatagramPacket("Login failed".getBytes(), "Login failed".length(), packetRead.getAddress(), packetRead.getPort());
+                }
                 socket.send(packetWrite);
             }
             else if(argCommand.get(0).equalsIgnoreCase("SLIST")){
@@ -168,4 +175,6 @@ public class ServerController {
             return "No Clients Connected";
         return List.toString();
     }
+
+
 }

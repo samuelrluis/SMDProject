@@ -53,12 +53,13 @@ public class ThTextUI extends Thread {
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
                     if(myClient.getLoginFlag()==false) {
                         if (argCommand.size() == 3) {
-                            myController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
                             myController.sendPacket(argCommand);
                             String answer=myController.receiveAnswerPacket();
                             System.out.println(answer);
-                            //TODO fazer setLoginFlagTrue so se houver um retorno positivo
-                            myClient.setloginFlagTrue();
+                            if(answer.compareTo("Login successfully")==0) {
+                                myClient.setloginFlagTrue();
+                                myController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                            }
                         }
                         else {
                             System.out.println("SYNTAX ERROR FOR COMMAND LOGIN");

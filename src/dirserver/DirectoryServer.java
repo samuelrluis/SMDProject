@@ -15,8 +15,7 @@ import java.util.ArrayList;
     private ArrayList<ServerRegistry> serverRegistries = null;
     private ServerController Scontroller = null;
     private DatagramPacket packet = null;
-
-     public DirectoryServer(){
+    public DirectoryServer(){
         createSocket();
         createPacket();
         Scontroller=new ServerController(this);
