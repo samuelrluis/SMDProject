@@ -105,8 +105,7 @@ public class Controller {
     }
 
     public void loginClient(String name,String pass){
-        myClient.getMyUserID().setName(name);
-        myClient.getMyUserID().setPassword(pass);
+        myClient.getMyUserID().setNameAndPassword(name+pass);
         myClient.setRegistedFlagTrue();
         return;
     }
