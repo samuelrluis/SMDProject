@@ -40,7 +40,7 @@ public class CliRegistry extends Registry implements Serializable  {
         return hBeat;
     }
 
-    @Override
+  @Override
     public String toString() {
         return "usernameAndPass"+ name + " " + this.hBeat.getUdpPort() + " " + this.hBeat.getTcpPort();
     }
@@ -52,6 +52,7 @@ public class CliRegistry extends Registry implements Serializable  {
             ObjectOutput objectOutput = new
                     ObjectOutputStream(outputStream);
             objectOutput.writeObject(this);
+            System.out.println(this.getName());
             objectOutput.close();
             System.out.println("Gravou sucessso");
         } catch (FileNotFoundException e1) {
@@ -64,43 +65,27 @@ public class CliRegistry extends Registry implements Serializable  {
 
     public boolean checkCliOnFile (String nameAndPass){
 
-        int i=0;
+
         ArrayList<CliRegistry> recordList = new ArrayList<>();
-        ObjectInputStream objectinputstream = null;
+        CliRegistry object= new CliRegistry();
         try {
-            FileInputStream streamIn = new FileInputStream("../SMDProject/src/dirserver/saveCliRegistry.obj");
-            objectinputstream = new ObjectInputStream(streamIn);
-            CliRegistry readCase = null;
-            do {
-                try {
-                    readCase = (CliRegistry) objectinputstream.readObject();
-                }catch (IOException e){
-                    System.out.println("File empty");
-                }
-                if(readCase != null){
-                    recordList.add(readCase);
-                }
-            } while (readCase != null);
-            System.out.println(recordList.get(i));
-            i++;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (objectinputstream != null) {
-                try {
-                    objectinputstream.close();
-                }catch (IOException e){}
-                return false;
-            }
-        }
-        for(i=0;i<recordList.size();i++){
-            if(recordList.get(i).getNameAndPassword().compareTo(nameAndPass)==0){
+            try {
+                FileInputStream fis = new FileInputStream("../SMDProject/src/dirserver/saveCliRegistry.obj");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                do {
+                    object = (CliRegistry) ois.readObject();
+                    if(object!=null)
+                        recordList.add(object);
+                }while (object!=null);
+            } catch (FileNotFoundException e) {System.out.println("File not found");return false;}
+        }catch (Exception e){}
+
+        for (int i=0; i<recordList.size();i++){
+            if(recordList.get(i).getName().toString().compareTo(nameAndPass)==0){
                 return true;
             }
         }
         return false;
-
-
     }
 
     public void sethBeat(ClientHeartBeat hBeat) {

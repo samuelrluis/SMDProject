@@ -40,6 +40,8 @@ public class ThSendHeartBeat extends Thread {
     public void run(){
         while(true) {
             try {
+                //TODO implementar/modificar um mecanismo de enviar arraylist de clientes logados activos nos ulimos Xsegundos(Acho que sao 30 tbm)
+                //TODO, tem de ser adicionado ao packetHeartBeat o arraylist
                 socketHeartBeatUDP.send(packetHeartBeat);    //Send the Packet
                 System.out.println("Enviei");
                 Thread.sleep(10000);

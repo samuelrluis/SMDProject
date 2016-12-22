@@ -63,7 +63,6 @@ public class Controller {
             out = new ObjectOutputStream(b0ut);
             out.writeObject(msg);
             out.flush();
-
             packetToDir = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), myClient.getServerPortCommand());
             socketToDir.send(packetToDir);
 
@@ -73,7 +72,7 @@ public class Controller {
     }
 
     public void regClient(String name, String pass){
-        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name,pass,myClient.getServerPortHB()));
+        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB()));
         myClient.setRegistedFlagTrue();
         myClient.startThreadHB();   //The HeartBeat Thread will start only when the userID is prepared
         return;
@@ -105,6 +104,7 @@ public class Controller {
     }
 
     public void loginClient(String name,String pass){
+        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB()));
         myClient.getMyUserID().setNameAndPassword(name+pass);
         myClient.setRegistedFlagTrue();
         return;

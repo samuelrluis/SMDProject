@@ -26,57 +26,70 @@ public class ServerController {
         packetRead=Serv.getPacket();
     }
 
-    private void receivedCommand(Msg message){
-        ArrayList<String> argCommand=new ArrayList<>();
+    private void receivedCommand(Msg message) {
+        ArrayList<String> argCommand = new ArrayList<>();
 
         String commandStr = message.getCommand();
         ClientHeartBeat hBeat = message.gethBeat();
-        StringTokenizer tok = new StringTokenizer(commandStr," ");
+        StringTokenizer tok = new StringTokenizer(commandStr, " ");
 
-        while (tok.hasMoreTokens()){
+        while (tok.hasMoreTokens()) {
             String token = tok.nextToken();
             argCommand.add(token);
         }
         //---------------------- trata comandos
-        try{
-            if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
-                CliRegistry cli = new CliRegistry(hBeat,333);
+        try {
+            if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+                CliRegistry cli = new CliRegistry(hBeat, 333);
                 cli.writeObjectToFile();
-                packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(),packetRead.getPort()); //Create a Packet
+                packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(), packetRead.getPort()); //Create a Packet
                 socket.send(packetWrite);
-            }
-            else if(argCommand.get(0).equalsIgnoreCase("LOGIN")) {
-                //TODO falta implementar a verificaçao no ficheiro de registos
+            } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 CliRegistry cli = new CliRegistry();
-                if(cli.checkCliOnFile(argCommand.get(1)+argCommand.get(2))==true) {
+                if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2)) == true) {
                     packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
-                }
-                else if(cli.checkCliOnFile(argCommand.get(1)+argCommand.get(2))==false) {
+                } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2)) == false) {
                     packetWrite = new DatagramPacket("Login failed".getBytes(), "Login failed".length(), packetRead.getAddress(), packetRead.getPort());
                 }
                 socket.send(packetWrite);
-            }
-            else if(argCommand.get(0).equalsIgnoreCase("SLIST")){
+            } else if (argCommand.get(0).equalsIgnoreCase("SLIST")) {
                 System.out.println("List of Servers \n" + Serv.getListServ());
-                packetWrite =new DatagramPacket((Serv.getListServ()).getBytes(),(Serv.getListServ()).length(),packetRead.getAddress(),packetRead.getPort());
+                packetWrite = new DatagramPacket((Serv.getListServ()).getBytes(), (Serv.getListServ()).length(), packetRead.getAddress(), packetRead.getPort());
                 socket.send(packetWrite);
-            }
-            else if(argCommand.get(0).equalsIgnoreCase("CLIST")){
+            } else if (argCommand.get(0).equalsIgnoreCase("CLIST")) {
                 System.out.println("List of Clients \n" + Serv.getListClient());
-                packetWrite =new DatagramPacket((Serv.getListClient()).getBytes(),(Serv.getListClient()).length(),packetRead.getAddress(),packetRead.getPort());
+                packetWrite = new DatagramPacket((Serv.getListClient()).getBytes(), (Serv.getListClient()).length(), packetRead.getAddress(), packetRead.getPort());
                 socket.send(packetWrite);
+            }else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
+                //TODO implementar msgs, para um cliente especifico "CLIMSG"+"espaço"+"idDoCli"+"texto", em difusao "CLIMSG"+"espaço"+"texto"
+
+
+
+
+
             }
-            else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
-                ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
-                int wantedServerTcp = serverRegistries.get((Integer.parseInt(argCommand.get(2)))).gethBeat().getTcpPort();
-                String wantedServer = wantedServerTcp+"";
-                packetWrite =new DatagramPacket(wantedServer.getBytes(),wantedServer.length(),packetRead.getAddress(),packetRead.getPort());
-                socket.send(packetWrite);
-            }
+
+                //TODO isto nao e ja para implementar pq e cara criar uma ligaçao TCP direta entre CLIENTE e SERV REMOTO
+//            else if (argCommand.get(0).equalsIgnoreCase("CONNECT")) {
+//                ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
+//                try {
+//                    int wantedServerTcp = serverRegistries.get((Integer.parseInt(argCommand.get(2)))).gethBeat().getTcpPort();
+//                    String wantedServer = wantedServerTcp + "";
+//                    packetWrite = new DatagramPacket(wantedServer.getBytes(), wantedServer.length(), packetRead.getAddress(), packetRead.getPort());
+//                    socket.send(packetWrite);
+//                } catch (NumberFormatException e) {
+//                    System.out.println("Server not found");
+//                }
+                //TODO com isto temos todos os comandos do servDiretoria implementados :)
+//            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
+
 
 
     private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
