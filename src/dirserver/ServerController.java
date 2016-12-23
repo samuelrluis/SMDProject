@@ -73,8 +73,9 @@ public class ServerController {
                     packetWrite = new DatagramPacket(wantedServer.getBytes(), wantedServer.length(), packetRead.getAddress(), packetRead.getPort());
                     System.out.println(wantedServer.toString());
                     socket.send(packetWrite);
-                } catch (NumberFormatException e) {
+                } catch (IndexOutOfBoundsException e) {
                     System.out.println("Server not found");
+                    socket.send(packetWrite);
                 }
                 //TODO com isto temos todos os comandos do servDiretoria implementados :)
                 }
