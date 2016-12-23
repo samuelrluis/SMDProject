@@ -99,6 +99,11 @@ public class Client {
         return;
     }
 
+    public void setloginFlagFalse(){
+        this.loginFlag=false;
+        return;
+    }
+
     public boolean getRegistedFlag(){
         return this.registedFlag;
     }
