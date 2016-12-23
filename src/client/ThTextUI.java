@@ -1,6 +1,7 @@
 package client;
 
 import common.CliRegistry;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 
 
 import java.io.*;
@@ -47,8 +48,15 @@ public class ThTextUI extends Thread {
                 }
 
                 try{
-                if(argCommand.get(0).equalsIgnoreCase("EXIT"))
-                    continue;
+                if(argCommand.get(0).equalsIgnoreCase("EXIT")){
+                    if (myClient.getLoginFlag() == true) {
+                        System.out.println("You have to logout first!");
+                        continue;
+                    }else
+                        System.exit(0);
+
+                }
+
                 else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
                     System.out.println(myController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
                     continue;
@@ -72,7 +80,20 @@ public class ThTextUI extends Thread {
                         System.out.println("You are already Logged");
                         continue;
                     }
-                }else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+                }else if(argCommand.get(0).equalsIgnoreCase("LOGOUT")){
+                    if (myClient.getRegistedFlag() == false) {
+                        System.out.println("You are not Logged");
+                            continue;
+                    }else
+                    {
+                        myClient.setloginFlagFalse(); // falta notificar o servidor
+                        System.out.println("Successfully logout!");
+                        continue;
+                    }
+                }
+
+
+                else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                     if (myClient.getRegistedFlag() == false) {
                         if (argCommand.size() == 3) {
                             myController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
@@ -112,6 +133,8 @@ public class ThTextUI extends Thread {
                     if(myClient.getRegistedFlag()==false){
                        System.out.println("To use this command you need to be logged in");
                        continue;
+                    }else{
+
                     }
                     //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer umam ligaçao direta com os servidores)
 //                    myController.sendPacket(argCommand);

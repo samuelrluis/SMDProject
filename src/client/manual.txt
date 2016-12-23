@@ -8,6 +8,7 @@ connect to server
 
 finish connection
    logout			        Ends the connection with the server
+   exit                     Finish the Client application
 
 work on the current directory
    copyfile			        Copy a file from server to client machine
