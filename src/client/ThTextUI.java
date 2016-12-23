@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
 /**
  * Created by diogomiguel on 25/11/16.
  */
+
 public class ThTextUI extends Thread {
     public static final int MAX_SIZE = 1024;
     private Client myClient;
@@ -48,7 +49,7 @@ public class ThTextUI extends Thread {
                 try{
                 if(argCommand.get(0).equalsIgnoreCase("EXIT"))
                     continue;
-                else if(argCommand.get(0).equalsIgnoreCase("HELP")) {
+                else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
                     System.out.println(myController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
                     continue;
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){

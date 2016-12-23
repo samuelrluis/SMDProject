@@ -1,8 +1,4 @@
-usage: git [--version] [--help] [-C <path>] [-c name=value]
-           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
-           [-p | --paginate | --no-pager] [--no-replace-objects] [--bare]
-           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
-           <command> [<args>]
+usage: <command> [<args>]
 
 These are common Client commands used in various situations:
 
@@ -24,3 +20,6 @@ directory commands
    changeworkingdirectory	Change current working directory for a new one
    getworkingdircontent	    Get info from the current directory content
    getworkingdirpath		Prints the current directory path
+
+other commands
+   man                      Displays the application manual
