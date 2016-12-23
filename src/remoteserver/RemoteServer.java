@@ -8,9 +8,7 @@ import java.io.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RemoteServer {
-    static AtomicInteger nextId = new AtomicInteger();
     private String name;
-    private int id;
     ServerSocket serverSocketTcp = null; //TCP
     DatagramSocket serverSocketUdp = null; //UDP
     InetAddress myAddress=null;
@@ -19,21 +17,26 @@ public class RemoteServer {
     ThSendHeartBeat threadHeartbeat;
     ThAnswerClient threadAnswerClient = null;
 
-    RemoteServer(InetAddress address,int udp){
-        id = nextId.incrementAndGet();
-        name="RemoteServer" + id + " ";
+    RemoteServer(String name,InetAddress address,int udp){
+        this.name=name;
         myAddress=address;
         myUdpPort=0;
         myTcpPort=0;
         serverDirPort=udp;
     }
-
+//TODO e preciso arrumar estas funçoes no controlador
     private void awaitsForNewClient(){
-        try{
-            socketToClient=serverSocketTcp.accept();
-        }catch(IOException e){
-            System.out.println("Error creating the New Socket C");
-        }
+            while (true) {
+                try {
+                    socketToClient = serverSocketTcp.accept();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                ThAnswerClient thread = new ThAnswerClient(serverSocketTcp, socketToClient);
+                thread.start();
+                System.out.println("after thread");
+            }
     }
 
     private void createThreadUdp(){
@@ -45,23 +48,22 @@ public class RemoteServer {
         threadHeartbeat.start();
     }
 
-    private void createThreadTcp(){
+    private void createThreadTcp(Socket socketToClient){
         //TCP-Socket to the Client
-        threadAnswerClient=new ThAnswerClient(serverSocketTcp);
+        threadAnswerClient=new ThAnswerClient(serverSocketTcp,socketToClient);
         threadAnswerClient.start();
     }
 
     public void runServer(){
         //TCP-Client
         try{
-            serverSocketTcp = new ServerSocket();
+            serverSocketTcp = new ServerSocket(0);
             serverSocketUdp = new DatagramSocket();
             myTcpPort=serverSocketTcp.getLocalPort();
             myUdpPort=serverSocketUdp.getLocalPort();
 
             createThreadUdp();
-/*            awaitsForNewClient();
-            createThreadTcp();*/
+            awaitsForNewClient();
 
         }catch(IOException e){
             System.out.println("Error creating the New Socket X");
@@ -75,21 +77,22 @@ public class RemoteServer {
     public static void main(String[] args) {
         RemoteServer remServer;
         InetAddress serverAddr = null;
-        int serverPortToDirectory = -1,serverPortTCP=-1;
+        int serverPortToDirectory = -1;
 
         try{
-            if(args.length!=2) {
+            if(args.length!=3) {
                 System.out.println("Sintax Error [SERVICEIP][UDP_SERVICEPORT_TODIRSERVER]");
                 System.exit(0);
             }
 
-            serverAddr = InetAddress.getByName(args[0]);
-            serverPortToDirectory = Integer.parseInt(args[1]);
+            String name = args[0];
+            serverAddr = InetAddress.getByName(args[1]);
+            serverPortToDirectory = Integer.parseInt(args[2]);
 
             if(serverPortToDirectory<0 )
                 System.out.println("The values of the port in the arguments are wrong");
 
-            remServer=new RemoteServer(serverAddr,serverPortToDirectory);
+            remServer=new RemoteServer(name,serverAddr,serverPortToDirectory);
             remServer.runServer();
 
         }catch(UnknownHostException e){

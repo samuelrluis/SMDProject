@@ -1,6 +1,7 @@
 package client;
 
-import common.UserID;
+import common.CliRegistry;
+import common.ClientHeartBeat;
 
 import java.io.*;
 import java.net.*;
@@ -14,21 +15,28 @@ import java.util.StringTokenizer;
  */
 public class Client {
     //threads
-    ThSendHeartBeat threadHeartBeat;
-    ThTextUI threadUI;
-    ThReaderUDP threadUDPReader=null;
-    DatagramSocket socketToDir=null;
-    Socket socketTCP=null;
-    InetAddress serverAddr=null;
-    int serverPortHB=-1,serverPortCommand=-1;
-    UserID myUserID=null;
+    private ThSendHeartBeat threadHeartBeat;
+    private ThTextUI threadUI;
+    private ThReaderUDP threadUDPReader=null;
+    private DatagramSocket socketToDir=null;
+    private Socket socketTCP=null;
+    private InetAddress serverAddr=null;
+    private int serverPortHB=-1,serverPortCommand=-1;
+    private CliRegistry myUserID=null;
+    private Controller myController=null;
+    private boolean registedFlag = false;
+    private boolean loginFlag = false;
 
+    public int getServerPortHB() {
+        return serverPortHB;
+    }
 
-    Client(InetAddress serverAddress, Integer serverPort,Integer serverPortCommand){
-        myUserID=new UserID();
+    Client(InetAddress serverAddress, Integer serverPort, Integer serverPortCommand){
+        myUserID=new CliRegistry();
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
+        myController=new Controller(this);
 
         try {
             socketToDir=new DatagramSocket();
@@ -40,23 +48,33 @@ public class Client {
 
     public void createThreads(){
         threadUI = new ThTextUI(this);
-        threadUDPReader=new ThReaderUDP();        //Thread that will be reading all the received data from DirServer
-        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,socketTCP.getPort(),"xpto");
-        //TODO THREAD HEARTBEAT SO E CRIADA E LANÇADA QUANDO O UTILIZADOR SE AUTENTICA
+        threadUDPReader=new ThReaderUDP();//Thread that will be reading all the received data from DirServer
     }
 
     public void startThreads(){
         threadUI.start();
         threadUDPReader.start();
+    }
+
+    public void startThreadHB(){
+        threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,this);
         threadHeartBeat.start();
     }
 
-    public UserID getMyUserID() {
+    public Controller getController() {
+        return myController;
+    }
+
+    public CliRegistry getMyUserID() {
         return myUserID;
     }
 
     public DatagramSocket getSocketToDir() {
         return socketToDir;
+    }
+
+    public Socket getSocketTCP() {
+        return socketTCP;
     }
 
     public InetAddress getServerAddr() {
@@ -69,6 +87,29 @@ public class Client {
 
     public int getServerPortCommand(){
         return serverPortCommand;
+    }
+
+    public void setRegistedFlagTrue(){
+        this.registedFlag=true;
+        return;
+    }
+
+    public void setloginFlagTrue(){
+        this.loginFlag=true;
+        return;
+    }
+
+    public void setloginFlagFalse(){
+        this.loginFlag=false;
+        return;
+    }
+
+    public boolean getRegistedFlag(){
+        return this.registedFlag;
+    }
+
+    public boolean getLoginFlag(){
+        return this.loginFlag;
     }
 
     public static void main(String args[]){
