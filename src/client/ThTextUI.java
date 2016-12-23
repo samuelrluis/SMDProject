@@ -33,7 +33,7 @@ public class ThTextUI extends Thread {
         while(true){
             ArrayList<String> argCommand = new ArrayList<>();
             int x=0;
-            System.out.println("Command: ");
+            System.out.print("$> ");
             System.out.flush();
 
             try {
