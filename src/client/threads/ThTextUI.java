@@ -1,13 +1,9 @@
 package client.threads;
 
-<<<<<<< HEAD:src/client/threads/ThTextUI.java
+
 import client.Client;
 import client.Controller;
 import common.registry.CliRegistry;
-
-=======
-import common.CliRegistry;
->>>>>>> master:src/client/ThTextUI.java
 
 import java.io.*;
 import java.util.ArrayList;

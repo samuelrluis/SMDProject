@@ -70,10 +70,6 @@ public class ServerController {
                 //TODO implementar msgs, para um cliente especifico "CLIMSG"+"espaço"+"idDoCli"+"texto", em difusao "CLIMSG"+"espaço"+"texto"
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
             }
             else if (argCommand.get(0).equalsIgnoreCase("CONNECT")) {
                 ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
