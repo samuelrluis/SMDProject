@@ -50,15 +50,15 @@ import java.util.ArrayList;
          return packet;
      }
 
-     public void runDirServeR(){
+     public void runDirServer(){
          Scontroller.answeringDatagram();
      }
 
      public static void main(String args[]) {
+
          DirectoryServer myServer=null;
          myServer=new DirectoryServer();
-
-         myServer.runDirServeR();
+         myServer.runDirServer();
      }
 
      public ArrayList<ServerRegistry> getServerRegistries() {

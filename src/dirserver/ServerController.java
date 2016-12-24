@@ -24,7 +24,7 @@ public class ServerController {
 
     private DatagramPacket packetRead;
     private DatagramPacket packetWrite;
-    private DatagramSocket socket;
+    private DatagramSocket socket = null;
 
     public ServerController(DirectoryServer x){
         Serv=x;
@@ -47,14 +47,14 @@ public class ServerController {
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                 CliRegistry cli = new CliRegistry(hBeat, 333);
-                cli.writeObjectToFile();
+                cli.writeObjectToFile("../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj");
                 packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(), packetRead.getPort()); //Create a Packet
                 socket.send(packetWrite);
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 CliRegistry cli = new CliRegistry();
-                if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2)) == true) {
+                if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == true) {
                     packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
-                } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2)) == false) {
+                } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == false) {
                     packetWrite = new DatagramPacket("Login failed".getBytes(), "Login failed".length(), packetRead.getAddress(), packetRead.getPort());
                 }
                 socket.send(packetWrite);

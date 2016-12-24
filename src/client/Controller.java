@@ -80,7 +80,7 @@ public class Controller {
         return;
     }
 
-    public void comandToRem(String ServerName){
+    public void comandToRemServer(String ServerName){
         String commandStr;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         do{
