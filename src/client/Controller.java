@@ -9,6 +9,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import static client.threads.ThTextUI.MAX_SIZE;
 
@@ -37,7 +38,7 @@ public class Controller {
         return answer;
     }
 
-    public void sendPacket(ArrayList<String> argCommand){
+    public void sendPacketToDirServer(ArrayList<String> argCommand){
         DatagramSocket socketToDir;
         DatagramPacket packetToDir;
         ByteArrayOutputStream b0ut;
@@ -78,29 +79,68 @@ public class Controller {
         return;
     }
 
-    public boolean connectToRemServer(String wantedPort){
-        Socket socketToRemServer=null;
-        int serverPort = Integer.parseInt(wantedPort);
-        InetSocketAddress serverAddr= new InetSocketAddress("127.0.0.1",serverPort);
+    public void comandToRem(String ServerName){
+        String commandStr;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        do{
+            ArrayList<String> argCommand = new ArrayList<>();
+            int x=0;
+            System.out.print(ServerName +" "+ "$> ");
+            System.out.flush();
 
-
-        if(serverPort!=0){
             try {
-                socketToRemServer=new Socket("127.0.0.1",serverPort);
-                //myClient.getSocketTCP().bind((serverAddr));
-                Msg msg = new Msg("Just Connect to this Server",myClient.getMyUserID().gethBeat()); //Create Serializable Msg
+                commandStr = br.readLine();
+                StringTokenizer tok = new StringTokenizer(commandStr," ");
 
-                ObjectOutputStream objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
-                objectOutput.writeObject(msg);
-                objectOutput.flush();
-                System.out.println("Enviou msg TCP");
+                while (tok.hasMoreTokens()){
+                    String token = tok.nextToken();
+                    argCommand.add(token);
+                }
 
+                try{
+                    if(argCommand.get(0).equalsIgnoreCase("EXIT")){
+                        break;
+                    }
+                    else{
+                        System.out.println("Command not found");
+                        continue;
+                    }
+                }catch (IndexOutOfBoundsException e){}
             } catch (IOException e) {
                 e.printStackTrace();
+                continue;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            return true;
-        }else
-            return false;
+        }while (true);
+    }
+
+
+    public boolean connectToRemServer(String wantedPort){
+        Socket socketToRemServer=null;
+        try {
+            int serverPort = Integer.parseInt(wantedPort);
+            InetSocketAddress serverAddr = new InetSocketAddress("127.0.0.1", serverPort);
+
+
+            if (serverPort != 0) {
+                try {
+                    socketToRemServer = new Socket("127.0.0.1", serverPort);
+                    //myClient.getSocketTCP().bind((serverAddr));
+                    Msg msg = new Msg("Just Connect to this Server", myClient.getMyUserID().gethBeat()); //Create Serializable Msg
+
+                    ObjectOutputStream objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
+                    objectOutput.writeObject(msg);
+                    objectOutput.flush();
+                    System.out.println("Enviou msg TCP");
+
+                } catch (IOException e) {
+                    return false;
+                }
+                return true;
+            } else
+                return false;
+        }catch (Exception e){return false;}
     }
 
     public void loginClient(String name,String pass){

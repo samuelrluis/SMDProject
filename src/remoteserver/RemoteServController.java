@@ -38,7 +38,7 @@ public class RemoteServController {
             String token = tok.nextToken();
             argCommand.add(token);
         }
-        //---------------------- trata comandos
+        //---------------------- trata comandos ----------------------
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                 //TODO implementar registos dos clientes neste servidor remoto,

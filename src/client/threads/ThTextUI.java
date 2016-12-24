@@ -1,9 +1,13 @@
 package client.threads;
 
+<<<<<<< HEAD:src/client/threads/ThTextUI.java
 import client.Client;
 import client.Controller;
 import common.registry.CliRegistry;
 
+=======
+import common.CliRegistry;
+>>>>>>> master:src/client/ThTextUI.java
 
 import java.io.*;
 import java.util.ArrayList;
@@ -61,7 +65,7 @@ public class ThTextUI extends Thread {
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
                     if(myClient.getLoginFlag()==false) {
                         if (argCommand.size() == 3) {
-                            myController.sendPacket(argCommand);
+                            myController.sendPacketToDirServer(argCommand);
                             String answer=myController.receiveAnswerPacket();
                             System.out.println(answer);
                             if(answer.compareTo("Login successfully")==0) {
@@ -95,7 +99,7 @@ public class ThTextUI extends Thread {
                     if (myClient.getRegistedFlag() == false) {
                         if (argCommand.size() == 3) {
                             myController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                            myController.sendPacket(argCommand);
+                            myController.sendPacketToDirServer(argCommand);
                             String answer = myController.receiveAnswerPacket();
                             System.out.println(answer);
                             continue;
@@ -109,23 +113,26 @@ public class ThTextUI extends Thread {
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
-                        if(myClient.getRegistedFlag()==false) {
-                            System.out.println("To use this command you need to be logged in");
-                            continue;
-                        }
-                    //TODO criar comunicaçao TCP com o respetivo Remote server
-//                        myController.sendPacket(argCommand);
-//                        String answer=myController.receiveAnswerPacket();
-//                        System.out.println(answer);
-//                        if(myController.connectToRemServer(answer))
-//                            System.out.printf("Connection to " + argCommand.get(1) + argCommand.get(2) + "Succeded" );
-//                        else
-//                            System.out.printf("You can't connect to that server");
+
                     //TODO----------------------------TRATAR COMANDOS PARA O SERVREMOTO------------------------------------
                     //TODO dpois aqui dentro eu proponho que façamos um ciclo infinito de leitura de comando para o servRemoto em questao
                     //TODO ,pq se nao para tratar os comandos temos tinhamos de colocar o nome do servidor sempre antes o que nao fazer muito sentido
                     //TODO dpois caso o cliente queira sair ha um comando "EXIT" damos um break e volta para aqui e pode se ligar a outro servRemoto
                     //-----------------------------------------------------------------------------------------------------
+
+                        if(myClient.getRegistedFlag()==false) {
+                            System.out.println("To use this command you need to be logged in");
+                            continue;
+                        }
+                        myController.sendPacketToDirServer(argCommand);
+                        String answer=myController.receiveAnswerPacket();
+                        if(myController.connectToRemServer(answer)) {
+                            System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
+                            myController.comandToRem(argCommand.get(1));
+                        }
+                        else
+                            System.out.println("You can't connect to that server");
+
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
                     if(myClient.getRegistedFlag()==false){
@@ -135,9 +142,9 @@ public class ThTextUI extends Thread {
 
                     }
                     //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer umam ligaçao direta com os servidores)
-//                    myController.sendPacket(argCommand);
-//                    String answer=myController.receiveAnswerPacket();
-//                    System.out.println(answer);
+                    myController.sendPacketToDirServer(argCommand);
+                    String answer=myController.receiveAnswerPacket();
+                    System.out.println(answer);
                 } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
                 if(myClient.getRegistedFlag()==false){
                         System.out.println("To use this command you need to be logged in");
