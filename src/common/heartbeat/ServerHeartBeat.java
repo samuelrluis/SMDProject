@@ -1,4 +1,6 @@
-package common;
+package common.heartbeat;
+
+import common.heartbeat.HeartBeat;
 
 /**
  * Created by Samuel on 15/12/2016.

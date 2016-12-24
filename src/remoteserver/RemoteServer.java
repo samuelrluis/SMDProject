@@ -3,27 +3,36 @@
  */
 package remoteserver;
 
+import remoteserver.threads.ThAnswerClient;
+import remoteserver.threads.ThSendHeartBeat;
+
 import java.net.*;
 import java.io.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class RemoteServer {
+
+    //RemServer
+    ThSendHeartBeat threadHeartbeat;
+    ThAnswerClient threadAnswerClient = null;
+
     private String name;
     ServerSocket serverSocketTcp = null; //TCP
     DatagramSocket serverSocketUdp = null; //UDP
     InetAddress myAddress=null;
     Socket socketToClient = null;
     int myTcpPort,serverDirPort,myUdpPort;
-    ThSendHeartBeat threadHeartbeat;
-    ThAnswerClient threadAnswerClient = null;
+
 
     RemoteServer(String name,InetAddress address,int udp){
+
         this.name=name;
         myAddress=address;
         myUdpPort=0;
         myTcpPort=0;
         serverDirPort=udp;
+
     }
+
 //TODO e preciso arrumar estas funçoes no controlador
     private void awaitsForNewClient(){
             while (true) {

@@ -1,37 +1,37 @@
 package client;
 
-import common.CliRegistry;
-import common.ClientHeartBeat;
+import client.threads.ThReaderUDP;
+import client.threads.ThSendHeartBeat;
+import client.threads.*;
+import common.registry.CliRegistry;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+
 
 /**
  * Created by Samuel on 30/10/2016.
  */
 public class Client {
-    //threads
-    private ThSendHeartBeat threadHeartBeat;
+
+    //Client
     private ThTextUI threadUI;
     private ThReaderUDP threadUDPReader=null;
+    private Controller myController=null;
+    private ThSendHeartBeat threadHeartBeat;
+
+    //Common
+    private CliRegistry myUserID=null;
+
     private DatagramSocket socketToDir=null;
     private Socket socketTCP=null;
     private InetAddress serverAddr=null;
     private int serverPortHB=-1,serverPortCommand=-1;
-    private CliRegistry myUserID=null;
-    private Controller myController=null;
     private boolean registedFlag = false;
     private boolean loginFlag = false;
 
-    public int getServerPortHB() {
-        return serverPortHB;
-    }
-
     Client(InetAddress serverAddress, Integer serverPort, Integer serverPortCommand){
+
         myUserID=new CliRegistry();
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
@@ -44,6 +44,11 @@ public class Client {
         } catch (SocketException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public int getServerPortHB() {
+        return serverPortHB;
     }
 
     public void createThreads(){

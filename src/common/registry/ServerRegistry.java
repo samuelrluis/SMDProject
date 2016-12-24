@@ -1,4 +1,6 @@
-package common;
+package common.registry;
+
+import common.heartbeat.ServerHeartBeat;
 
 /**
  * Created by Samuel on 25/11/2016.

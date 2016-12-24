@@ -1,6 +1,6 @@
 package client;
 
-import common.ClientHeartBeat;
+import common.heartbeat.ClientHeartBeat;
 import common.Msg;
 
 import java.io.*;
@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import static client.ThTextUI.MAX_SIZE;
+import static client.threads.ThTextUI.MAX_SIZE;
 
 /**
  * Created by Samuel on 13/12/2016.

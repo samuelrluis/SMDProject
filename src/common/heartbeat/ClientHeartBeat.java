@@ -1,8 +1,8 @@
-package common;
+package common.heartbeat;
 
-import java.awt.*;
+import common.heartbeat.HeartBeat;
+
 import java.io.Serializable;
-import java.net.InetAddress;
 
 /**
  * Created by Samuel on 15/12/2016.

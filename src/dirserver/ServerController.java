@@ -1,9 +1,12 @@
 package dirserver;
 
 import common.*;
+import common.heartbeat.ClientHeartBeat;
+import common.heartbeat.ServerHeartBeat;
+import common.registry.CliRegistry;
+import common.registry.ServerRegistry;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -15,7 +18,10 @@ import java.util.StringTokenizer;
  * Created by MarceloCortesao on 15/12/16.
  */
 public class ServerController {
+
+    //DirServer
     private DirectoryServer Serv;
+
     private DatagramPacket packetRead;
     private DatagramPacket packetWrite;
     private DatagramSocket socket;
@@ -64,6 +70,10 @@ public class ServerController {
                 //TODO implementar msgs, para um cliente especifico "CLIMSG"+"espaço"+"idDoCli"+"texto", em difusao "CLIMSG"+"espaço"+"texto"
 
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> master
             }
             else if (argCommand.get(0).equalsIgnoreCase("CONNECT")) {
                 ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
@@ -84,9 +94,6 @@ public class ServerController {
             e.printStackTrace();
         }
     }
-
-
-
 
 
     private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
@@ -133,7 +140,6 @@ public class ServerController {
                 serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
             }
         }
-
 
     public void answeringDatagram(){
         //This is the principal function in our DirServer Controller;

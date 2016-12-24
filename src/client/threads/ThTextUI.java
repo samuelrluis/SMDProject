@@ -1,11 +1,15 @@
-package client;
+package client.threads;
 
+<<<<<<< HEAD:src/client/threads/ThTextUI.java
+import client.Client;
+import client.Controller;
+import common.registry.CliRegistry;
+
+=======
 import common.CliRegistry;
+>>>>>>> master:src/client/ThTextUI.java
 
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -19,7 +23,7 @@ public class ThTextUI extends Thread {
     private CliRegistry myUserID;
     private Controller myController;
 
-    ThTextUI(Client x){
+    public ThTextUI(Client x){
         myClient=x;
         myController=x.getController();
         myUserID=myClient.getMyUserID();
