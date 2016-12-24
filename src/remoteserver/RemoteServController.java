@@ -1,11 +1,9 @@
 package remoteserver;
 
 import common.*;
+import common.heartbeat.ClientHeartBeat;
 import dirserver.DirectoryServer;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
@@ -22,9 +20,11 @@ public class RemoteServController {
     private DatagramSocket socket;
 
     public RemoteServController(DirectoryServer x){
+
         Serv=x;
         socket=Serv.getSocketUDP();
         packetRead=Serv.getPacket();
+
     }
 
     private void receivedCommand(Msg message) {

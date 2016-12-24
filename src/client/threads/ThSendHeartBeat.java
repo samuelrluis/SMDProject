@@ -1,7 +1,7 @@
-package client;
+package client.threads;
 
-import common.ClientHeartBeat;
-import common.HeartBeat;
+import client.Client;
+import common.heartbeat.HeartBeat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,13 +12,16 @@ import java.net.*;
  * Created by Samuel on 22/11/2016.
  */
 public class ThSendHeartBeat extends Thread {
+
+    //Common
     private HeartBeat myHeartBeat;
+
     private DatagramPacket packetHeartBeat=null;
     private DatagramSocket socketHeartBeat = null;
     private ByteArrayOutputStream b0ut;
     private ObjectOutputStream out;
 
-    ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, Client myClient){
+    public ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, Client myClient){
         try{
             socketHeartBeat = new DatagramSocket();                        //Create Socket to send the HeartBeat
             myHeartBeat = myClient.getMyUserID().gethBeat();               //Create the HeartBeat Serializable Object

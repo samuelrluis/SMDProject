@@ -1,5 +1,7 @@
 package common;
 
+import common.heartbeat.ClientHeartBeat;
+
 import java.io.Serializable;
 
 /**

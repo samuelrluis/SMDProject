@@ -1,13 +1,11 @@
-package client;
+package client.threads;
 
-import common.CliRegistry;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import client.Client;
+import client.Controller;
+import common.registry.CliRegistry;
 
 
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -21,7 +19,7 @@ public class ThTextUI extends Thread {
     private CliRegistry myUserID;
     private Controller myController;
 
-    ThTextUI(Client x){
+    public ThTextUI(Client x){
         myClient=x;
         myController=x.getController();
         myUserID=myClient.getMyUserID();

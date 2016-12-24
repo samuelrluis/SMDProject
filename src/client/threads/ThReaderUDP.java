@@ -1,4 +1,4 @@
-package client;
+package client.threads;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,6 +9,7 @@ import java.net.SocketException;
  * Created by Samuel on 02/11/2016.
  */
 public class ThReaderUDP extends Thread{
+
     public static final int MAX_SIZE = 256;
     DatagramSocket socket=null;
     DatagramPacket packetRead=null;
@@ -16,7 +17,7 @@ public class ThReaderUDP extends Thread{
     String TCPport;
 
 
-    ThReaderUDP(){
+    public ThReaderUDP(){
         try {
             socket=new DatagramSocket();
         } catch (SocketException e) {

@@ -1,4 +1,4 @@
-package remoteserver;
+package remoteserver.threads;
 
 import common.Msg;
 import sun.plugin2.message.Message;
@@ -11,14 +11,19 @@ import java.net.Socket;
  * Created by Samuel on 03/11/2016.
  */
 public class ThAnswerClient extends Thread {
+
     public static final int TIMEOUT = 5;
     public static final int MAX_SIZE = 4000;
+
+    //Common
+    private Msg msg;
+
     private ServerSocket socketTCP;
     private Socket socketToClient;
     private String msgClient;
-    private Msg msg;
 
-    ThAnswerClient(ServerSocket socket,Socket socketToClient){
+
+    public ThAnswerClient(ServerSocket socket,Socket socketToClient){
         this.socketTCP=socket;
         this.socketToClient=socketToClient;
     }

@@ -1,6 +1,6 @@
-package common;
+package common.registry;
 
-import sun.misc.JavaIOFileDescriptorAccess;
+import common.heartbeat.ClientHeartBeat;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * Created by MarceloCortesao on 05/12/16.
  */
 public class CliRegistry extends Registry implements Serializable  {
+
     private Boolean login;
     private ClientHeartBeat hBeat;
 
@@ -48,7 +49,7 @@ public class CliRegistry extends Registry implements Serializable  {
     public void writeObjectToFile() {
         try {
             OutputStream outputStream = new
-                    BufferedOutputStream(new FileOutputStream("../SMDProject/src/dirserver/saveCliRegistry.obj"));
+                    BufferedOutputStream(new FileOutputStream("../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj"));
             ObjectOutput objectOutput = new
                     ObjectOutputStream(outputStream);
             objectOutput.writeObject(this);
@@ -70,7 +71,7 @@ public class CliRegistry extends Registry implements Serializable  {
         CliRegistry object= new CliRegistry();
         try {
             try {
-                FileInputStream fis = new FileInputStream("../SMDProject/src/dirserver/saveCliRegistry.obj");
+                FileInputStream fis = new FileInputStream("../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj");
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 do {
                     object = (CliRegistry) ois.readObject();
