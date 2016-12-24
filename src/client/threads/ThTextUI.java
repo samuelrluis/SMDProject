@@ -120,11 +120,13 @@ public class ThTextUI extends Thread {
                             System.out.println("To use this command you need to be logged in");
                             continue;
                         }
+
                         myController.sendPacketToDirServer(argCommand);
                         String answer=myController.receiveAnswerPacket();
+
                         if(myController.connectToRemServer(answer)) {
                             System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
-                            myController.comandToRem(argCommand.get(1));
+                            myController.comandToRemServer(argCommand.get(1));
                         }
                         else
                             System.out.println("You can't connect to that server");
@@ -137,7 +139,7 @@ public class ThTextUI extends Thread {
                     }else{
 
                     }
-                    //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer umam ligaçao direta com os servidores)
+                    //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
                     myController.sendPacketToDirServer(argCommand);
                     String answer=myController.receiveAnswerPacket();
                     System.out.println(answer);
@@ -147,9 +149,9 @@ public class ThTextUI extends Thread {
                         continue;
                     }
                     //TODO receber arrayList com objetos do tipo cliente(e preciso portos e IP para usar troca de msgs ou difusao)
-//                    myController.sendPacket(argCommand);
-//                    String answer=myController.receiveAnswerPacket();
-//                    System.out.println(answer);
+                        myController.sendPacketToDirServer(argCommand);
+                        String answer=myController.receiveAnswerPacket();
+                        System.out.println(answer);
                 } else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
                         if(myClient.getRegistedFlag()==false){
                             System.out.println("To use this command you need to be logged in");

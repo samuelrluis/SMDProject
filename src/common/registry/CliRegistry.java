@@ -46,10 +46,10 @@ public class CliRegistry extends Registry implements Serializable  {
         return "usernameAndPass"+ name + " " + this.hBeat.getUdpPort() + " " + this.hBeat.getTcpPort();
     }
 
-    public void writeObjectToFile() {
+    public void writeObjectToFile(String path) {
         try {
             OutputStream outputStream = new
-                    BufferedOutputStream(new FileOutputStream("../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj"));
+                    BufferedOutputStream(new FileOutputStream(path));
             ObjectOutput objectOutput = new
                     ObjectOutputStream(outputStream);
             objectOutput.writeObject(this);
@@ -64,14 +64,14 @@ public class CliRegistry extends Registry implements Serializable  {
         }
     }
 
-    public boolean checkCliOnFile (String nameAndPass){
+    public boolean checkCliOnFile (String nameAndPass, String path){
 
 
         ArrayList<CliRegistry> recordList = new ArrayList<>();
         CliRegistry object= new CliRegistry();
         try {
             try {
-                FileInputStream fis = new FileInputStream("../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj");
+                FileInputStream fis = new FileInputStream(path);
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 do {
                     object = (CliRegistry) ois.readObject();
