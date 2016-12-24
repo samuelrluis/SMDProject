@@ -56,7 +56,6 @@ public class Controller {
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("CONNECT"))
             command = new String ("CONNECT" + " " + argCommand.get(1) + " " + argCommand.get(2));
-
         try {
             //Create a Serializable Message with the command to send to DirServer
             Msg msg = new Msg(command,myClient.getMyUserID().gethBeat()); //Create Serializable Msg
@@ -72,6 +71,8 @@ public class Controller {
         }
     }
 
+
+
     public void regClient(String name, String pass){
         myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB()));
         myClient.setRegistedFlagTrue();
@@ -85,7 +86,7 @@ public class Controller {
         do{
             ArrayList<String> argCommand = new ArrayList<>();
             int x=0;
-            System.out.print(ServerName +" "+ "$> ");
+            System.out.print(ServerName +" "+"$> ");
             System.out.flush();
 
             try {
@@ -100,6 +101,69 @@ public class Controller {
                 try{
                     if(argCommand.get(0).equalsIgnoreCase("EXIT")){
                         break;
+                    }
+                    else if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+                        //TODO implementar registos dos clientes neste servidor remoto,
+                        // TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
+
+                        continue;
+
+                    } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
+                        //TODO falta implementar a verificaçao no ficheiro de registos
+                        //mais notas:
+                        //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
+                        //TODO se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
+                        continue;
+
+                    } else if (argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
+                        //TODO mostrar todos os conteudos da diretoria
+                        //mais notas:
+                        //TODO (so da diretoria dos cliente em questao, nao pode ser visivel as diretorias dos outros clientes)
+                        //TODO Comando SHOWDIR mostra a pasta base
+                        //TODO Comando SHOWDIR+"espaço"+"caminho" mostra os doc's nessa pasta especifica
+                        continue;
+
+                    }else if (argCommand.get(0).equalsIgnoreCase("UPLOAD")){
+                        //TODO upload ficheiro, utilizar protocolo TCP
+                        continue;
+
+                    }else if (argCommand.get(0).equalsIgnoreCase("DOWNLOAD")){
+                        //TODO download ficheiro, utilizar protocolo TCP
+                        continue;
+
+                    } else if (argCommand.get(0).equalsIgnoreCase("MOVFILE")){
+                        //TODO implementar movimentaçao de ficheiros entre diretorias
+                        //TODO MOVFILE+"espaço"+"caminho"+"espaço"+"caminho"
+                        continue;
+
+                    }else if (argCommand.get(0).equalsIgnoreCase("COPYFILE")){
+                        //TODO implementar copia de ficheiros entre diretorias
+                        //TODO COPYFILE+"espaço"+"caminho"+"espaço"+"caminho"
+                        continue;
+
+                    }else if (argCommand.get(0).equalsIgnoreCase("DELFILE")) {
+                        //TODO eliminar ficheiro
+                        continue;
+
+                    }else if (argCommand.get(0).equalsIgnoreCase("DELDIR")) {
+                        //TODO eliminar ficheiro
+                        //TODO ATENÇAO SO VALIDO PARA DIRETORIAS VAZIAS
+                        continue;
+
+                    }else if (argCommand.get(0).equalsIgnoreCase("RENAMEFILE")) {
+                        //TODO mudar nome de ficheiro
+                        //TODO RENAMEFILE+"espaço"+"nomeFile"+"espaço"+"nomeFile"
+                        continue;
+
+                    }else if (argCommand.get(0).equalsIgnoreCase("RENAMEDIR")) {
+                        //TODO mudar nome de diretoria
+                        //TODO RENAMEDIR+"espaço"+"nomeDir"+"espaço"+"nomeDir"
+                        continue;
+
+                    }else if (argCommand.get(0).equalsIgnoreCase("CREATEDIR")){
+                        //TODO mudar nome de diretoria
+                        //TODO RENAMEDIR+"espaço"+"nomeDir"
+                        continue;
                     }
                     else{
                         System.out.println("Command not found");
