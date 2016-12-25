@@ -5,6 +5,7 @@ import client.threads.ThSendHeartBeat;
 import client.threads.*;
 import common.registry.CliRegistry;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.*;
 
@@ -15,18 +16,19 @@ import java.net.*;
 public class Client {
 
     //Client
+    private Controller myController = null;
     private ThTextUI threadUI;
-    private ThReaderUDP threadUDPReader=null;
-    private Controller myController=null;
+    private ThReaderUDP threadUDPReader = null;
     private ThSendHeartBeat threadHeartBeat;
 
     //Common
-    private CliRegistry myUserID=null;
+    private CliRegistry myUserID = null;
 
-    private DatagramSocket socketToDir=null;
-    private Socket socketTCP=null;
-    private InetAddress serverAddr=null;
-    private int serverPortHB=-1,serverPortCommand=-1;
+    private DatagramSocket socketDirServer = null;
+    private DatagramSocket socketRemServer = null;
+    private Socket socketTCP = null;
+    private InetAddress serverAddr = null;
+    private int serverPortHB = -1 ,serverPortCommand = -1;
     private boolean registedFlag = false;
     private boolean loginFlag = false;
 
@@ -39,8 +41,10 @@ public class Client {
         myController=new Controller(this);
 
         try {
-            socketToDir=new DatagramSocket();
+            socketDirServer=new DatagramSocket();
+            socketRemServer = new DatagramSocket();
             socketTCP=new Socket();
+
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -74,8 +78,12 @@ public class Client {
         return myUserID;
     }
 
-    public DatagramSocket getSocketToDir() {
-        return socketToDir;
+    public DatagramSocket getSocketDirServer() {
+        return socketDirServer;
+    }
+
+    public DatagramSocket getSocketRemServer(){
+        return socketRemServer;
     }
 
     public Socket getSocketTCP() {
