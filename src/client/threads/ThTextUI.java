@@ -62,7 +62,7 @@ public class ThTextUI extends Thread {
                     if(myClient.getLoginFlag()==false) {
                         if (argCommand.size() == 3) {
                             myController.sendPacketToDirServer(argCommand);
-                            String answer=myController.receiveAnswerPacket();
+                            String answer=myController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
                             if(answer.compareTo("Login successfully")==0) {
                                 myClient.setloginFlagTrue();
@@ -96,7 +96,7 @@ public class ThTextUI extends Thread {
                         if (argCommand.size() == 3) {
                             myController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
                             myController.sendPacketToDirServer(argCommand);
-                            String answer = myController.receiveAnswerPacket();
+                            String answer = myController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
                             continue;
                         } else
@@ -116,13 +116,15 @@ public class ThTextUI extends Thread {
                     //TODO dpois caso o cliente queira sair ha um comando "EXIT" damos um break e volta para aqui e pode se ligar a outro servRemoto
                     //-----------------------------------------------------------------------------------------------------
 
+
+
                         if(myClient.getRegistedFlag()==false) {
                             System.out.println("To use this command you need to be logged in");
                             continue;
                         }
 
                         myController.sendPacketToDirServer(argCommand);
-                        String answer=myController.receiveAnswerPacket();
+                        String answer=myController.receiveAnswerPacketDirServer();
 
                         if(myController.connectToRemServer(answer)) {
                             System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
@@ -141,7 +143,7 @@ public class ThTextUI extends Thread {
                     }
                     //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
                     myController.sendPacketToDirServer(argCommand);
-                    String answer=myController.receiveAnswerPacket();
+                    String answer=myController.receiveAnswerPacketDirServer();
                     System.out.println(answer);
                 } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
                 if(myClient.getRegistedFlag()==false){
@@ -150,7 +152,7 @@ public class ThTextUI extends Thread {
                     }
                     //TODO receber arrayList com objetos do tipo cliente(e preciso portos e IP para usar troca de msgs ou difusao)
                         myController.sendPacketToDirServer(argCommand);
-                        String answer=myController.receiveAnswerPacket();
+                        String answer=myController.receiveAnswerPacketDirServer();
                         System.out.println(answer);
                 } else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
                         if(myClient.getRegistedFlag()==false){

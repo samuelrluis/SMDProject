@@ -23,11 +23,11 @@ public class Controller {
         myClient=x;
     }
 
-    public String receiveAnswerPacket(){
+    public String receiveAnswerPacketDirServer(){
         DatagramSocket socketToDir;
         DatagramPacket packetReadDir;
         packetReadDir = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
-        socketToDir=myClient.getSocketToDir();
+        socketToDir=myClient.getSocketDirServer();
 
         try {
             socketToDir.receive(packetReadDir);
@@ -38,13 +38,28 @@ public class Controller {
         return answer;
     }
 
+    public String receiveAnswerPacketRemServer(){
+        DatagramSocket socketRemServer;
+        DatagramPacket packetRemServer;
+        packetRemServer = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
+        socketRemServer = myClient.getSocketRemServer();
+
+        try {
+            socketRemServer.receive(packetRemServer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String answer = new String(packetRemServer.getData(),0,packetRemServer.getLength());
+        return answer;
+    }
+
     public void sendPacketToDirServer(ArrayList<String> argCommand){
         DatagramSocket socketToDir;
         DatagramPacket packetToDir;
         ByteArrayOutputStream b0ut;
         ObjectOutputStream out;
         String command=null;
-        socketToDir=myClient.getSocketToDir();
+        socketToDir=myClient.getSocketDirServer();
 
         if(argCommand.get(0).equalsIgnoreCase("SLIST"))
             command = new String("SLIST");
@@ -103,6 +118,7 @@ public class Controller {
                         break;
                     }
                     else if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+
                         //TODO implementar registos dos clientes neste servidor remoto,
                         // TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
 
