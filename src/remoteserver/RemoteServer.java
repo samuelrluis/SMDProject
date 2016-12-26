@@ -3,6 +3,7 @@
  */
 package remoteserver;
 
+import common.registry.CliRegistry;
 import remoteserver.threads.ThAnswerClient;
 import remoteserver.threads.ThSendHeartBeat;
 
@@ -12,8 +13,10 @@ import java.io.*;
 public class RemoteServer {
 
     //RemServer
+    RemoteServController remoteServController;
     ThSendHeartBeat threadHeartbeat;
     ThAnswerClient threadAnswerClient = null;
+
 
     private String name;
     ServerSocket serverSocketTcp = null; //TCP
@@ -30,6 +33,7 @@ public class RemoteServer {
         myUdpPort=0;
         myTcpPort=0;
         serverDirPort=udp;
+        //remoteServController = new RemoteServController();
 
     }
 
@@ -82,6 +86,8 @@ public class RemoteServer {
     public String getName(){
         return name;
     }
+
+
 
     public static void main(String[] args) {
         RemoteServer remServer;

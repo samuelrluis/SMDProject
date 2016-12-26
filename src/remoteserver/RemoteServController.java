@@ -15,16 +15,21 @@ import java.util.StringTokenizer;
  */
 public class RemoteServController {
 
-    private DirectoryServer Serv;
+    //Remote Server
+    private DirectoryServer myServ;
+
+    //Common
+    private CliRegistry cliRegistry;
+
     private DatagramPacket packetRead;
     private DatagramPacket packetWrite;
     private DatagramSocket socket;
 
     public RemoteServController(DirectoryServer x){
 
-        Serv=x;
-        socket=Serv.getSocketUDP();
-        packetRead=Serv.getPacket();
+        myServ = x;
+        socket = myServ.getSocketUDP();
+        packetRead = myServ.getPacket();
 
     }
 
@@ -44,7 +49,7 @@ public class RemoteServController {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                 //TODO implementar registos dos clientes neste servidor remoto,
                 //TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
-                
+
                 CliRegistry cli = new CliRegistry(hBeat, 333);
                 cli.writeObjectToFile("../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj");
                 packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(), packetRead.getPort()); //Create a Packet
@@ -100,6 +105,14 @@ public class RemoteServController {
             e.printStackTrace();
         }
     }
+
+    public void regClient(String name, String pass){
+
+
+        return;
+    }
+
+
 
 
 
