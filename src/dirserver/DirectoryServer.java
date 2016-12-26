@@ -2,7 +2,7 @@ package dirserver; /**
  * Created by Samuel on 29/10/2016.
  */
 
-import common.registry.CliRegistry;
+import common.registry.ClientRegistry;
 import common.registry.ServerRegistry;
 import java.net.*;
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
  public class DirectoryServer {
 
      //DirServer
-     private ServerController Scontroller = null;
+     private DirectoryServerController Scontroller = null;
 
      //Common
-     private ArrayList<CliRegistry> cliRegistries = null;
+     private ArrayList<ClientRegistry> cliRegistries = null;
      private ArrayList<ServerRegistry> serverRegistries = null;
 
      public static final int MAX_SIZE = 1024;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
      public DirectoryServer(){
          createSocket();
          createPacket();
-         Scontroller=new ServerController(this);
+         Scontroller=new DirectoryServerController(this);
          cliRegistries=new ArrayList<>();
          serverRegistries=new ArrayList<>();
      }
@@ -65,7 +65,7 @@ import java.util.ArrayList;
          return serverRegistries;
      }
 
-     public ArrayList<CliRegistry> getCliRegistries() {
+     public ArrayList<ClientRegistry> getCliRegistries() {
          return cliRegistries;
      }
 

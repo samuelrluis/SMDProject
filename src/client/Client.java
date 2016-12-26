@@ -3,9 +3,8 @@ package client;
 import client.threads.ThReaderUDP;
 import client.threads.ThSendHeartBeat;
 import client.threads.*;
-import common.registry.CliRegistry;
+import common.registry.ClientRegistry;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.*;
 
@@ -16,13 +15,13 @@ import java.net.*;
 public class Client {
 
     //Client
-    private Controller myController = null;
+    private ClientController myClientController = null;
     private ThTextUI threadUI;
     private ThReaderUDP threadUDPReader = null;
     private ThSendHeartBeat threadHeartBeat;
 
     //Common
-    private CliRegistry myUserID = null;
+    private ClientRegistry myUserID = null;
 
     private DatagramSocket socketDirServer = null;
     private DatagramSocket socketRemServer = null;
@@ -34,11 +33,11 @@ public class Client {
 
     Client(InetAddress serverAddress, Integer serverPort, Integer serverPortCommand){
 
-        myUserID=new CliRegistry();
+        myUserID=new ClientRegistry();
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
-        myController=new Controller(this);
+        myClientController =new ClientController(this);
 
         try {
             socketDirServer = new DatagramSocket();
@@ -70,11 +69,11 @@ public class Client {
         threadHeartBeat.start();
     }
 
-    public Controller getController() {
-        return myController;
+    public ClientController getController() {
+        return myClientController;
     }
 
-    public CliRegistry getMyUserID() {
+    public ClientRegistry getMyUserID() {
         return myUserID;
     }
 
