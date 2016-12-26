@@ -41,7 +41,7 @@ public class Client {
         myController=new Controller(this);
 
         try {
-            socketDirServer=new DatagramSocket();
+            socketDirServer = new DatagramSocket();
             socketRemServer = new DatagramSocket();
             socketTCP=new Socket();
 

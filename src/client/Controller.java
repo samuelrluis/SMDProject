@@ -2,6 +2,7 @@ package client;
 
 import common.heartbeat.ClientHeartBeat;
 import common.Msg;
+import remoteserver.RemoteServController;
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -39,27 +40,64 @@ public class Controller {
     }
 
     public String receiveAnswerPacketRemServer(){
-        DatagramSocket socketRemServer;
-        DatagramPacket packetRemServer;
-        packetRemServer = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
-        socketRemServer = myClient.getSocketRemServer();
+        DatagramSocket socketToRem;
+        DatagramPacket packetReadRem;
+        packetReadRem = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
+        socketToRem = myClient.getSocketRemServer();
 
         try {
-            socketRemServer.receive(packetRemServer);
+            socketToRem.receive(packetReadRem);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String answer = new String(packetRemServer.getData(),0,packetRemServer.getLength());
+        String answer = new String(packetReadRem.getData(),0,packetReadRem.getLength());
         return answer;
     }
+
 
     public void sendPacketToDirServer(ArrayList<String> argCommand){
         DatagramSocket socketToDir;
         DatagramPacket packetToDir;
         ByteArrayOutputStream b0ut;
         ObjectOutputStream out;
-        String command=null;
-        socketToDir=myClient.getSocketDirServer();
+        String command = null;
+        socketToDir=  myClient.getSocketDirServer();
+
+            if(argCommand.get(0).equalsIgnoreCase("SLIST"))
+                command = new String("SLIST");
+            else if(argCommand.get(0).equalsIgnoreCase("CLIST"))
+                command = new String("CLIST");
+            else if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
+                command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
+            else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
+                command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
+            else if(argCommand.get(0).equalsIgnoreCase("CONNECT"))
+                command = new String ("CONNECT" + " " + argCommand.get(1) + " " + argCommand.get(2));
+
+        try {
+                //Create a Serializable Message with the command to send to DirServer
+                Msg msg = new Msg(command,myClient.getMyUserID().gethBeat()); //Create Serializable Msg
+                b0ut = new ByteArrayOutputStream();
+                out = new ObjectOutputStream(b0ut);
+                out.writeObject(msg);
+                out.flush();
+                packetToDir = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), myClient.getServerPortCommand());
+                socketToDir.send(packetToDir);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+        }
+    }
+
+
+
+    public void sendPacketToRemServer(ArrayList<String> argCommand){
+        DatagramSocket socketToRem;
+        DatagramPacket packetToRem;
+        ByteArrayOutputStream b0ut;
+        ObjectOutputStream out;
+        String command = null;
+        socketToRem = myClient.getSocketRemServer();
 
         if(argCommand.get(0).equalsIgnoreCase("SLIST"))
             command = new String("SLIST");
@@ -71,22 +109,21 @@ public class Controller {
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("CONNECT"))
             command = new String ("CONNECT" + " " + argCommand.get(1) + " " + argCommand.get(2));
+
         try {
-            //Create a Serializable Message with the command to send to DirServer
+            //Create a Serializable Message with the command to send to RemoteServer
             Msg msg = new Msg(command,myClient.getMyUserID().gethBeat()); //Create Serializable Msg
             b0ut = new ByteArrayOutputStream();
             out = new ObjectOutputStream(b0ut);
             out.writeObject(msg);
             out.flush();
-            packetToDir = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), myClient.getServerPortCommand());
-            socketToDir.send(packetToDir);
+            packetToRem = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), myClient.getServerPortCommand());
+            socketToRem.send(packetToRem);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 
     public void regClient(String name, String pass){
         myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB()));
@@ -121,6 +158,11 @@ public class Controller {
 
                         //TODO implementar registos dos clientes neste servidor remoto,
                         // TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
+
+                        this.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                        this.sendPacketToRemServer(argCommand);
+                        String answer = this.receiveAnswerPacketRemServer();
+                        System.out.println(answer);
 
                         continue;
 
