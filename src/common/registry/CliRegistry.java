@@ -1,6 +1,7 @@
 package common.registry;
 
 import common.heartbeat.ClientHeartBeat;
+import sun.misc.Cleaner;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -47,13 +48,13 @@ public class CliRegistry extends Registry implements Serializable  {
     }
 
     public void writeObjectToFile(String path) {
+        ArrayList<CliRegistry> allObjs = null;
         try {
-            OutputStream outputStream = new
-                    BufferedOutputStream(new FileOutputStream(path));
-            ObjectOutput objectOutput = new
-                    ObjectOutputStream(outputStream);
-            objectOutput.writeObject(this);
-            System.out.println(this.getName());
+            allObjs= new ArrayList<>(readObjsFile(path));
+            allObjs.add(this);
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
+            ObjectOutput objectOutput = new ObjectOutputStream(outputStream);
+            objectOutput.writeObject(allObjs);
             objectOutput.close();
             System.out.println("Gravou sucessso");
         } catch (FileNotFoundException e1) {
@@ -64,22 +65,30 @@ public class CliRegistry extends Registry implements Serializable  {
         }
     }
 
+    public ArrayList<CliRegistry> readObjsFile (String path){
+        ArrayList<CliRegistry> ListObj = new ArrayList<>();
+        try {
+            FileInputStream fis = new FileInputStream(path);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            ListObj= (ArrayList<CliRegistry>) ois.readObject();
+        }catch (Exception e){}
+        return ListObj;
+
+    }
+
     public boolean checkCliOnFile (String nameAndPass, String path){
 
 
         ArrayList<CliRegistry> recordList = new ArrayList<>();
-        CliRegistry object= new CliRegistry();
         try {
             try {
                 FileInputStream fis = new FileInputStream(path);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                do {
-                    object = (CliRegistry) ois.readObject();
-                    if(object!=null)
-                        recordList.add(object);
-                }while (object!=null);
+                     recordList = (ArrayList<CliRegistry>) ois.readObject();
+
             } catch (FileNotFoundException e) {System.out.println("File not found");return false;}
         }catch (Exception e){}
+
 
         for (int i=0; i<recordList.size();i++){
             if(recordList.get(i).getName().toString().compareTo(nameAndPass)==0){
