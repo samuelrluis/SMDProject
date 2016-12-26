@@ -2,7 +2,7 @@ package remoteserver;
 
 import common.*;
 import common.heartbeat.ClientHeartBeat;
-import common.registry.CliRegistry;
+import common.registry.ClientRegistry;
 import dirserver.DirectoryServer;
 
 import java.net.DatagramPacket;
@@ -19,7 +19,7 @@ public class RemoteServController {
     private DirectoryServer myServ;
 
     //Common
-    private CliRegistry cliRegistry;
+    private ClientRegistry clientRegistry;
 
     private DatagramPacket packetRead;
     private DatagramPacket packetWrite;
@@ -50,7 +50,7 @@ public class RemoteServController {
                 //TODO implementar registos dos clientes neste servidor remoto,
                 //TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
 
-                CliRegistry cli = new CliRegistry(hBeat, 333);
+                ClientRegistry cli = new ClientRegistry(hBeat, 333);
                 cli.writeObjectToFile("../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj");
                 packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(), packetRead.getPort()); //Create a Packet
                 socket.send(packetWrite);

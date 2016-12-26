@@ -3,7 +3,6 @@
  */
 package remoteserver;
 
-import common.registry.CliRegistry;
 import remoteserver.threads.ThAnswerClient;
 import remoteserver.threads.ThSendHeartBeat;
 

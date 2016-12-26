@@ -17,10 +17,10 @@ import static client.threads.ThTextUI.MAX_SIZE;
 /**
  * Created by Samuel on 13/12/2016.
  */
-public class Controller {
+public class ClientController {
     private Client myClient;
 
-    Controller(Client x){
+    ClientController(Client x){
         myClient=x;
     }
 

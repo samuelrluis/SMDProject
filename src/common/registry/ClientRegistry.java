@@ -1,7 +1,6 @@
 package common.registry;
 
 import common.heartbeat.ClientHeartBeat;
-import sun.misc.Cleaner;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,17 +8,17 @@ import java.util.ArrayList;
 /**
  * Created by MarceloCortesao on 05/12/16.
  */
-public class CliRegistry extends Registry implements Serializable  {
+public class ClientRegistry extends Registry implements Serializable  {
 
     private Boolean login;
     private ClientHeartBeat hBeat;
 
-    public CliRegistry(){
+    public ClientRegistry(){
         hBeat = null;
         login = false;
     }
 
-    public CliRegistry(ClientHeartBeat hBeat,long entry){
+    public ClientRegistry(ClientHeartBeat hBeat, long entry){
         this.hBeat = hBeat;
         this.entryTime = entry;
     }
@@ -48,7 +47,7 @@ public class CliRegistry extends Registry implements Serializable  {
     }
 
     public void writeObjectToFile(String path) {
-        ArrayList<CliRegistry> allObjs = null;
+        ArrayList<ClientRegistry> allObjs = null;
         try {
             allObjs= new ArrayList<>(readObjsFile(path));
             allObjs.add(this);
@@ -65,12 +64,12 @@ public class CliRegistry extends Registry implements Serializable  {
         }
     }
 
-    public ArrayList<CliRegistry> readObjsFile (String path){
-        ArrayList<CliRegistry> ListObj = new ArrayList<>();
+    public ArrayList<ClientRegistry> readObjsFile (String path){
+        ArrayList<ClientRegistry> ListObj = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(path);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            ListObj= (ArrayList<CliRegistry>) ois.readObject();
+            ListObj= (ArrayList<ClientRegistry>) ois.readObject();
         }catch (Exception e){}
         return ListObj;
 
@@ -79,12 +78,12 @@ public class CliRegistry extends Registry implements Serializable  {
     public boolean checkCliOnFile (String nameAndPass, String path){
 
 
-        ArrayList<CliRegistry> recordList = new ArrayList<>();
+        ArrayList<ClientRegistry> recordList = new ArrayList<>();
         try {
             try {
                 FileInputStream fis = new FileInputStream(path);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                     recordList = (ArrayList<CliRegistry>) ois.readObject();
+                     recordList = (ArrayList<ClientRegistry>) ois.readObject();
 
             } catch (FileNotFoundException e) {System.out.println("File not found");return false;}
         }catch (Exception e){}

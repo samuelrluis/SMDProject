@@ -3,7 +3,7 @@ package dirserver;
 import common.*;
 import common.heartbeat.ClientHeartBeat;
 import common.heartbeat.ServerHeartBeat;
-import common.registry.CliRegistry;
+import common.registry.ClientRegistry;
 import common.registry.ServerRegistry;
 
 import java.io.ByteArrayInputStream;
@@ -17,7 +17,7 @@ import java.util.StringTokenizer;
 /**
  * Created by MarceloCortesao on 15/12/16.
  */
-public class ServerController {
+public class DirectoryServerController {
 
     //DirServer
     private DirectoryServer Serv;
@@ -26,7 +26,7 @@ public class ServerController {
     private DatagramPacket packetWrite;
     private DatagramSocket socket = null;
 
-    public ServerController(DirectoryServer x){
+    public DirectoryServerController(DirectoryServer x){
         Serv=x;
         socket=Serv.getSocketUDP();
         packetRead=Serv.getPacket();
@@ -46,12 +46,12 @@ public class ServerController {
         //---------------------- trata comandos
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-                CliRegistry cli = new CliRegistry(hBeat, 333);
+                ClientRegistry cli = new ClientRegistry(hBeat, 333);
                 cli.writeObjectToFile("../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj");
                 packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(), packetRead.getPort()); //Create a Packet
                 socket.send(packetWrite);
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
-                CliRegistry cli = new CliRegistry();
+                ClientRegistry cli = new ClientRegistry();
                 if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == true) {
                     packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
                 } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == false) {
@@ -95,9 +95,9 @@ public class ServerController {
     private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
         int i=0;
         Boolean foundReg=false;
-        ArrayList<CliRegistry> cliRegestries = Serv.getCliRegistries();
+        ArrayList<ClientRegistry> cliRegestries = Serv.getCliRegistries();
         if(cliRegestries.size()==0)
-            cliRegestries.add(new CliRegistry(hBeat, System.nanoTime()));
+            cliRegestries.add(new ClientRegistry(hBeat, System.nanoTime()));
 
         else{
             while(i<cliRegestries.size()) {
@@ -110,7 +110,7 @@ public class ServerController {
             }
 
             if(foundReg==false)
-                cliRegestries.add(new CliRegistry(hBeat, System.nanoTime()));
+                cliRegestries.add(new ClientRegistry(hBeat, System.nanoTime()));
         }
     }
 
@@ -138,7 +138,7 @@ public class ServerController {
         }
 
     public void answeringDatagram(){
-        //This is the principal function in our DirServer Controller;
+
         while(true){
             try{
                 socket.receive(packetRead);

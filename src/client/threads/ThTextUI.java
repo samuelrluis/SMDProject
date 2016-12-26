@@ -2,8 +2,8 @@ package client.threads;
 
 
 import client.Client;
-import client.Controller;
-import common.registry.CliRegistry;
+import client.ClientController;
+import common.registry.ClientRegistry;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,12 +16,12 @@ import java.util.StringTokenizer;
 public class ThTextUI extends Thread {
     public static final int MAX_SIZE = 1024;
     private Client myClient;
-    private CliRegistry myUserID;
-    private Controller myController;
+    private ClientRegistry myUserID;
+    private ClientController myClientController;
 
     public ThTextUI(Client x){
         myClient=x;
-        myController=x.getController();
+        myClientController =x.getController();
         myUserID=myClient.getMyUserID();
     }
 
@@ -59,9 +59,9 @@ public class ThTextUI extends Thread {
                     if (myClient.getRegistedFlag() == false) {
                         if (argCommand.size() == 3) {
 
-                            myController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                            myController.sendPacketToDirServer(argCommand);
-                            String answer = myController.receiveAnswerPacketDirServer();
+                            myClientController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                            myClientController.sendPacketToDirServer(argCommand);
+                            String answer = myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
 
                             continue;
@@ -76,18 +76,18 @@ public class ThTextUI extends Thread {
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
-                    System.out.println(myController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
+                    System.out.println(myClientController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
                     continue;
 
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
                     if(myClient.getLoginFlag()==false) {
                         if (argCommand.size() == 3) {
-                            myController.sendPacketToDirServer(argCommand);
-                            String answer=myController.receiveAnswerPacketDirServer();
+                            myClientController.sendPacketToDirServer(argCommand);
+                            String answer= myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
                             if(answer.compareTo("Login successfully!")==0) {
                                 myClient.setloginFlagTrue();
-                                myController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                                myClientController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
                             }
                         }
                         else {
@@ -129,12 +129,12 @@ public class ThTextUI extends Thread {
                             continue;
                         }
 
-                        myController.sendPacketToDirServer(argCommand);
-                        String answer=myController.receiveAnswerPacketDirServer();
+                        myClientController.sendPacketToDirServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketDirServer();
 
-                        if(myController.connectToRemServer(answer)) {
+                        if(myClientController.connectToRemServer(answer)) {
                             System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
-                            myController.comandToRemServer(argCommand.get(1));
+                            myClientController.comandToRemServer(argCommand.get(1));
                         }
                         else
                             System.out.println("You can't connect to that server");
@@ -148,8 +148,8 @@ public class ThTextUI extends Thread {
 
                     }
                     //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
-                    myController.sendPacketToDirServer(argCommand);
-                    String answer=myController.receiveAnswerPacketDirServer();
+                    myClientController.sendPacketToDirServer(argCommand);
+                    String answer= myClientController.receiveAnswerPacketDirServer();
                     System.out.println(answer);
                 } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
                 if(myClient.getRegistedFlag()==false){
@@ -157,8 +157,8 @@ public class ThTextUI extends Thread {
                         continue;
                     }
                     //TODO receber arrayList com objetos do tipo cliente(e preciso portos e IP para usar troca de msgs ou difusao)
-                        myController.sendPacketToDirServer(argCommand);
-                        String answer=myController.receiveAnswerPacketDirServer();
+                        myClientController.sendPacketToDirServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketDirServer();
                         System.out.println(answer);
                 } else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
                         if(myClient.getRegistedFlag()==false){
