@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 /**
  * Created by MarceloCortesao on 21/12/16.
  */
-public class RemoteServController {
+public class RemoteServerController {
 
     //Remote Server
     private DirectoryServer myServ;
@@ -25,7 +25,7 @@ public class RemoteServController {
     private DatagramPacket packetWrite;
     private DatagramSocket socket;
 
-    public RemoteServController(DirectoryServer x){
+    public RemoteServerController(DirectoryServer x){
 
         myServ = x;
         socket = myServ.getSocketUDP();
