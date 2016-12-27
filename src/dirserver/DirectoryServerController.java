@@ -43,7 +43,7 @@ public class DirectoryServerController {
             String token = tok.nextToken();
             argCommand.add(token);
         }
-        //---------------------- trata comandos
+        //--------------------------- Trata comandos ----------------------------//
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                 ClientRegistry cli = new ClientRegistry(hBeat, 333);

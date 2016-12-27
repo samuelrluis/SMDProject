@@ -12,7 +12,7 @@ import java.io.*;
 public class RemoteServer {
 
     //RemServer
-    RemoteServController remoteServController;
+    RemoteServerController remoteServerController;
     ThSendHeartBeat threadHeartbeat;
     ThAnswerClient threadAnswerClient = null;
 
@@ -32,7 +32,6 @@ public class RemoteServer {
         myUdpPort=0;
         myTcpPort=0;
         serverDirPort=udp;
-        //remoteServController = new RemoteServController();
 
     }
 

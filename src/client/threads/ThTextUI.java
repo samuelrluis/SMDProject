@@ -14,19 +14,21 @@ import java.util.StringTokenizer;
  */
 
 public class ThTextUI extends Thread {
+
     public static final int MAX_SIZE = 1024;
     private Client myClient;
     private ClientRegistry myUserID;
     private ClientController myClientController;
 
     public ThTextUI(Client x){
-        myClient=x;
-        myClientController =x.getController();
-        myUserID=myClient.getMyUserID();
+        myClient = x;
+        myClientController = x.getController();
+        myUserID = myClient.getMyUserID();
     }
 
     @Override
     public void run() {
+
         String commandStr;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 

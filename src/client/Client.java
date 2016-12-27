@@ -23,10 +23,9 @@ public class Client {
     //Common
     private ClientRegistry myUserID = null;
 
-    private DatagramSocket socketDirServer = null;
-    private DatagramSocket socketRemServer = null;
     private Socket socketTCP = null;
     private InetAddress serverAddr = null;
+    private DatagramSocket socketDirServer = null, socketRemServer = null;
     private int serverPortHB = -1 ,serverPortCommand = -1;
     private boolean registedFlag = false;
     private boolean loginFlag = false;
@@ -50,14 +49,14 @@ public class Client {
 
     }
 
-    public int getServerPortHB() {
-        return serverPortHB;
-    }
+    // Client Threads Create
 
     public void createThreads(){
         threadUI = new ThTextUI(this);
         threadUDPReader=new ThReaderUDP();//Thread that will be reading all the received data from DirServer
     }
+
+    // Client Threads Start
 
     public void startThreads(){
         threadUI.start();
@@ -68,6 +67,26 @@ public class Client {
         threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,this);
         threadHeartBeat.start();
     }
+
+
+    // Client Setters
+
+    public void setRegistedFlagTrue(){
+        this.registedFlag=true;
+        return;
+    }
+
+    public void setloginFlagTrue(){
+        this.loginFlag=true;
+        return;
+    }
+
+    public void setloginFlagFalse(){
+        this.loginFlag=false;
+        return;
+    }
+
+    // Client Getters
 
     public ClientController getController() {
         return myClientController;
@@ -101,19 +120,8 @@ public class Client {
         return serverPortCommand;
     }
 
-    public void setRegistedFlagTrue(){
-        this.registedFlag=true;
-        return;
-    }
-
-    public void setloginFlagTrue(){
-        this.loginFlag=true;
-        return;
-    }
-
-    public void setloginFlagFalse(){
-        this.loginFlag=false;
-        return;
+    public int getServerPortHB() {
+        return serverPortHB;
     }
 
     public boolean getRegistedFlag(){
@@ -125,11 +133,14 @@ public class Client {
     }
 
     public static void main(String args[]){
+
         Client thisClient;
+
         InetAddress serverAddr=null;
         int serverPortHB = -1 , serverPortCommand=-1;
 
         try {
+
             if(args.length!=3){
                 System.out.println("Sintax Error [DIRIP][UDP_PORT_FOR HB][UDP_PORT_FOR_COMMAND]");
                 System.exit(0);
