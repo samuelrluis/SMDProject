@@ -62,8 +62,8 @@ public class ThTextUI extends Thread {
                         if (argCommand.size() == 3) {
 
                             myClientController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                            myClientController.sendPacketToDirServer(argCommand);
-                            String answer = myClientController.receiveAnswerPacketDirServer();
+                            myClientController.sendPacketToRemServer(argCommand);
+                            String answer = myClientController.receiveAnswerPacketRemServer();
                             System.out.println(answer);
 
                             continue;
