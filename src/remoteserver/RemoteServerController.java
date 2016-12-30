@@ -64,16 +64,13 @@ public class RemoteServerController {
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 //TODO falta implementar a verificaçao no ficheiro de registos
 
-                //TODO:FIX
-                 /*   if (argCommand.size() == 3) {
-                        this.sendPacketToRemServer(argCommand);
-                        String answer= myClientController.receiveAnswerPacketDirServer();
-                        System.out.println(answer);
-                        if(answer.compareTo("Login successfully!")==0) {
-                            myClient.setloginFlagTrue();
-                            myClientController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                        }
-                    }*/
+                ClientRegistry cli = new ClientRegistry();
+                if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj") == true) {
+                    packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
+                } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj") == false) {
+                    packetWrite = new DatagramPacket("Login failed".getBytes(), "Login failed".length(), packetRead.getAddress(), packetRead.getPort());
+                }
+                socket.send(packetWrite);
 
                 //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
                 //TODO se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
