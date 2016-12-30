@@ -2,9 +2,14 @@ package remoteserver;
 
 import common.*;
 import common.heartbeat.ClientHeartBeat;
+import common.heartbeat.ServerHeartBeat;
 import common.registry.ClientRegistry;
+import common.registry.ServerRegistry;
 import dirserver.DirectoryServer;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
@@ -16,7 +21,7 @@ import java.util.StringTokenizer;
 public class RemoteServerController {
 
     //Remote Server
-    private DirectoryServer myServ;
+    private RemoteServer myServ;
 
     //Common
     private ClientRegistry clientRegistry;
@@ -25,7 +30,7 @@ public class RemoteServerController {
     private DatagramPacket packetWrite;
     private DatagramSocket socket;
 
-    public RemoteServerController(DirectoryServer x){
+    public RemoteServerController(RemoteServer x){
 
         myServ = x;
         socket = myServ.getSocketUDP();
@@ -58,7 +63,18 @@ public class RemoteServerController {
 
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 //TODO falta implementar a verificaçao no ficheiro de registos
-                //mais notas:
+
+                //TODO:FIX
+                 /*   if (argCommand.size() == 3) {
+                        this.sendPacketToRemServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketDirServer();
+                        System.out.println(answer);
+                        if(answer.compareTo("Login successfully!")==0) {
+                            myClient.setloginFlagTrue();
+                            myClientController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                        }
+                    }*/
+
                 //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
                 //TODO se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
 
@@ -110,6 +126,81 @@ public class RemoteServerController {
 
 
         return;
+    }
+
+
+    private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
+        int i=0;
+        Boolean foundReg=false;
+        ArrayList<ClientRegistry> cliRegestries = myServ.getCliRegistries();
+        if(cliRegestries.size()==0)
+            cliRegestries.add(new ClientRegistry(hBeat, System.nanoTime()));
+
+        else{
+            while(i<cliRegestries.size()) {
+                if (cliRegestries.get(i).gethBeat().getName().equalsIgnoreCase(hBeat.getName())) {
+                    cliRegestries.get(i).setEntryTime();
+                    foundReg = true;
+                    break;
+                } else
+                    i++;
+            }
+
+            if(foundReg==false)
+                cliRegestries.add(new ClientRegistry(hBeat, System.nanoTime()));
+        }
+    }
+
+    private void receiveHeartBeatServer(ServerHeartBeat hBeat ){
+        int i=0;
+        Boolean foundReg=false;
+        ArrayList<ServerRegistry> serverRegistries = myServ.getServerRegistries();
+
+        if(serverRegistries.size()==0)
+            serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
+
+        else{
+            while(i<serverRegistries.size()) {
+                if (serverRegistries.get(i).gethBeat().getName().equalsIgnoreCase(hBeat.getName())) {
+                    serverRegistries.get(i).setEntryTime();
+                    foundReg = true;
+                    break;
+                } else
+                    i++;
+            }
+
+            if(foundReg==false)
+                serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
+        }
+    }
+
+
+
+    public void answeringDatagram(){
+
+        while(true){
+            try{
+                socket.receive(packetRead);
+                ByteArrayInputStream Bin = new ByteArrayInputStream(packetRead.getData());
+                ObjectInputStream in = new ObjectInputStream(Bin);
+                in.close();
+                Object message = in.readObject();
+
+                if(message instanceof ServerHeartBeat)
+                    receiveHeartBeatServer((ServerHeartBeat) message); //This will receive th HB from Server
+                else if(message instanceof ClientHeartBeat)
+                    receivedHeartBeatClient((ClientHeartBeat) message); //This will receive th HB from Client
+                else if(message instanceof Msg)
+                    receivedCommand((Msg) message);
+
+            } catch (IOException e){
+                e.printStackTrace();
+                System.out.println("IO");
+            } catch (ClassNotFoundException e){
+                System.out.printf("Class");
+                e.printStackTrace();
+            }
+        }
     }
 
 
