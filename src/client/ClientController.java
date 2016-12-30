@@ -198,10 +198,6 @@ public class ClientController {
                         break;
                     }
                     else if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-
-                        //TODO implementar registos dos clientes neste servidor remoto,
-                        // TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
-
                         if (argCommand.size() == 3) {
 
                             this.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
@@ -222,6 +218,19 @@ public class ClientController {
                         //mais notas:
                         //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
                         //TODO se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
+
+                        if (argCommand.size() == 3) {
+                            this.sendPacketToRemServer(argCommand);
+                            String answer= this.receiveAnswerPacketRemServer();
+                            System.out.println(answer);
+                            if(answer.compareTo("Login successfully!")==0) {
+                                myClient.setloginFlagTrue();
+                                this.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                            }
+                        }
+                        else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND LOGIN");
+                        }
                         continue;
 
                     } else if (argCommand.get(0).equalsIgnoreCase("SHOWDIR")){

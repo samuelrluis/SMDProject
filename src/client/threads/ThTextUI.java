@@ -131,8 +131,8 @@ public class ThTextUI extends Thread {
                             continue;
                         }
 
-                        myClientController.sendPacketToDirServer(argCommand);
-                        String answer= myClientController.receiveAnswerPacketDirServer();
+                        myClientController.sendPacketToRemServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketRemServer();
 
                         if(myClientController.connectToRemServer(answer)) {
                             System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
