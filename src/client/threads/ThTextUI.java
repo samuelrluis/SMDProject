@@ -62,8 +62,8 @@ public class ThTextUI extends Thread {
                         if (argCommand.size() == 3) {
 
                             myClientController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                            myClientController.sendPacketToRemServer(argCommand);
-                            String answer = myClientController.receiveAnswerPacketRemServer();
+                            myClientController.sendPacketToDirServer(argCommand);
+                            String answer = myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
 
                             continue;
@@ -125,18 +125,20 @@ public class ThTextUI extends Thread {
                     //-----------------------------------------------------------------------------------------------------
 
 
-
                         if(myClient.getRegistedFlag()==false) {
                             System.out.println("To use this command you need to be logged in");
                             continue;
                         }
 
-                        myClientController.sendPacketToRemServer(argCommand);
-                        String answer= myClientController.receiveAnswerPacketRemServer();
+                        myClientController.sendPacketToDirServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketDirServer();
+                        System.out.println("Porto: " + answer);
 
                         if(myClientController.connectToRemServer(answer)) {
                             System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
                             myClientController.comandToRemServer(argCommand.get(1));
+                            int sPort = Integer.parseInt(answer);
+                            myClientController.setRemoteServerPort(sPort);
                         }
                         else
                             System.out.println("You can't connect to that server");

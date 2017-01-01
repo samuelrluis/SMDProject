@@ -43,7 +43,7 @@ public class ThAnswerClient extends Thread {
             in = new ObjectInputStream(socketToClient.getInputStream());
             msg = (Msg) in.readObject();
 
-            System.out.println("recebi mensagem de" + msg.gethBeat().getName());
+            System.out.println("recebi mensagem de " + msg.gethBeat().getName());
 
         } catch(IOException e){
             System.out.println("Ocorreu a excepcao de E/S: \n\t" + e);

@@ -20,6 +20,10 @@ import static client.threads.ThTextUI.MAX_SIZE;
 public class ClientController {
 
     private Client myClient;
+    private int remoteServerPort;
+
+    Socket socketToRemServer = null;
+    ObjectOutputStream objectOutput = null;
 
     ClientController(Client x){
         myClient=x;
@@ -43,6 +47,14 @@ public class ClientController {
 
     // DirectoryServer Comunication Methods
 
+    public int getRemoteServerPort() {
+        return remoteServerPort;
+    }
+
+    public void setRemoteServerPort(int remoteServerPort) {
+        this.remoteServerPort = remoteServerPort;
+    }
+
     public String receiveAnswerPacketDirServer(){
         DatagramSocket socketToDir;
         DatagramPacket packetReadDir;
@@ -59,6 +71,7 @@ public class ClientController {
     }
 
     public void sendPacketToDirServer(ArrayList<String> argCommand){
+
         DatagramSocket socketToDir;
         DatagramPacket packetToDir;
         ByteArrayOutputStream b0ut;
@@ -92,6 +105,35 @@ public class ClientController {
         }
     }
 
+    public boolean connectToRemServer(String wantedPort){
+
+        try {
+            int serverPort = Integer.parseInt(wantedPort);
+            InetSocketAddress serverAddr = new InetSocketAddress("127.0.0.1", serverPort);
+
+
+            if (serverPort != 0) {
+                try {
+                    socketToRemServer = new Socket("127.0.0.1", serverPort);
+                    //myClient.getSocketTCP().bind((serverAddr));
+                    Msg msg = new Msg("Just Connect to this Server", myClient.getMyUserID().gethBeat()); //Create Serializable Msg
+
+                    ObjectOutputStream objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
+                    objectOutput.writeObject(msg);
+                    objectOutput.flush();
+                    System.out.println("Enviou msg TCP");
+
+
+
+                } catch (IOException e) {
+                    return false;
+                }
+                return true;
+            } else
+                return false;
+        }catch (Exception e){return false;}
+    }
+
     // RemoteServer Comunication Methods
 
     public String receiveAnswerPacketRemServer(){
@@ -118,62 +160,40 @@ public class ClientController {
         DatagramPacket packetToRem;
         ByteArrayOutputStream b0ut;
         ObjectOutputStream out;
-
         String command = null;
-        socketToRem = myClient.getSocketRemServer();
+        socketToRem =  myClient.getSocketRemServer();
 
-        if(argCommand.get(0).equalsIgnoreCase("SLIST"))
-            command = new String("SLIST");
-        else if(argCommand.get(0).equalsIgnoreCase("CLIST"))
-            command = new String("CLIST");
-        else if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
+
+
+        if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
-        else if(argCommand.get(0).equalsIgnoreCase("CONNECT"))
-            command = new String ("CONNECT" + " " + argCommand.get(1) + " " + argCommand.get(2));
 
-        try {
-            //Create a Serializable Message with the command to send to RemoteServer
-            Msg msg = new Msg(command,myClient.getMyUserID().gethBeat()); //Create Serializable Msg
-            b0ut = new ByteArrayOutputStream();
-            out = new ObjectOutputStream(b0ut);
-            out.writeObject(msg);
-            out.flush();
-            packetToRem = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), myClient.getServerPortCommand());
-            socketToRem.send(packetToRem);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //if (this.remoteServerPort != 0) {
+            try {
+                //Create a Serializable Message with the command to send to DirServer
+                Msg msg = new Msg(command, myClient.getMyUserID().gethBeat()); //Create Serializable Msg
+
+
+                //b0ut = new ByteArrayOutputStream();
+                //out = new ObjectOutputStream(socketToRemServer.getOutputStream());
+                objectOutput.writeObject(msg);
+                objectOutput.flush();
+
+                //packetToRem = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), this.remoteServerPort);
+                //socketToRem.send(packetToRem);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+
+
+            }
+        //}
     }
 
-    public boolean connectToRemServer(String wantedPort){
-        Socket socketToRemServer=null;
-        try {
-            int serverPort = Integer.parseInt(wantedPort);
-            InetSocketAddress serverAddr = new InetSocketAddress("127.0.0.1", serverPort);
 
-
-            if (serverPort != 0) {
-                try {
-                    socketToRemServer = new Socket("127.0.0.1", serverPort);
-                    //myClient.getSocketTCP().bind((serverAddr));
-                    Msg msg = new Msg("Just Connect to this Server", myClient.getMyUserID().gethBeat()); //Create Serializable Msg
-
-                    ObjectOutputStream objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
-                    objectOutput.writeObject(msg);
-                    objectOutput.flush();
-                    System.out.println("Enviou msg TCP");
-
-                } catch (IOException e) {
-                    return false;
-                }
-                return true;
-            } else
-                return false;
-        }catch (Exception e){return false;}
-    }
 
     public void comandToRemServer(String ServerName){
         String commandStr;
@@ -197,13 +217,13 @@ public class ClientController {
                     if(argCommand.get(0).equalsIgnoreCase("EXIT")){
                         break;
                     }
-                    else if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+                    else if (argCommand.get(0).equalsIgnoreCase("REGISTER")){
                         if (argCommand.size() == 3) {
 
-                            this.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
                             this.sendPacketToRemServer(argCommand);
                             String answer = this.receiveAnswerPacketRemServer();
-                            System.out.println(answer);
+
+                            System.out.println(ServerName + answer);
 
                             continue;
 
@@ -223,10 +243,6 @@ public class ClientController {
                             this.sendPacketToRemServer(argCommand);
                             String answer= this.receiveAnswerPacketRemServer();
                             System.out.println(answer);
-                            if(answer.compareTo("Login successfully!")==0) {
-                                myClient.setloginFlagTrue();
-                                this.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                            }
                         }
                         else {
                             System.out.println("SYNTAX ERROR FOR COMMAND LOGIN");
