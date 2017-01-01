@@ -55,10 +55,14 @@ public class RemoteServerController {
                 //TODO implementar registos dos clientes neste servidor remoto,
                 //TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
 
+                //FIXTHIS
+                System.out.println("Não está a chegar aqui!");
+
                 ClientRegistry cli = new ClientRegistry(hBeat, 333);
                 cli.writeObjectToFile("../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj");
                 packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(), packetRead.getPort()); //Create a Packet
                 socket.send(packetWrite);
+                System.out.println("Registado com Sucesso!!");
 
 
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
@@ -71,6 +75,8 @@ public class RemoteServerController {
                     packetWrite = new DatagramPacket("Login failed".getBytes(), "Login failed".length(), packetRead.getAddress(), packetRead.getPort());
                 }
                 socket.send(packetWrite);
+
+                System.out.println("Logado com Sucesso!!");
 
                 //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
                 //TODO se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente

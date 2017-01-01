@@ -72,13 +72,17 @@ public class DirectoryServerController {
 
             }
             else if (argCommand.get(0).equalsIgnoreCase("CONNECT")) {
+
                 ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
+
                 try {
+
                     int wantedServerTcp = serverRegistries.get((Integer.parseInt(argCommand.get(2)))).gethBeat().getTcpPort();
                     String wantedServer = wantedServerTcp + "";
                     packetWrite = new DatagramPacket(wantedServer.getBytes(), wantedServer.length(), packetRead.getAddress(), packetRead.getPort());
                     System.out.println(wantedServer.toString());
                     socket.send(packetWrite);
+
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Server not found");
                     socket.send(packetWrite);
