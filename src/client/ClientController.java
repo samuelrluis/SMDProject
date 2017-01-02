@@ -227,6 +227,7 @@ public class ClientController {
 
 
 
+
        /*if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
@@ -316,7 +317,7 @@ public class ClientController {
                             System.out.println("SYNTAX ERROR FOR COMMAND LOGIN");
                         }
                         continue;
-<<<<<<< HEAD
+
 */
 
                     } else if (argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
