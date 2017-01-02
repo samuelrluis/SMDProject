@@ -6,6 +6,7 @@ import common.Msg;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -126,12 +127,10 @@ public class ClientController {
             if (serverPort != 0) {
                 try {
                     socketToRemServer = new Socket("127.0.0.1", serverPort);
-<<<<<<< HEAD
+
                     //myClient.getSocketTCP().bind((serverAddr));
                     Msg msg = new Msg("TryConnection", myClient.getMyUserID().gethBeat()); //Create Serializable Msg
-=======
-                  
->>>>>>> origin/master
+
 
                     ObjectOutputStream objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
                     objectOutput.writeObject(msg);
@@ -153,7 +152,7 @@ public class ClientController {
             int serverPort = Integer.parseInt(wantedPort);
             InetSocketAddress serverAddr = new InetSocketAddress("127.0.0.1", serverPort);
 
-<<<<<<< HEAD
+
 
 
              String command = null;
@@ -162,8 +161,7 @@ public class ClientController {
                  command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
              else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
                  command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
+
 
             if (serverPort != 0) {
                 try {
@@ -177,17 +175,11 @@ public class ClientController {
                     System.out.println("Enviou msg TCP");
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
                     objectInput = new ObjectInputStream(socketToRemServer.getInputStream());
                     msg = (Msg) objectInput.readObject();
 
 
-
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 
                 } catch (IOException e) {
                     return false;
@@ -218,21 +210,14 @@ public class ClientController {
     }
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
 
     public void comandToRemServer(String answerTo,String ServerName){
-=======
-        socketToRem =  myClient.getSocketRemServer();
 
-=======
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
+        //socketToRem =  myClient.getSocketRemServer();
+
+
         DatagramSocket socketToRem;
         DatagramPacket packetToRem;
         ByteArrayOutputStream b0ut;
@@ -241,13 +226,6 @@ public class ClientController {
         socketToRem =  myClient.getSocketRemServer();
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 
         if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
@@ -256,16 +234,6 @@ public class ClientController {
 
 
         //if (this.remoteServerPort != 0) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
             try {
                 //Create a Serializable Message with the command to send to DirServer
                 Msg msg = new Msg(command, myClient.getMyUserID().gethBeat()); //Create Serializable Msg
@@ -284,25 +252,15 @@ public class ClientController {
 
         //}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
-=======
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
+
             }
         //}
-    }
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
-
 
 
     }
 
     public void comandToRemServer(String ServerName){
->>>>>>> origin/master
+
         String commandStr;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         do{
@@ -326,16 +284,15 @@ public class ClientController {
                     } else if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                         if (argCommand.size() == 3) {
 
-<<<<<<< HEAD
+
                             this.sendComandToRemServer(answerTo,argCommand);
                             String strAnswer = this.receiveAnswerPacketRemServer();
                             System.out.println(ServerName + strAnswer);
-=======
+
                             this.sendPacketToRemServer(argCommand);
                             String answer = this.receiveAnswerPacketRemServer();
 
                             System.out.println(ServerName + answer);
->>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 
                             continue;
 
@@ -361,10 +318,7 @@ public class ClientController {
                         continue;
 <<<<<<< HEAD
 */
-=======
 
-
->>>>>>> origin/master
                     } else if (argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
                         //TODO mostrar todos os conteudos da diretoria
                         //mais notas:
