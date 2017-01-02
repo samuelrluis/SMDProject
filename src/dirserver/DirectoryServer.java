@@ -5,6 +5,9 @@ package dirserver; /**
 import common.registry.ClientRegistry;
 import common.registry.ServerRegistry;
 import java.net.*;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.server.RemoteRef;
 import java.util.ArrayList;
 
 
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 
      //DirServer
      private DirectoryServerController Scontroller = null;
+     private DirectoryServerRMI RemoteServicesInstance = null;
 
      //Common
      private ArrayList<ClientRegistry> cliRegistries = null;
@@ -27,6 +31,29 @@ import java.util.ArrayList;
          Scontroller=new DirectoryServerController(this);
          cliRegistries=new ArrayList<>();
          serverRegistries=new ArrayList<>();
+         setRMIService();
+     }
+
+     private void setRMIService(){
+         try {
+             RemoteServicesInstance = new DirectoryServerRMI();
+         } catch (RemoteException e) {
+             e.printStackTrace();
+         }
+
+         RemoteRef location = RemoteServicesInstance.getRef();
+         System.out.println(location.remoteToString());
+
+         String registry = "localhost";
+         String registration = "rmi://"+registry+"/RemoteServices";
+
+         try {
+             Naming.rebind(registration,RemoteServicesInstance);
+         } catch (RemoteException e) {
+             e.printStackTrace();
+         } catch (MalformedURLException e) {
+             System.out.println("No service Found");
+         }
      }
 
      public void createSocket(){
@@ -38,7 +65,7 @@ import java.util.ArrayList;
          }
      }
 
-     public void createPacket(){
+     private void createPacket(){
          packet = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
      }
 
@@ -50,7 +77,7 @@ import java.util.ArrayList;
          return packet;
      }
 
-     public void runDirServer(){
+     private void runDirServer(){
          Scontroller.answeringDatagram();
      }
 
