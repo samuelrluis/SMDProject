@@ -5,6 +5,12 @@ package dirserver; /**
 import common.registry.ClientRegistry;
 import common.registry.ServerRegistry;
 import java.net.*;
+import java.rmi.AlreadyBoundException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.RemoteRef;
 import java.util.ArrayList;
 
 
@@ -12,6 +18,7 @@ import java.util.ArrayList;
 
      //DirServer
      private DirectoryServerController Scontroller = null;
+     private DirectoryServerRMI RemoteServicesInstance = null;
 
      //Common
      private ArrayList<ClientRegistry> cliRegistries = null;
@@ -29,6 +36,35 @@ import java.util.ArrayList;
          serverRegistries=new ArrayList<>();
      }
 
+     private void setRMIService(String serverAddr){
+         String registry = null;
+
+         try {
+             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+             RemoteServicesInstance = new DirectoryServerRMI(Scontroller);
+         } catch (RemoteException e) {
+             e.printStackTrace();
+         }
+
+         RemoteRef location = RemoteServicesInstance.getRef();
+         System.out.println(location.remoteToString());
+
+         if(serverAddr!=null)
+             registry = serverAddr;
+         else
+             registry = "localhost";
+
+         String registration = "rmi://" + registry + "/RemoteServices";
+
+         try {
+             Naming.rebind(registration,RemoteServicesInstance);
+         } catch (RemoteException e) {
+             e.printStackTrace();
+         } catch (MalformedURLException e) {
+             System.out.println("No service Found");
+         }
+     }
+
      public void createSocket(){
          //Creating SocketUDP
          try {
@@ -38,7 +74,7 @@ import java.util.ArrayList;
          }
      }
 
-     public void createPacket(){
+     private void createPacket(){
          packet = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
      }
 
@@ -50,7 +86,7 @@ import java.util.ArrayList;
          return packet;
      }
 
-     public void runDirServer(){
+     private void runDirServer(){
          Scontroller.answeringDatagram();
      }
 
@@ -58,6 +94,7 @@ import java.util.ArrayList;
 
          DirectoryServer myServer=null;
          myServer=new DirectoryServer();
+         myServer.setRMIService(args[0]);
          myServer.runDirServer();
      }
 
