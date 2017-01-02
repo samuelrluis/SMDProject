@@ -10,6 +10,7 @@ import dirserver.DirectoryServer;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
@@ -30,15 +31,8 @@ public class RemoteServerController {
     private DatagramPacket packetWrite;
     private DatagramSocket socket;
 
-    public RemoteServerController(RemoteServer x){
 
-        myServ = x;
-        socket = myServ.getSocketUDP();
-        packetRead = myServ.getPacket();
-
-    }
-
-    private void receivedCommand(Msg message) {
+    public void receivedCommand(Msg message) {
         ArrayList<String> argCommand = new ArrayList<>();
 
         String commandStr = message.getCommand();
@@ -54,20 +48,19 @@ public class RemoteServerController {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                 //TODO implementar registos dos clientes neste servidor remoto,
                 //TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
-
+                /*
                 //FIXTHIS
                 System.out.println("Não está a chegar aqui!");
 
                 ClientRegistry cli = new ClientRegistry(hBeat, 333);
                 cli.writeObjectToFile("../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj");
-                packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(), packetRead.getPort()); //Create a Packet
-                socket.send(packetWrite);
-                System.out.println("Registado com Sucesso!!");
+                */
+
 
 
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 //TODO falta implementar a verificaçao no ficheiro de registos
-
+                /*
                 ClientRegistry cli = new ClientRegistry();
                 if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj") == true) {
                     packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
@@ -75,7 +68,7 @@ public class RemoteServerController {
                     packetWrite = new DatagramPacket("Login failed".getBytes(), "Login failed".length(), packetRead.getAddress(), packetRead.getPort());
                 }
                 socket.send(packetWrite);
-
+/               */
                 System.out.println("Logado com Sucesso!!");
 
                 //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,

@@ -1,4 +1,4 @@
-package common;
+package remoteserver;
 
 /**
  * Created by MarceloCortesao on 24/12/16.
