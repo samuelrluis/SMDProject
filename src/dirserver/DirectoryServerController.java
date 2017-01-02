@@ -89,7 +89,6 @@ public class DirectoryServerController {
                 }
                 //TODO com isto temos todos os comandos do servDiretoria implementados :)
                 }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

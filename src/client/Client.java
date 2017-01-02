@@ -4,10 +4,14 @@ import client.threads.ThReaderUDP;
 import client.threads.ThSendHeartBeat;
 import client.threads.*;
 import common.registry.ClientRegistry;
+import dirserver.RemoteServices;
 
 import java.io.*;
 import java.net.*;
-
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  * Created by Samuel on 30/10/2016.
@@ -20,9 +24,11 @@ public class Client {
     private ThReaderUDP threadUDPReader = null;
     private ThSendHeartBeat threadHeartBeat;
 
+    //RMI
+    RemoteServices remoteInterface = null;
+
     //Common
     private ClientRegistry myUserID = null;
-
     private Socket socketTCP = null;
     private InetAddress serverAddr = null;
     private DatagramSocket socketDirServer = null, socketRemServer = null;
@@ -36,6 +42,7 @@ public class Client {
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
+        setUpRMIService();
         myClientController =new ClientController(this);
 
         try {
@@ -46,7 +53,23 @@ public class Client {
         } catch (SocketException e) {
             e.printStackTrace();
         }
+    }
 
+    private void setUpRMIService(){
+        String registry = "localhost";
+        String registrartion = "rmi://"+registry+"/RemoteServices";
+
+        Remote remoteService = null;
+        try {
+            remoteService = Naming.lookup(registrartion);
+            remoteInterface = (RemoteServices) remoteService;
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     // Client Threads Create
@@ -87,6 +110,10 @@ public class Client {
     }
 
     // Client Getters
+
+    public RemoteServices getRemoteInterface() {
+        return remoteInterface;
+    }
 
     public ClientController getController() {
         return myClientController;
