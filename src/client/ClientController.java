@@ -175,17 +175,35 @@ public class ClientController {
 
 
         //if (this.remoteServerPort != 0) {
+<<<<<<< HEAD
+=======
+            //try {
+                //Create a Serializable Message with the command to send to DirServer
+                Msg msg = new Msg(command, myClient.getMyUserID().gethBeat()); //Create Serializable Msg
+>>>>>>> master
 
         try {
 
+<<<<<<< HEAD
             Msg msg = new Msg(command,myClient.getMyUserID().gethBeat());
+=======
+                //b0ut = new ByteArrayOutputStream();
+                //out = new ObjectOutputStream(socketToRemServer.getOutputStream());
+                //objectOutput.writeObject(msg);
+                //objectOutput.flush();
+>>>>>>> master
 
             //b0ut = new ByteArrayOutputStream();
             //out = new ObjectOutputStream(socketToRemServer.getOutputStream());
             objectOutput.writeObject(msg);
             objectOutput.flush();
 
+<<<<<<< HEAD
             System.out.println("Enviou msg TCP para o porto: " + remoteServerPort);
+=======
+           // } catch (IOException e) {
+              //  e.printStackTrace();
+>>>>>>> master
 
 
             //packetToRem = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), this.remoteServerPort);
@@ -195,6 +213,10 @@ public class ClientController {
             e.printStackTrace();
         }
 
+<<<<<<< HEAD
+=======
+           // }
+>>>>>>> master
         //}
 
 
@@ -228,11 +250,20 @@ public class ClientController {
 
                             this.sendPacketToRemServer(argCommand);
 
+<<<<<<< HEAD
                             System.out.println("Cheguei aqui");
 
                             String answer = this.receiveAnswerPacketRemServer();
+=======
+                            //this.sendComandToRemServer(answerTo,argCommand);
+                            //String strAnswer = this.receiveAnswerPacketRemServer();
+                            //System.out.println(ServerName + strAnswer);
 
-                            System.out.println(ServerName + answer);
+                            //this.sendPacketToRemServer(argCommand);
+                            //String answer = this.receiveAnswerPacketRemServer();
+>>>>>>> master
+
+                            //System.out.println(ServerName + answer);
 
                             continue;
 
