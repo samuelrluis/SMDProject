@@ -143,12 +143,18 @@ public class ThTextUI extends Thread {
                         if(myClientController.sendComandToRemServer(answer)) {
                             System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
 <<<<<<< HEAD
+<<<<<<< HEAD
 
                             int sPort = Integer.parseInt(answer);
                             myClientController.setRemoteServerPort(sPort); // Guarda o porto do Server Remoto no cliente
 
                             myClientController.comandToRemServer(answer,argCommand.get(1));
 
+=======
+                            myClientController.comandToRemServer(argCommand.get(1));
+                            int sPort = Integer.parseInt(answer);
+                            myClientController.setRemoteServerPort(sPort);
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 =======
                             myClientController.comandToRemServer(argCommand.get(1));
                             int sPort = Integer.parseInt(answer);

@@ -151,6 +151,8 @@ public class ClientController {
 
         try {
             int serverPort = Integer.parseInt(wantedPort);
+            InetSocketAddress serverAddr = new InetSocketAddress("127.0.0.1", serverPort);
+
 
 
              String command = null;
@@ -166,17 +168,20 @@ public class ClientController {
                     //myClient.getSocketTCP().bind((serverAddr));
                     Msg msg = new Msg(command, myClient.getMyUserID().gethBeat()); //Create Serializable Msg
 
-                    objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
+                    ObjectOutputStream objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
                     objectOutput.writeObject(msg);
                     objectOutput.flush();
                     System.out.println("Enviou msg TCP");
 
 
+<<<<<<< HEAD
                     objectInput = new ObjectInputStream(socketToRemServer.getInputStream());
                     msg = (Msg) objectInput.readObject();
 
 
 
+=======
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 
                 } catch (IOException e) {
                     return false;
@@ -209,6 +214,7 @@ public class ClientController {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
     public void comandToRemServer(String answerTo,String ServerName){
@@ -216,6 +222,8 @@ public class ClientController {
         socketToRem =  myClient.getSocketRemServer();
 
 =======
+=======
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
         DatagramSocket socketToRem;
         DatagramPacket packetToRem;
         ByteArrayOutputStream b0ut;
@@ -224,6 +232,9 @@ public class ClientController {
         socketToRem =  myClient.getSocketRemServer();
 
 
+<<<<<<< HEAD
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
+=======
 >>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 
         if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
@@ -234,7 +245,10 @@ public class ClientController {
 
         //if (this.remoteServerPort != 0) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 =======
 >>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
             try {
@@ -256,7 +270,10 @@ public class ClientController {
         //}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
             }
         //}
     }

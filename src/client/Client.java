@@ -24,7 +24,7 @@ public class Client {
     private ThReaderUDP threadUDPReader = null;
     private ThSendHeartBeat threadHeartBeat;
 
-    //RMI
+    //RMIasd
     RemoteServices remoteInterface = null;
 
     //Common
