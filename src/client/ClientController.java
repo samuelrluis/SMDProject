@@ -109,8 +109,6 @@ public class ClientController {
 
         try {
             int serverPort = Integer.parseInt(wantedPort);
-            InetSocketAddress serverAddr = new InetSocketAddress("127.0.0.1", serverPort);
-
 
             if (serverPort != 0) {
                 try {
@@ -118,11 +116,10 @@ public class ClientController {
                     //myClient.getSocketTCP().bind((serverAddr));
                     Msg msg = new Msg("Just Connect to this Server", myClient.getMyUserID().gethBeat()); //Create Serializable Msg
 
-                    ObjectOutputStream objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
+                    objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
                     objectOutput.writeObject(msg);
                     objectOutput.flush();
                     System.out.println("Enviou msg TCP");
-
 
 
                 } catch (IOException e) {
@@ -156,14 +153,7 @@ public class ClientController {
 
     public void sendPacketToRemServer(ArrayList<String> argCommand){
 
-        DatagramSocket socketToRem;
-        DatagramPacket packetToRem;
-        ByteArrayOutputStream b0ut;
-        ObjectOutputStream out;
         String command = null;
-        socketToRem =  myClient.getSocketRemServer();
-
-
 
         if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
@@ -171,26 +161,28 @@ public class ClientController {
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
 
 
-        //if (this.remoteServerPort != 0) {
+        if (this.remoteServerPort != 0) {
             try {
-                //Create a Serializable Message with the command to send to DirServer
-                Msg msg = new Msg(command, myClient.getMyUserID().gethBeat()); //Create Serializable Msg
 
+                Msg msg = new Msg(command,myClient.getMyUserID().gethBeat());
 
                 //b0ut = new ByteArrayOutputStream();
                 //out = new ObjectOutputStream(socketToRemServer.getOutputStream());
                 objectOutput.writeObject(msg);
                 objectOutput.flush();
 
+                System.out.println("Enviou msg TCP para o porto: " + remoteServerPort);
+
+
                 //packetToRem = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), this.remoteServerPort);
                 //socketToRem.send(packetToRem);
 
             } catch (IOException e) {
                 e.printStackTrace();
-
-
             }
-        //}
+
+
+        }
     }
 
 
@@ -221,6 +213,9 @@ public class ClientController {
                         if (argCommand.size() == 3) {
 
                             this.sendPacketToRemServer(argCommand);
+
+                            System.out.println("Cheguei aqui");
+
                             String answer = this.receiveAnswerPacketRemServer();
 
                             System.out.println(ServerName + answer);

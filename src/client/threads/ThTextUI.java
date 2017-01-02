@@ -136,9 +136,12 @@ public class ThTextUI extends Thread {
 
                         if(myClientController.connectToRemServer(answer)) {
                             System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
-                            myClientController.comandToRemServer(argCommand.get(1));
+
                             int sPort = Integer.parseInt(answer);
-                            myClientController.setRemoteServerPort(sPort);
+                            myClientController.setRemoteServerPort(sPort); // Guarda o porto do Server Remoto no cliente
+
+                            myClientController.comandToRemServer(argCommand.get(1));
+
                         }
                         else
                             System.out.println("You can't connect to that server");
