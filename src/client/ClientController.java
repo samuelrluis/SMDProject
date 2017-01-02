@@ -120,6 +120,8 @@ public class ClientController {
 
         try {
             int serverPort = Integer.parseInt(wantedPort);
+            InetSocketAddress serverAddr = new InetSocketAddress("127.0.0.1", serverPort);
+
 
             if (serverPort != 0) {
                 try {
@@ -131,7 +133,7 @@ public class ClientController {
                   
 >>>>>>> origin/master
 
-                    objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
+                    ObjectOutputStream objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
                     objectOutput.writeObject(msg);
                     objectOutput.flush();
                     System.out.println("Enviou msg TCP");
@@ -175,6 +177,7 @@ public class ClientController {
 
 
 
+
                 } catch (IOException e) {
                     return false;
                 }
@@ -205,12 +208,23 @@ public class ClientController {
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
     public void comandToRemServer(String answerTo,String ServerName){
 =======
         socketToRem =  myClient.getSocketRemServer();
 
+=======
+        DatagramSocket socketToRem;
+        DatagramPacket packetToRem;
+        ByteArrayOutputStream b0ut;
+        ObjectOutputStream out;
+        String command = null;
+        socketToRem =  myClient.getSocketRemServer();
+
+
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 
         if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
@@ -219,28 +233,34 @@ public class ClientController {
 
 
         //if (this.remoteServerPort != 0) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
             try {
+                //Create a Serializable Message with the command to send to DirServer
+                Msg msg = new Msg(command, myClient.getMyUserID().gethBeat()); //Create Serializable Msg
 
-                Msg msg = new Msg(command,myClient.getMyUserID().gethBeat());
 
                 //b0ut = new ByteArrayOutputStream();
                 //out = new ObjectOutputStream(socketToRemServer.getOutputStream());
                 objectOutput.writeObject(msg);
                 objectOutput.flush();
 
-                System.out.println("Enviou msg TCP para o porto: " + remoteServerPort);
-
-
                 //packetToRem = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), this.remoteServerPort);
                 //socketToRem.send(packetToRem);
 
             } catch (IOException e) {
                 e.printStackTrace();
-            }
 
         //}
 
+<<<<<<< HEAD
+=======
+            }
+        //}
+    }
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 
 
 
@@ -271,9 +291,16 @@ public class ClientController {
                     } else if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                         if (argCommand.size() == 3) {
 
+<<<<<<< HEAD
                             this.sendComandToRemServer(answerTo,argCommand);
                             String strAnswer = this.receiveAnswerPacketRemServer();
                             System.out.println(ServerName + strAnswer);
+=======
+                            this.sendPacketToRemServer(argCommand);
+                            String answer = this.receiveAnswerPacketRemServer();
+
+                            System.out.println(ServerName + answer);
+>>>>>>> parent of beff17e... Merge pull request #26 from samuelrluis/diogo2.0
 
                             continue;
 
