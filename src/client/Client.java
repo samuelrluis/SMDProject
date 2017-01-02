@@ -42,7 +42,7 @@ public class Client {
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
-        //setUpRMIService();
+        setUpRMIService();
         myClientController =new ClientController(this);
 
         try {
@@ -54,7 +54,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-/*
+
     private void setUpRMIService(){
         String registry = "localhost";
         String registrartion = "rmi://"+registry+"/RemoteServices";
@@ -71,7 +71,6 @@ public class Client {
             e.printStackTrace();
         }
     }
-    */
 
     // Client Threads Create
 
@@ -91,7 +90,6 @@ public class Client {
         threadHeartBeat=new ThSendHeartBeat(serverAddr,serverPortHB,this);
         threadHeartBeat.start();
     }
-
 
     // Client Setters
 

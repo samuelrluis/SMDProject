@@ -71,7 +71,6 @@ public class ClientController {
         return answer;
     }
 
-
     public void sendCommandRMI(ArrayList<String> argCommand){
         if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){
             try {
