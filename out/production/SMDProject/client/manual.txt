@@ -3,6 +3,9 @@ usage: <command> [<args>]
 These are common Client commands used in various situations:
 
 connect to server
+   slist                    Show the list of active servers
+   slistrmi                 Show the list of active servers by RMI technologie
+   clist                    Sow the list of activer clients
    register                 Regist new client in the Directory Service
    login			        Login into the Directory Service
 
