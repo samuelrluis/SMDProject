@@ -6,7 +6,6 @@ import common.Msg;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ public class ClientController {
 
     Socket socketToRemServer = null;
     ObjectOutputStream objectOutput = null;
+    ObjectInputStream objectInput =null ;
 
     ClientController(Client x){
         myClient=x;
@@ -42,7 +42,6 @@ public class ClientController {
     public void loginClient(String name,String pass){
         myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB()));
         myClient.getMyUserID().setNameAndPassword(name+pass);
-        myClient.setRegistedFlagTrue();
         return;
     }
 
@@ -117,7 +116,7 @@ public class ClientController {
         }
     }
 
-    public boolean connectToRemServer(String wantedPort){
+    public boolean sendComandToRemServer(String wantedPort){
 
         try {
             int serverPort = Integer.parseInt(wantedPort);
@@ -125,7 +124,12 @@ public class ClientController {
             if (serverPort != 0) {
                 try {
                     socketToRemServer = new Socket("127.0.0.1", serverPort);
-                    Msg msg = new Msg("Just Connect to this Server", myClient.getMyUserID().gethBeat()); //Create Serializable Msg
+<<<<<<< HEAD
+                    //myClient.getSocketTCP().bind((serverAddr));
+                    Msg msg = new Msg("TryConnection", myClient.getMyUserID().gethBeat()); //Create Serializable Msg
+=======
+                  
+>>>>>>> origin/master
 
                     objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
                     objectOutput.writeObject(msg);
@@ -141,7 +145,45 @@ public class ClientController {
         }catch (Exception e){return false;}
     }
 
-    // RemoteServer Comunication Methods
+    public boolean sendComandToRemServer(String wantedPort, ArrayList<String> argCommand){
+
+        try {
+            int serverPort = Integer.parseInt(wantedPort);
+
+
+             String command = null;
+
+             if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
+                 command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
+             else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
+                 command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
+
+            if (serverPort != 0) {
+                try {
+                    socketToRemServer = new Socket("127.0.0.1", serverPort);
+                    //myClient.getSocketTCP().bind((serverAddr));
+                    Msg msg = new Msg(command, myClient.getMyUserID().gethBeat()); //Create Serializable Msg
+
+                    objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
+                    objectOutput.writeObject(msg);
+                    objectOutput.flush();
+                    System.out.println("Enviou msg TCP");
+
+
+                    objectInput = new ObjectInputStream(socketToRemServer.getInputStream());
+                    msg = (Msg) objectInput.readObject();
+
+
+
+                } catch (IOException e) {
+                    return false;
+                }
+                return true;
+            } else
+                return false;
+        }catch (Exception e){return false;}
+    }
+
 
     public String receiveAnswerPacketRemServer(){
 
@@ -161,10 +203,12 @@ public class ClientController {
         return answer;
     }
 
-    public void sendPacketToRemServer(ArrayList<String> argCommand){
 
-        String command = null;
+<<<<<<< HEAD
 
+
+    public void comandToRemServer(String answerTo,String ServerName){
+=======
         socketToRem =  myClient.getSocketRemServer();
 
 
@@ -203,6 +247,7 @@ public class ClientController {
     }
 
     public void comandToRemServer(String ServerName){
+>>>>>>> origin/master
         String commandStr;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         do{
@@ -226,13 +271,9 @@ public class ClientController {
                     } else if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                         if (argCommand.size() == 3) {
 
-                            this.sendPacketToRemServer(argCommand);
-
-                            System.out.println("Cheguei aqui");
-
-                            String answer = this.receiveAnswerPacketRemServer();
-
-                            System.out.println(ServerName + answer);
+                            this.sendComandToRemServer(answerTo,argCommand);
+                            String strAnswer = this.receiveAnswerPacketRemServer();
+                            System.out.println(ServerName + strAnswer);
 
                             continue;
 
@@ -246,9 +287,9 @@ public class ClientController {
                         //mais notas:
                         //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
                         //TODO se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
-
+/*
                         if (argCommand.size() == 3) {
-                            this.sendPacketToRemServer(argCommand);
+                            this.sendComandToRemServer(answerTo,argCommand);
                             String answer= this.receiveAnswerPacketRemServer();
                             System.out.println(answer);
                         }
@@ -256,8 +297,12 @@ public class ClientController {
                             System.out.println("SYNTAX ERROR FOR COMMAND LOGIN");
                         }
                         continue;
+<<<<<<< HEAD
+*/
+=======
 
 
+>>>>>>> origin/master
                     } else if (argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
                         //TODO mostrar todos os conteudos da diretoria
                         //mais notas:
