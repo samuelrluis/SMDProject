@@ -227,11 +227,11 @@ public class ClientController {
 
 
 
-        if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
+       /*if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
-
+*/
 
         //if (this.remoteServerPort != 0) {
             try {
