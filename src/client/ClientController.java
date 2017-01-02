@@ -235,26 +235,26 @@ public class ClientController {
 */
 
         //if (this.remoteServerPort != 0) {
-            try {
+            //try {
                 //Create a Serializable Message with the command to send to DirServer
                 Msg msg = new Msg(command, myClient.getMyUserID().gethBeat()); //Create Serializable Msg
 
 
                 //b0ut = new ByteArrayOutputStream();
                 //out = new ObjectOutputStream(socketToRemServer.getOutputStream());
-                objectOutput.writeObject(msg);
-                objectOutput.flush();
+                //objectOutput.writeObject(msg);
+                //objectOutput.flush();
 
                 //packetToRem = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), this.remoteServerPort);
                 //socketToRem.send(packetToRem);
 
-            } catch (IOException e) {
-                e.printStackTrace();
+           // } catch (IOException e) {
+              //  e.printStackTrace();
 
         //}
 
 
-            }
+           // }
         //}
 
 
@@ -286,14 +286,14 @@ public class ClientController {
                         if (argCommand.size() == 3) {
 
 
-                            this.sendComandToRemServer(answerTo,argCommand);
-                            String strAnswer = this.receiveAnswerPacketRemServer();
-                            System.out.println(ServerName + strAnswer);
+                            //this.sendComandToRemServer(answerTo,argCommand);
+                            //String strAnswer = this.receiveAnswerPacketRemServer();
+                            //System.out.println(ServerName + strAnswer);
 
-                            this.sendPacketToRemServer(argCommand);
-                            String answer = this.receiveAnswerPacketRemServer();
+                            //this.sendPacketToRemServer(argCommand);
+                            //String answer = this.receiveAnswerPacketRemServer();
 
-                            System.out.println(ServerName + answer);
+                            //System.out.println(ServerName + answer);
 
                             continue;
 
