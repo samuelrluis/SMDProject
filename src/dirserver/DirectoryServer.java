@@ -5,8 +5,11 @@ package dirserver; /**
 import common.registry.ClientRegistry;
 import common.registry.ServerRegistry;
 import java.net.*;
+import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.RemoteRef;
 import java.util.ArrayList;
 
@@ -31,12 +34,14 @@ import java.util.ArrayList;
          Scontroller=new DirectoryServerController(this);
          cliRegistries=new ArrayList<>();
          serverRegistries=new ArrayList<>();
-         setRMIService();
      }
 
-     private void setRMIService(){
+     private void setRMIService(String serverAddr){
+         String registry = null;
+
          try {
-             RemoteServicesInstance = new DirectoryServerRMI();
+             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+             RemoteServicesInstance = new DirectoryServerRMI(Scontroller);
          } catch (RemoteException e) {
              e.printStackTrace();
          }
@@ -44,8 +49,12 @@ import java.util.ArrayList;
          RemoteRef location = RemoteServicesInstance.getRef();
          System.out.println(location.remoteToString());
 
-         String registry = "localhost";
-         String registration = "rmi://"+registry+"/RemoteServices";
+         if(serverAddr!=null)
+             registry = serverAddr;
+         else
+             registry = "localhost";
+
+         String registration = "rmi://" + registry + "/RemoteServices";
 
          try {
              Naming.rebind(registration,RemoteServicesInstance);
@@ -85,6 +94,7 @@ import java.util.ArrayList;
 
          DirectoryServer myServer=null;
          myServer=new DirectoryServer();
+         myServer.setRMIService(args[0]);
          myServer.runDirServer();
      }
 

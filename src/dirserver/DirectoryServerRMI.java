@@ -8,13 +8,15 @@ import java.rmi.RemoteException;
 public class DirectoryServerRMI extends java.rmi.server.UnicastRemoteObject
     implements RemoteServices{
 
+    DirectoryServerController myServerController = null;
 
-    protected DirectoryServerRMI() throws RemoteException {
 
+    protected DirectoryServerRMI(DirectoryServerController controller) throws RemoteException {
+        myServerController = controller;
     }
 
     @Override
     public String getListServRMI() throws RemoteException {
-        return "teste RMI";
+        return myServerController.getListServ();
     }
 }

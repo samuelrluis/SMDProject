@@ -8,6 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -70,6 +71,17 @@ public class ClientController {
         return answer;
     }
 
+
+    public void sendCommandRMI(ArrayList<String> argCommand){
+        if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){
+            try {
+                System.out.println(myClient.getRemoteInterface().getListServRMI());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void sendPacketToDirServer(ArrayList<String> argCommand){
 
         DatagramSocket socketToDir;
@@ -109,21 +121,16 @@ public class ClientController {
 
         try {
             int serverPort = Integer.parseInt(wantedPort);
-            InetSocketAddress serverAddr = new InetSocketAddress("127.0.0.1", serverPort);
-
 
             if (serverPort != 0) {
                 try {
                     socketToRemServer = new Socket("127.0.0.1", serverPort);
-                    //myClient.getSocketTCP().bind((serverAddr));
                     Msg msg = new Msg("Just Connect to this Server", myClient.getMyUserID().gethBeat()); //Create Serializable Msg
 
                     ObjectOutputStream objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
                     objectOutput.writeObject(msg);
                     objectOutput.flush();
                     System.out.println("Enviou msg TCP");
-
-
 
                 } catch (IOException e) {
                     return false;
@@ -163,13 +170,10 @@ public class ClientController {
         String command = null;
         socketToRem =  myClient.getSocketRemServer();
 
-
-
         if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
-
 
         //if (this.remoteServerPort != 0) {
             try {
@@ -187,13 +191,9 @@ public class ClientController {
 
             } catch (IOException e) {
                 e.printStackTrace();
-
-
             }
         //}
     }
-
-
 
     public void comandToRemServer(String ServerName){
         String commandStr;
@@ -213,11 +213,10 @@ public class ClientController {
                     argCommand.add(token);
                 }
 
-                try{
-                    if(argCommand.get(0).equalsIgnoreCase("EXIT")){
+                try {
+                    if (argCommand.get(0).equalsIgnoreCase("EXIT")) {
                         break;
-                    }
-                    else if (argCommand.get(0).equalsIgnoreCase("REGISTER")){
+                    } else if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                         if (argCommand.size() == 3) {
 
                             this.sendPacketToRemServer(argCommand);
@@ -230,10 +229,9 @@ public class ClientController {
                         } else
                             System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
 
-
                         continue;
 
-                    } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
+                    }else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                         //TODO falta implementar a verificaçao no ficheiro de registos
                         //mais notas:
                         //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
@@ -248,6 +246,7 @@ public class ClientController {
                             System.out.println("SYNTAX ERROR FOR COMMAND LOGIN");
                         }
                         continue;
+
 
                     } else if (argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
                         //TODO mostrar todos os conteudos da diretoria
@@ -294,7 +293,7 @@ public class ClientController {
                         //TODO RENAMEDIR+"espaço"+"nomeDir"+"espaço"+"nomeDir"
                         continue;
 
-                    }else if (argCommand.get(0).equalsIgnoreCase("CREATEDIR")){
+                    }else if (argCommand.get(0).equalsIgnoreCase("CREATEDIR")) {
                         //TODO mudar nome de diretoria
                         //TODO RENAMEDIR+"espaço"+"nomeDir"
                         continue;
@@ -332,9 +331,4 @@ public class ClientController {
             br.close();
         }
     }
-
-
-
-
-
 }

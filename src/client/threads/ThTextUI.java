@@ -54,7 +54,6 @@ public class ThTextUI extends Thread {
                             continue;
                         }else
                             System.exit(0);
-
                     }
 
                 else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
@@ -75,6 +74,10 @@ public class ThTextUI extends Thread {
                         System.out.println("You are already registered");
                         continue;
                     }
+                }
+
+                else if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){
+                        myClientController.sendCommandRMI(argCommand);
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
