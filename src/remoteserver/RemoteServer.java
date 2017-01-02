@@ -3,27 +3,47 @@
  */
 package remoteserver;
 
+import common.registry.ClientRegistry;
+import common.registry.ServerRegistry;
+import remoteserver.threads.ThAnswerClient;
+import remoteserver.threads.ThSendHeartBeat;
+
 import java.net.*;
 import java.io.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
 
 public class RemoteServer {
+
+    //RemoteServer
+    RemoteServerController remoteServerController;
+    ThSendHeartBeat threadHeartbeat;
+    ThAnswerClient threadAnswerClient = null;
+
+    //Common
+    private ArrayList<ClientRegistry> cliRegistries = null;
+    private ArrayList<ServerRegistry> serverRegistries = null;
+
     private String name;
-    ServerSocket serverSocketTcp = null; //TCP
+    private ServerSocket serverSocketTcp = null; //TCP
+    private DatagramPacket serverPacket = null;
     DatagramSocket serverSocketUdp = null; //UDP
     InetAddress myAddress=null;
     Socket socketToClient = null;
     int myTcpPort,serverDirPort,myUdpPort;
-    ThSendHeartBeat threadHeartbeat;
-    ThAnswerClient threadAnswerClient = null;
+
+
+
 
     RemoteServer(String name,InetAddress address,int udp){
+
         this.name=name;
         myAddress=address;
         myUdpPort=0;
         myTcpPort=0;
         serverDirPort=udp;
+
     }
+
 //TODO e preciso arrumar estas funçoes no controlador
     private void awaitsForNewClient(){
             while (true) {
@@ -68,16 +88,37 @@ public class RemoteServer {
         }catch(IOException e){
             System.out.println("Error creating the New Socket X");
         }
+
+        remoteServerController.answeringDatagram();
     }
 
     public String getName(){
         return name;
     }
 
+    public DatagramSocket getSocketUDP() {
+        return serverSocketUdp;
+    }
+
+    public DatagramPacket getPacket() {
+        return serverPacket;
+    }
+
+    public ArrayList<ServerRegistry> getServerRegistries() {
+        return serverRegistries;
+    }
+
+    public ArrayList<ClientRegistry> getCliRegistries() {
+        return cliRegistries;
+    }
+
+
     public static void main(String[] args) {
         RemoteServer remServer;
         InetAddress serverAddr = null;
         int serverPortToDirectory = -1;
+
+
 
         try{
             if(args.length!=3) {

@@ -1,6 +1,6 @@
-package common;
+package common.registry;
 
-import sun.misc.JavaIOFileDescriptorAccess;
+import common.heartbeat.ClientHeartBeat;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -8,16 +8,17 @@ import java.util.ArrayList;
 /**
  * Created by MarceloCortesao on 05/12/16.
  */
-public class CliRegistry extends Registry implements Serializable  {
+public class ClientRegistry extends Registry implements Serializable  {
+
     private Boolean login;
     private ClientHeartBeat hBeat;
 
-    public CliRegistry(){
+    public ClientRegistry(){
         hBeat = null;
         login = false;
     }
 
-    public CliRegistry(ClientHeartBeat hBeat,long entry){
+    public ClientRegistry(ClientHeartBeat hBeat, long entry){
         this.hBeat = hBeat;
         this.entryTime = entry;
     }
@@ -45,14 +46,14 @@ public class CliRegistry extends Registry implements Serializable  {
         return "usernameAndPass"+ name + " " + this.hBeat.getUdpPort() + " " + this.hBeat.getTcpPort();
     }
 
-    public void writeObjectToFile() {
+    public void writeObjectToFile(String path) {
+        ArrayList<ClientRegistry> allObjs = null;
         try {
-            OutputStream outputStream = new
-                    BufferedOutputStream(new FileOutputStream("../SMDProject/src/dirserver/saveCliRegistry.obj"));
-            ObjectOutput objectOutput = new
-                    ObjectOutputStream(outputStream);
-            objectOutput.writeObject(this);
-            System.out.println(this.getName());
+            allObjs= new ArrayList<>(readObjsFile(path));
+            allObjs.add(this);
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
+            ObjectOutput objectOutput = new ObjectOutputStream(outputStream);
+            objectOutput.writeObject(allObjs);
             objectOutput.close();
             System.out.println("Gravou sucessso");
         } catch (FileNotFoundException e1) {
@@ -63,22 +64,30 @@ public class CliRegistry extends Registry implements Serializable  {
         }
     }
 
-    public boolean checkCliOnFile (String nameAndPass){
+    public ArrayList<ClientRegistry> readObjsFile (String path){
+        ArrayList<ClientRegistry> ListObj = new ArrayList<>();
+        try {
+            FileInputStream fis = new FileInputStream(path);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            ListObj= (ArrayList<ClientRegistry>) ois.readObject();
+        }catch (Exception e){}
+        return ListObj;
+
+    }
+
+    public boolean checkCliOnFile (String nameAndPass, String path){
 
 
-        ArrayList<CliRegistry> recordList = new ArrayList<>();
-        CliRegistry object= new CliRegistry();
+        ArrayList<ClientRegistry> recordList = new ArrayList<>();
         try {
             try {
-                FileInputStream fis = new FileInputStream("../SMDProject/src/dirserver/saveCliRegistry.obj");
+                FileInputStream fis = new FileInputStream(path);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                do {
-                    object = (CliRegistry) ois.readObject();
-                    if(object!=null)
-                        recordList.add(object);
-                }while (object!=null);
+                     recordList = (ArrayList<ClientRegistry>) ois.readObject();
+
             } catch (FileNotFoundException e) {System.out.println("File not found");return false;}
         }catch (Exception e){}
+
 
         for (int i=0; i<recordList.size();i++){
             if(recordList.get(i).getName().toString().compareTo(nameAndPass)==0){

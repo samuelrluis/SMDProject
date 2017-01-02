@@ -1,9 +1,12 @@
 package dirserver;
 
 import common.*;
+import common.heartbeat.ClientHeartBeat;
+import common.heartbeat.ServerHeartBeat;
+import common.registry.ClientRegistry;
+import common.registry.ServerRegistry;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -14,13 +17,16 @@ import java.util.StringTokenizer;
 /**
  * Created by MarceloCortesao on 15/12/16.
  */
-public class ServerController {
+public class DirectoryServerController {
+
+    //DirServer
     private DirectoryServer Serv;
+
     private DatagramPacket packetRead;
     private DatagramPacket packetWrite;
-    private DatagramSocket socket;
+    private DatagramSocket socket = null;
 
-    public ServerController(DirectoryServer x){
+    public DirectoryServerController(DirectoryServer x){
         Serv=x;
         socket=Serv.getSocketUDP();
         packetRead=Serv.getPacket();
@@ -37,18 +43,18 @@ public class ServerController {
             String token = tok.nextToken();
             argCommand.add(token);
         }
-        //---------------------- trata comandos
+        //--------------------------- Trata comandos ----------------------------//
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-                CliRegistry cli = new CliRegistry(hBeat, 333);
-                cli.writeObjectToFile();
+                ClientRegistry cli = new ClientRegistry(hBeat, 333);
+                cli.writeObjectToFile("../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj");
                 packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(), packetRead.getPort()); //Create a Packet
                 socket.send(packetWrite);
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
-                CliRegistry cli = new CliRegistry();
-                if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2)) == true) {
+                ClientRegistry cli = new ClientRegistry();
+                if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == true) {
                     packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
-                } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2)) == false) {
+                } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == false) {
                     packetWrite = new DatagramPacket("Login failed".getBytes(), "Login failed".length(), packetRead.getAddress(), packetRead.getPort());
                 }
                 socket.send(packetWrite);
@@ -66,35 +72,35 @@ public class ServerController {
 
             }
             else if (argCommand.get(0).equalsIgnoreCase("CONNECT")) {
+
                 ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
+
                 try {
+
                     int wantedServerTcp = serverRegistries.get((Integer.parseInt(argCommand.get(2)))).gethBeat().getTcpPort();
                     String wantedServer = wantedServerTcp + "";
                     packetWrite = new DatagramPacket(wantedServer.getBytes(), wantedServer.length(), packetRead.getAddress(), packetRead.getPort());
                     System.out.println(wantedServer.toString());
                     socket.send(packetWrite);
+
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Server not found");
                     socket.send(packetWrite);
                 }
                 //TODO com isto temos todos os comandos do servDiretoria implementados :)
                 }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-
-
-
     private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
         int i=0;
         Boolean foundReg=false;
-        ArrayList<CliRegistry> cliRegestries = Serv.getCliRegistries();
+        ArrayList<ClientRegistry> cliRegestries = Serv.getCliRegistries();
         if(cliRegestries.size()==0)
-            cliRegestries.add(new CliRegistry(hBeat, System.nanoTime()));
+            cliRegestries.add(new ClientRegistry(hBeat, System.nanoTime()));
 
         else{
             while(i<cliRegestries.size()) {
@@ -107,7 +113,7 @@ public class ServerController {
             }
 
             if(foundReg==false)
-                cliRegestries.add(new CliRegistry(hBeat, System.nanoTime()));
+                cliRegestries.add(new ClientRegistry(hBeat, System.nanoTime()));
         }
     }
 
@@ -134,9 +140,8 @@ public class ServerController {
             }
         }
 
-
     public void answeringDatagram(){
-        //This is the principal function in our DirServer Controller;
+
         while(true){
             try{
                 socket.receive(packetRead);

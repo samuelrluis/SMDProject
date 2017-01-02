@@ -1,11 +1,11 @@
-package client;
+package client.threads;
 
-import common.CliRegistry;
+
+import client.Client;
+import client.ClientController;
+import common.registry.ClientRegistry;
 
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -14,21 +14,23 @@ import java.util.StringTokenizer;
  */
 
 public class ThTextUI extends Thread {
+
     public static final int MAX_SIZE = 1024;
     private Client myClient;
-    private CliRegistry myUserID;
-    private Controller myController;
+    private ClientRegistry myUserID;
+    private ClientController myClientController;
 
-    ThTextUI(Client x){
-        myClient=x;
-        myController=x.getController();
-        myUserID=myClient.getMyUserID();
+    public ThTextUI(Client x){
+        myClient = x;
+        myClientController = x.getController();
+        myUserID = myClient.getMyUserID();
     }
 
     @Override
     public void run() {
+
         String commandStr;
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
         while(true){
             ArrayList<String> argCommand = new ArrayList<>();
@@ -37,7 +39,7 @@ public class ThTextUI extends Thread {
             System.out.flush();
 
             try {
-                commandStr = br.readLine();
+                commandStr = bufferedReader.readLine();
                 StringTokenizer tok = new StringTokenizer(commandStr," ");
 
                 while (tok.hasMoreTokens()){
@@ -46,27 +48,54 @@ public class ThTextUI extends Thread {
                 }
 
                 try{
-                if(argCommand.get(0).equalsIgnoreCase("EXIT")){
-                    if (myClient.getLoginFlag() == true) {
-                        System.out.println("You have to logout first!");
-                        continue;
-                    }else
-                        System.exit(0);
+                    if(argCommand.get(0).equalsIgnoreCase("EXIT")){
+                        if (myClient.getLoginFlag() == true) {
+                            System.out.println("You have to logout first!");
+                            continue;
+                        }else
+                            System.exit(0);
+                    }
 
+                else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+                    if (myClient.getRegistedFlag() == false) {
+                        if (argCommand.size() == 3) {
+
+                            myClientController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                            myClientController.sendPacketToDirServer(argCommand);
+                            String answer = myClientController.receiveAnswerPacketDirServer();
+                            System.out.println(answer);
+                            myClient.setRegistedFlagTrue();
+
+                            continue;
+
+                        } else
+                            System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
+
+                    } else {
+                        System.out.println("You are already registered");
+                        continue;
+                    }
+                }
+
+                else if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){
+                        myClientController.sendCommandRMI(argCommand);
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
-                    System.out.println(myController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
+                    System.out.println(myClientController.readObjectFromFile("../SMDProject/src/client/manual.txt"));
                     continue;
+
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGIN")){
                     if(myClient.getLoginFlag()==false) {
                         if (argCommand.size() == 3) {
-                            myController.sendPacketToDirServer(argCommand);
-                            String answer=myController.receiveAnswerPacket();
+                            myClientController.sendPacketToDirServer(argCommand);
+                            String answer= myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
-                            if(answer.compareTo("Login successfully")==0) {
+                            if(answer.compareTo("Login successfully!")==0) {
+                                myClientController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
                                 myClient.setloginFlagTrue();
-                                myController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                                myClient.setRegistedFlagTrue();
+                                continue;
                             }
                         }
                         else {
@@ -85,28 +114,13 @@ public class ThTextUI extends Thread {
                     }else
                     {
                         myClient.setloginFlagFalse(); // falta notificar o servidor
-                        System.out.println("Successfully logout!");
+                        System.out.println("Logout Successfully!");
                         continue;
                     }
                 }
 
 
-                else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-                    if (myClient.getRegistedFlag() == false) {
-                        if (argCommand.size() == 3) {
-                            myController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                            myController.sendPacketToDirServer(argCommand);
-                            String answer = myController.receiveAnswerPacket();
-                            System.out.println(answer);
-                            continue;
-                        } else
-                            System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
 
-                    } else {
-                        System.out.println("You are already registered");
-                        continue;
-                    }
-                }
 
                 else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
 
@@ -116,15 +130,26 @@ public class ThTextUI extends Thread {
                     //TODO dpois caso o cliente queira sair ha um comando "EXIT" damos um break e volta para aqui e pode se ligar a outro servRemoto
                     //-----------------------------------------------------------------------------------------------------
 
+
                         if(myClient.getRegistedFlag()==false) {
                             System.out.println("To use this command you need to be logged in");
                             continue;
                         }
-                        myController.sendPacketToDirServer(argCommand);
-                        String answer=myController.receiveAnswerPacket();
-                        if(myController.connectToRemServer(answer)) {
+
+                        myClientController.sendPacketToDirServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketDirServer();
+                        System.out.println("Porto: " + answer);
+
+                        if(myClientController.sendComandToRemServer(answer)) {
                             System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
-                            myController.comandToRem(argCommand.get(1));
+
+
+                            int sPort = Integer.parseInt(answer);
+                            myClientController.setRemoteServerPort(sPort); // Guarda o porto do Server Remoto no cliente
+
+                            myClientController.comandToRemServer(answer,argCommand.get(1));
+
+
                         }
                         else
                             System.out.println("You can't connect to that server");
@@ -137,9 +162,9 @@ public class ThTextUI extends Thread {
                     }else{
 
                     }
-                    //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer umam ligaçao direta com os servidores)
-                    myController.sendPacketToDirServer(argCommand);
-                    String answer=myController.receiveAnswerPacket();
+                    //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
+                    myClientController.sendPacketToDirServer(argCommand);
+                    String answer= myClientController.receiveAnswerPacketDirServer();
                     System.out.println(answer);
                 } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
                 if(myClient.getRegistedFlag()==false){
@@ -147,9 +172,9 @@ public class ThTextUI extends Thread {
                         continue;
                     }
                     //TODO receber arrayList com objetos do tipo cliente(e preciso portos e IP para usar troca de msgs ou difusao)
-//                    myController.sendPacket(argCommand);
-//                    String answer=myController.receiveAnswerPacket();
-//                    System.out.println(answer);
+                        myClientController.sendPacketToDirServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketDirServer();
+                        System.out.println(answer);
                 } else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
                         if(myClient.getRegistedFlag()==false){
                             System.out.println("To use this command you need to be logged in");

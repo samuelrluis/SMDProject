@@ -1,55 +1,85 @@
 package client;
 
-import common.CliRegistry;
-import common.ClientHeartBeat;
+import client.threads.ThReaderUDP;
+import client.threads.ThSendHeartBeat;
+import client.threads.*;
+import common.registry.ClientRegistry;
+import dirserver.RemoteServices;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  * Created by Samuel on 30/10/2016.
  */
 public class Client {
-    //threads
-    private ThSendHeartBeat threadHeartBeat;
+
+    //Client
+    private ClientController myClientController = null;
     private ThTextUI threadUI;
-    private ThReaderUDP threadUDPReader=null;
-    private DatagramSocket socketToDir=null;
-    private Socket socketTCP=null;
-    private InetAddress serverAddr=null;
-    private int serverPortHB=-1,serverPortCommand=-1;
-    private CliRegistry myUserID=null;
-    private Controller myController=null;
+    private ThReaderUDP threadUDPReader = null;
+    private ThSendHeartBeat threadHeartBeat;
+
+    //RMIasd
+    RemoteServices remoteInterface = null;
+
+    //Common
+    private ClientRegistry myUserID = null;
+    private Socket socketTCP = null;
+    private InetAddress serverAddr = null;
+    private DatagramSocket socketDirServer = null, socketRemServer = null;
+    private int serverPortHB = -1 ,serverPortCommand = -1;
     private boolean registedFlag = false;
     private boolean loginFlag = false;
 
-    public int getServerPortHB() {
-        return serverPortHB;
-    }
-
     Client(InetAddress serverAddress, Integer serverPort, Integer serverPortCommand){
-        myUserID=new CliRegistry();
+
+        myUserID=new ClientRegistry();
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
-        myController=new Controller(this);
+        setUpRMIService();
+        myClientController =new ClientController(this);
 
         try {
-            socketToDir=new DatagramSocket();
+            socketDirServer = new DatagramSocket();
+            socketRemServer = new DatagramSocket();
             socketTCP=new Socket();
+
         } catch (SocketException e) {
             e.printStackTrace();
         }
     }
 
+    private void setUpRMIService(){
+        String registry = "localhost";
+        String registrartion = "rmi://"+registry+"/RemoteServices";
+
+        Remote remoteService = null;
+        try {
+            remoteService = Naming.lookup(registrartion);
+            remoteInterface = (RemoteServices) remoteService;
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Client Threads Create
+
     public void createThreads(){
         threadUI = new ThTextUI(this);
         threadUDPReader=new ThReaderUDP();//Thread that will be reading all the received data from DirServer
     }
+
+    // Client Threads Start
 
     public void startThreads(){
         threadUI.start();
@@ -61,16 +91,44 @@ public class Client {
         threadHeartBeat.start();
     }
 
-    public Controller getController() {
-        return myController;
+
+    // Client Setters
+
+    public void setRegistedFlagTrue(){
+        this.registedFlag=true;
+        return;
     }
 
-    public CliRegistry getMyUserID() {
+    public void setloginFlagTrue(){
+        this.loginFlag=true;
+        return;
+    }
+
+    public void setloginFlagFalse(){
+        this.loginFlag=false;
+        return;
+    }
+
+    // Client Getters
+
+    public RemoteServices getRemoteInterface() {
+        return remoteInterface;
+    }
+
+    public ClientController getController() {
+        return myClientController;
+    }
+
+    public ClientRegistry getMyUserID() {
         return myUserID;
     }
 
-    public DatagramSocket getSocketToDir() {
-        return socketToDir;
+    public DatagramSocket getSocketDirServer() {
+        return socketDirServer;
+    }
+
+    public DatagramSocket getSocketRemServer(){
+        return socketRemServer;
     }
 
     public Socket getSocketTCP() {
@@ -89,19 +147,8 @@ public class Client {
         return serverPortCommand;
     }
 
-    public void setRegistedFlagTrue(){
-        this.registedFlag=true;
-        return;
-    }
-
-    public void setloginFlagTrue(){
-        this.loginFlag=true;
-        return;
-    }
-
-    public void setloginFlagFalse(){
-        this.loginFlag=false;
-        return;
+    public int getServerPortHB() {
+        return serverPortHB;
     }
 
     public boolean getRegistedFlag(){
@@ -113,11 +160,14 @@ public class Client {
     }
 
     public static void main(String args[]){
+
         Client thisClient;
+
         InetAddress serverAddr=null;
         int serverPortHB = -1 , serverPortCommand=-1;
 
         try {
+
             if(args.length!=3){
                 System.out.println("Sintax Error [DIRIP][UDP_PORT_FOR HB][UDP_PORT_FOR_COMMAND]");
                 System.exit(0);

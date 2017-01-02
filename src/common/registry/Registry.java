@@ -1,4 +1,4 @@
-package common;
+package common.registry;
 
 import java.io.Serializable;
 

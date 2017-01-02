@@ -1,4 +1,4 @@
-package common;
+package common.heartbeat;
 import java.io.Serializable;
 /**
  * Created by Samuel on 15/11/2016.
