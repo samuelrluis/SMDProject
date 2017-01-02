@@ -64,6 +64,7 @@ public class ThTextUI extends Thread {
                             myClientController.sendPacketToDirServer(argCommand);
                             String answer = myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
+                            myClient.setRegistedFlagTrue();
 
                             continue;
 
@@ -91,8 +92,10 @@ public class ThTextUI extends Thread {
                             String answer= myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
                             if(answer.compareTo("Login successfully!")==0) {
-                                myClient.setloginFlagTrue();
                                 myClientController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
+                                myClient.setloginFlagTrue();
+                                myClient.setRegistedFlagTrue();
+                                continue;
                             }
                         }
                         else {
@@ -137,13 +140,15 @@ public class ThTextUI extends Thread {
                         String answer= myClientController.receiveAnswerPacketDirServer();
                         System.out.println("Porto: " + answer);
 
-                        if(myClientController.connectToRemServer(answer)) {
+                        if(myClientController.sendComandToRemServer(answer)) {
                             System.out.println("Connection to " + argCommand.get(1) + " " + argCommand.get(2) + "Succeded");
+
 
                             int sPort = Integer.parseInt(answer);
                             myClientController.setRemoteServerPort(sPort); // Guarda o porto do Server Remoto no cliente
 
-                            myClientController.comandToRemServer(argCommand.get(1));
+                            myClientController.comandToRemServer(answer,argCommand.get(1));
+
 
                         }
                         else
