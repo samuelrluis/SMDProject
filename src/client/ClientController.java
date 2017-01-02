@@ -165,7 +165,7 @@ public class ClientController {
 
         String command = null;
 
-        socketToRem =  myClient.getSocketRemServer();
+        //socketToRem =  myClient.getSocketRemServer();
 
 
         if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
