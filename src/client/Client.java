@@ -33,9 +33,12 @@ public class Client {
     private InetAddress serverAddr = null;
     private DatagramSocket socketDirServer = null;
     private Socket socketRemServer = null;
-    private int serverPortHB = -1 ,serverPortCommand = -1;
+    private int serverPortHB = -1;
+    private int serverPortCommand = -1;
+    private int readerPort=-1;
     private boolean registedFlag = false;
     private boolean loginFlag = false;
+
 
     Client(InetAddress serverAddress, Integer serverPort, Integer serverPortCommand){
 
@@ -79,7 +82,7 @@ public class Client {
 
     public void createThreads(){
         threadUI = new ThTextUI(this);
-        threadUDPReader=new ThReaderUDP();//Thread that will be reading all the received data from DirServer
+        threadUDPReader=new ThReaderUDP(this);//Thread that will be reading all the received data from DirServer
     }
 
     // Client Threads Start
@@ -95,6 +98,10 @@ public class Client {
     }
 
     // Client Setters
+
+    public void setReaderPort(int readerPort) {
+        this.readerPort = readerPort;
+    }
 
     public void setRegistedFlagTrue(){
         this.registedFlag=true;
@@ -159,6 +166,10 @@ public class Client {
 
     public boolean getLoginFlag(){
         return this.loginFlag;
+    }
+
+    public int readerPort() {
+        return readerPort;
     }
 
     public static void main(String args[]){

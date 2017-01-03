@@ -217,6 +217,10 @@ public class ThTextUI extends Thread {
                     }
                 }
 
+                else if (argCommand.get(0).equalsIgnoreCase("CHAT")) {
+                    myClientController.sendPacketToDirServer(argCommand);
+                }
+
                 else if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){
                         myClientController.sendCommandRMI(argCommand);
                 }
