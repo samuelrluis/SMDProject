@@ -31,7 +31,8 @@ public class Client {
     private ClientRegistry myUserID = null;
     private Socket socketTCP = null;
     private InetAddress serverAddr = null;
-    private DatagramSocket socketDirServer = null, socketRemServer = null;
+    private DatagramSocket socketDirServer = null;
+    private Socket socketRemServer = null;
     private int serverPortHB = -1 ,serverPortCommand = -1;
     private boolean registedFlag = false;
     private boolean loginFlag = false;
@@ -47,31 +48,13 @@ public class Client {
 
         try {
             socketDirServer = new DatagramSocket();
-            socketRemServer = new DatagramSocket();
+            socketRemServer = new Socket();
             socketTCP=new Socket();
 
         } catch (SocketException e) {
             e.printStackTrace();
         }
     }
-/*
-    private void setUpRMIService(){
-        String registry = "localhost";
-        String registrartion = "rmi://"+registry+"/RemoteServices";
-
-        Remote remoteService = null;
-        try {
-            remoteService = Naming.lookup(registrartion);
-            remoteInterface = (RemoteServices) remoteService;
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-    */
 
     // Client Threads Create
 
@@ -128,7 +111,7 @@ public class Client {
         return socketDirServer;
     }
 
-    public DatagramSocket getSocketRemServer(){
+    public Socket getSocketRemServer(){
         return socketRemServer;
     }
 
