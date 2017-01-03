@@ -6,6 +6,7 @@ import common.Msg;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -147,8 +148,6 @@ public class ClientController {
     }
 
     // RemoteServer Comunication Methods
-
-
 
     public String receiveAnswerMsgRemServer(){
 

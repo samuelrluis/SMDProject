@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -46,7 +47,8 @@ public class DirectoryServerController {
         //--------------------------- Trata comandos ----------------------------//
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-                ClientRegistry cli = new ClientRegistry(hBeat, 333);
+                ClientRegistry cli = new ClientRegistry(hBeat, 2222);
+
                 if(cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == false) {
                     cli.writeObjectToFile("../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj");
                     packetWrite = new DatagramPacket("Registered successfully".getBytes(), "Registered successfully".length(), packetRead.getAddress(), packetRead.getPort()); //Create a Packet
@@ -57,6 +59,7 @@ public class DirectoryServerController {
                 socket.send(packetWrite);
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 ClientRegistry cli = new ClientRegistry();
+                cli.setAddress(packetRead.getAddress());
                 if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == true) {
                     packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
                 } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == false) {
@@ -72,20 +75,23 @@ public class DirectoryServerController {
                 packetWrite = new DatagramPacket((Serv.getListClient()).getBytes(), (Serv.getListClient()).length(), packetRead.getAddress(), packetRead.getPort());
                 socket.send(packetWrite);
             }else if(argCommand.get(0).equalsIgnoreCase("CHAT")){
-
+                    InetAddress addr = null;
                     int port = 0;
-                    if(argCommand.get(1).equalsIgnoreCase("ALL")){
+                    if(argCommand.get(1).equalsIgnoreCase("ALL")){ // Send to all
                         for(int i=0;i<Serv.getCliRegistries().size();i++){
+                            addr = Serv.getCliRegistries().get(i).getMyAddress();
                             port = Serv.getCliRegistries().get(i).gethBeat().getReaderPort();
                             System.out.println(port);
-                            packetWrite = new DatagramPacket((argCommand.get(2).getBytes()), (argCommand.get(2).length()), packetRead.getAddress(),port);
+                            System.out.println(addr.toString());
+                            packetWrite = new DatagramPacket((argCommand.get(2).getBytes()), (argCommand.get(2).length()),addr,port);
                             socket.send(packetWrite);
                         }
                     }else {
-                        for (int i = 0; i < Serv.getCliRegistries().size(); i++) {
+                        for (int i = 0; i < Serv.getCliRegistries().size(); i++) { // Send to one User
                             if (argCommand.get(1).equalsIgnoreCase(Serv.getCliRegistries().get(i).getName())){
+                                addr = Serv.getCliRegistries().get(i).getMyAddress();
                                 port = Serv.getCliRegistries().get(i).gethBeat().getReaderPort();
-                                packetWrite = new DatagramPacket((argCommand.get(2).getBytes()), (argCommand.get(2).length()), packetRead.getAddress(), port);
+                                packetWrite = new DatagramPacket((argCommand.get(2).getBytes()), (argCommand.get(2).length()),addr, port);
                                 socket.send(packetWrite);
                             }
                         }
@@ -114,12 +120,16 @@ public class DirectoryServerController {
         }
     }
 
-    private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
+    private void receivedHeartBeatClient(ClientHeartBeat hBeat,InetAddress cliAddr) {
+        ClientRegistry clientRegistry = null;
         int i=0;
         Boolean foundReg=false;
         ArrayList<ClientRegistry> cliRegestries = Serv.getCliRegistries();
-        if(cliRegestries.size()==0)
-            cliRegestries.add(new ClientRegistry(hBeat, System.nanoTime()));
+        if(cliRegestries.size()==0) {
+            clientRegistry = new ClientRegistry(hBeat, System.nanoTime());
+            clientRegistry.setAddress(cliAddr);
+            cliRegestries.add(clientRegistry);
+        }
 
         else{
             while(i<cliRegestries.size()) {
@@ -131,8 +141,11 @@ public class DirectoryServerController {
                     i++;
             }
 
-            if(foundReg==false)
-                cliRegestries.add(new ClientRegistry(hBeat, System.nanoTime()));
+            if(foundReg==false){
+                clientRegistry = new ClientRegistry(hBeat, System.nanoTime());
+                clientRegistry.setAddress(cliAddr);
+                cliRegestries.add(clientRegistry);
+            }
         }
     }
 
@@ -172,7 +185,7 @@ public class DirectoryServerController {
                 if(message instanceof ServerHeartBeat)
                     receiveHeartBeatServer((ServerHeartBeat) message); //This will receive th HB from Server
                 else if(message instanceof ClientHeartBeat)
-                    receivedHeartBeatClient((ClientHeartBeat) message); //This will receive th HB from Client
+                    receivedHeartBeatClient((ClientHeartBeat) message,packetRead.getAddress()); //This will receive th HB from Client
                 else if(message instanceof Msg)
                     receivedCommand((Msg) message);
 
