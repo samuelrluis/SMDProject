@@ -26,18 +26,21 @@ public class RemoteServer {
     private String name;
     private ServerSocket serverSocketTcp = null; //TCP
     private DatagramPacket serverPacket = null;
+    private RemoteServerController myController= null;
     DatagramSocket serverSocketUdp = null; //UDP
     InetAddress myAddress=null;
-    Socket socketToClient = null;
+    private Socket socketToClient = null;
     int myTcpPort,serverDirPort,myUdpPort;
 
-    RemoteServer(String name,InetAddress address,int udp){
+
+    RemoteServer(String name, InetAddress address, int udp){
 
         this.name=name;
         myAddress=address;
         myUdpPort=0;
         myTcpPort=0;
         serverDirPort=udp;
+        myController = new RemoteServerController();
 
     }
 
@@ -52,18 +55,20 @@ public class RemoteServer {
                     e.printStackTrace();
                 }
 
-                ThAnswerClient thread = new ThAnswerClient(serverSocketTcp, socketToClient);
+                ThAnswerClient thread = new ThAnswerClient(this);
                 thread.start();
 
     }
 
     private void createThreadUdp(){
+
         //UDP-Socket to directory Servers
         System.out.println("dirport: "+serverDirPort);
         System.out.println("udpPort: "+myUdpPort);
         System.out.println("tcpPort: "+myTcpPort);
         threadHeartbeat=new ThSendHeartBeat(myAddress,serverDirPort,myUdpPort,myTcpPort,this.getName());
         threadHeartbeat.start();
+
     }
 
     public void runServer(){
@@ -87,9 +92,12 @@ public class RemoteServer {
         return this.name;
     }
 
-    public DatagramSocket getSocketUDP() {
-        return serverSocketUdp;
+
+    public RemoteServerController getRemoteServerController() {
+        return remoteServerController;
     }
+
+
 
     public DatagramPacket getPacket() {
         return serverPacket;
@@ -103,6 +111,8 @@ public class RemoteServer {
         return cliRegistries;
     }
 
+    public ServerSocket getServerSocketTcp() {return this.serverSocketTcp;}
+    public Socket getSocketToClient() {return this.socketToClient;}
 
     public static void main(String[] args) {
         RemoteServer remServer;
