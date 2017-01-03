@@ -31,9 +31,6 @@ public class RemoteServer {
     Socket socketToClient = null;
     int myTcpPort,serverDirPort,myUdpPort;
 
-
-
-
     RemoteServer(String name,InetAddress address,int udp){
 
         this.name=name;
@@ -46,7 +43,7 @@ public class RemoteServer {
 
 //TODO e preciso arrumar estas funçoes no controlador
     private void awaitsForNewClient(){
-            while (true) {
+
                 try {
                     socketToClient = serverSocketTcp.accept();
                 } catch (IOException e) {
@@ -55,8 +52,7 @@ public class RemoteServer {
 
                 ThAnswerClient thread = new ThAnswerClient(serverSocketTcp, socketToClient);
                 thread.start();
-                System.out.println("after thread");
-            }
+
     }
 
     private void createThreadUdp(){
@@ -66,12 +62,6 @@ public class RemoteServer {
         System.out.println("tcpPort: "+myTcpPort);
         threadHeartbeat=new ThSendHeartBeat(myAddress,serverDirPort,myUdpPort,myTcpPort,this.getName());
         threadHeartbeat.start();
-    }
-
-    private void createThreadTcp(Socket socketToClient){
-        //TCP-Socket to the Client
-        threadAnswerClient=new ThAnswerClient(serverSocketTcp,socketToClient);
-        threadAnswerClient.start();
     }
 
     public void runServer(){
@@ -88,8 +78,7 @@ public class RemoteServer {
         }catch(IOException e){
             System.out.println("Error creating the New Socket X");
         }
-
-        remoteServerController.answeringDatagram();
+        //remoteServerController.answeringDatagram();
     }
 
     public String getName(){
@@ -117,8 +106,6 @@ public class RemoteServer {
         RemoteServer remServer;
         InetAddress serverAddr = null;
         int serverPortToDirectory = -1;
-
-
 
         try{
             if(args.length!=3) {
