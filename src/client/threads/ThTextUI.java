@@ -183,15 +183,6 @@ public class ThTextUI extends Thread {
                             System.out.println("Modificada com sucesso");
                         }
                         */
-
-
-
-
-
-
-
-
-
                     }
 
                 else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
@@ -218,11 +209,22 @@ public class ThTextUI extends Thread {
                 }
 
                 else if (argCommand.get(0).equalsIgnoreCase("CHAT")) {
-                    myClientController.sendPacketToDirServer(argCommand);
+                    if(myClient.getLoginFlag()==false){
+                        System.out.println("To use this command you need to be logged in");
+                        continue;
+                    }else{
+                        myClientController.sendPacketToDirServer(argCommand);
+                    }
+
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){
+                    if(myClient.getLoginFlag()==false){
+                        System.out.println("To use this command you need to be logged in");
+                        continue;
+                    }else{
                         myClientController.sendCommandRMI(argCommand);
+                    }
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
@@ -295,12 +297,11 @@ public class ThTextUI extends Thread {
                        System.out.println("To use this command you need to be logged in");
                        continue;
                     }else{
-
+                        //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
+                        myClientController.sendPacketToDirServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketDirServer();
+                        System.out.println(answer);
                     }
-                    //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
-                    myClientController.sendPacketToDirServer(argCommand);
-                    String answer= myClientController.receiveAnswerPacketDirServer();
-                    System.out.println(answer);
                 } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
                 if(myClient.getLoginFlag()==false){
                         System.out.println("To use this command you need to be logged in");
@@ -312,7 +313,7 @@ public class ThTextUI extends Thread {
                         System.out.println(answer);
                 } else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
                         if(myClient.getLoginFlag()==false){
-                            System.out.println("To use this command you need to be logged in");
+                            System.out.println("You can't see the logged clients without login");
                             continue;
                         }
                     //TODO implementar msgs, para um cliente especifico "CLIMSG"+"espaço"+"idDoCli"+"texto", em difusao "CLIMSG"+"espaço"+"texto"
