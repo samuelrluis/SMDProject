@@ -71,15 +71,15 @@ public class RemoteServerController {
 /               */
                 System.out.println("Logado com Sucesso!!");
 
-                //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
-                //TODO se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
+                // A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
+                // se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
 
             } else if (argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
-                //TODO mostrar todos os conteudos da diretoria
+                //mostrar todos os conteudos da diretoria
                 //mais notas:
-                //TODO (so da diretoria dos cliente em questao, nao pode ser visivel as diretorias dos outros clientes)
-                //TODO Comando SHOWDIR mostra a pasta base
-                //TODO Comando SHOWDIR+"espaço"+"caminho" mostra os doc's nessa pasta especifica
+                //(so da diretoria dos cliente em questao, nao pode ser visivel as diretorias dos outros clientes)
+                //Comando SHOWDIR mostra a pasta base
+                // Comando SHOWDIR+"espaço"+"caminho" mostra os doc's nessa pasta especifica
 
             }else if (argCommand.get(0).equalsIgnoreCase("UPLOAD")){
                 //TODO upload ficheiro, utilizar protocolo TCP
@@ -88,30 +88,30 @@ public class RemoteServerController {
                 //TODO download ficheiro, utilizar protocolo TCP
 
             } else if (argCommand.get(0).equalsIgnoreCase("MOVFILE")){
-                //TODO implementar movimentaçao de ficheiros entre diretorias
-                //TODO MOVFILE+"espaço"+"caminho"+"espaço"+"caminho"
+                //implementar movimentaçao de ficheiros entre diretorias
+                //MOVFILE+"espaço"+"caminho"+"espaço"+"caminho"
 
             }else if (argCommand.get(0).equalsIgnoreCase("COPYFILE")){
-                //TODO implementar copia de ficheiros entre diretorias
-                //TODO COPYFILE+"espaço"+"caminho"+"espaço"+"caminho"
+                //implementar copia de ficheiros entre diretorias
+                //COPYFILE+"espaço"+"caminho"+"espaço"+"caminho"
 
             }else if (argCommand.get(0).equalsIgnoreCase("DELFILE")) {
-                //TODO eliminar ficheiro
+                //eliminar ficheiro
 
             }else if (argCommand.get(0).equalsIgnoreCase("DELDIR")) {
-                //TODO eliminar ficheiro
-                //TODO ATENÇAO SO VALIDO PARA DIRETORIAS VAZIAS
+                //eliminar ficheiro
+                //ATENÇAO SO VALIDO PARA DIRETORIAS VAZIAS
 
             }else if (argCommand.get(0).equalsIgnoreCase("RENAMEFILE")) {
-                //TODO mudar nome de ficheiro
-                //TODO RENAMEFILE+"espaço"+"nomeFile"+"espaço"+"nomeFile"
+                // mudar nome de ficheiro
+                // RENAMEFILE+"espaço"+"nomeFile"+"espaço"+"nomeFile"
 
             }else if (argCommand.get(0).equalsIgnoreCase("RENAMEDIR")) {
                 //TODO mudar nome de diretoria
                 //TODO RENAMEDIR+"espaço"+"nomeDir"+"espaço"+"nomeDir"
             }else if (argCommand.get(0).equalsIgnoreCase("CREATEDIR")) {
-                //TODO mudar nome de diretoria
-                //TODO RENAMEDIR+"espaço"+"nomeDir"
+                //mudar nome de diretoria
+
             }
         } catch (Exception e) {
             e.printStackTrace();
