@@ -85,9 +85,6 @@ public class DirectoryServerController {
                             }
                         }
                     }
-
-
-
             }
 
             else if (argCommand.get(0).equalsIgnoreCase("CONNECT")) {
@@ -95,7 +92,6 @@ public class DirectoryServerController {
                 ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
 
                 try {
-
                     int wantedServerTcp = serverRegistries.get((Integer.parseInt(argCommand.get(2)))).gethBeat().getTcpPort();
                     String wantedServer = wantedServerTcp + "";
                     packetWrite = new DatagramPacket(wantedServer.getBytes(), wantedServer.length(), packetRead.getAddress(), packetRead.getPort());
