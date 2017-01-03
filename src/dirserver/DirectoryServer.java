@@ -94,7 +94,7 @@ import java.util.ArrayList;
 
          DirectoryServer myServer=null;
          myServer=new DirectoryServer();
-         //myServer.setRMIService(args[0]);
+         myServer.setRMIService(args[0]);
          myServer.runDirServer();
      }
 

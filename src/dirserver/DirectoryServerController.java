@@ -66,11 +66,30 @@ public class DirectoryServerController {
                 System.out.println("List of Clients \n" + Serv.getListClient());
                 packetWrite = new DatagramPacket((Serv.getListClient()).getBytes(), (Serv.getListClient()).length(), packetRead.getAddress(), packetRead.getPort());
                 socket.send(packetWrite);
-            }else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
-                //TODO implementar msgs, para um cliente especifico "CLIMSG"+"espaço"+"idDoCli"+"texto", em difusao "CLIMSG"+"espaço"+"texto"
+            }else if(argCommand.get(0).equalsIgnoreCase("CHAT")){
+
+                    int port = 0;
+                    if(argCommand.get(1).equalsIgnoreCase("ALL")){
+                        for(int i=0;i<Serv.getCliRegistries().size();i++){
+                            port = Serv.getCliRegistries().get(i).gethBeat().getReaderPort();
+                            System.out.println(port);
+                            packetWrite = new DatagramPacket((argCommand.get(2).getBytes()), (argCommand.get(2).length()), packetRead.getAddress(),port);
+                            socket.send(packetWrite);
+                        }
+                    }else {
+                        for (int i = 0; i < Serv.getCliRegistries().size(); i++) {
+                            if (argCommand.get(1).equalsIgnoreCase(Serv.getCliRegistries().get(i).getName())){
+                                port = Serv.getCliRegistries().get(i).gethBeat().getReaderPort();
+                                packetWrite = new DatagramPacket((argCommand.get(2).getBytes()), (argCommand.get(2).length()), packetRead.getAddress(), port);
+                                socket.send(packetWrite);
+                            }
+                        }
+                    }
+
 
 
             }
+
             else if (argCommand.get(0).equalsIgnoreCase("CONNECT")) {
 
                 ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
@@ -93,7 +112,6 @@ public class DirectoryServerController {
             e.printStackTrace();
         }
     }
-
 
     private void receivedHeartBeatClient(ClientHeartBeat hBeat) {
         int i=0;
@@ -190,6 +208,4 @@ public class DirectoryServerController {
             return "No Clients Connected";
         return List.toString();
     }
-
-
 }
