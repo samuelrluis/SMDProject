@@ -32,9 +32,8 @@ public class RemoteServerController {
     private DatagramSocket socket;
 
 
-    public void receivedCommand(Msg message) {
+    public String receivedCommand(Msg message) {
         ArrayList<String> argCommand = new ArrayList<>();
-
         String commandStr = message.getCommand();
         ClientHeartBeat hBeat = message.gethBeat();
         StringTokenizer tok = new StringTokenizer(commandStr, " ");
@@ -46,20 +45,9 @@ public class RemoteServerController {
         //---------------------- trata comandos ----------------------
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-
-
                 //TODO implementar registos dos clientes neste servidor remoto,
-                //TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
-                /*
-                //FIXTHIS
-                System.out.println("Não está a chegar aqui!");
 
-                ClientRegistry cli = new ClientRegistry(hBeat, 333);
-                cli.writeObjectToFile("../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj");
-                */
-
-
-
+                return "COCOCOCOCOCOOCOCOCOCOCOOCOCOCOC";
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 //TODO falta implementar a verificaçao no ficheiro de registos
                 /*
@@ -71,7 +59,6 @@ public class RemoteServerController {
                 }
                 socket.send(packetWrite);
 /               */
-                System.out.println("Logado com Sucesso!!");
 
                 // A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
                 // se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
@@ -118,6 +105,7 @@ public class RemoteServerController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void regClient(String name, String pass){

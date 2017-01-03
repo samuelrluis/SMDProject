@@ -61,8 +61,6 @@ public class ThTextUI extends Thread {
                     }
                     else if(argCommand.get(0).equalsIgnoreCase("TEST")){
 
-
-
                         //String nomeCliente = new String("NomeCliente");
                         //File dir = new File("../SMDProject/cliFolders/"+ nomeCliente);
                         /*
@@ -215,6 +213,10 @@ public class ThTextUI extends Thread {
                         System.out.println("You are already registered");
                         continue;
                     }
+                }
+
+                else if (argCommand.get(0).equalsIgnoreCase("CHAT")) {
+                    myClientController.sendPacketToDirServer(argCommand);
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){

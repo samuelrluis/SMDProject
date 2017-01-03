@@ -20,6 +20,8 @@ public class HeartBeat implements Serializable{
         return nameAndPass;
     }
 
+    public void setName(String name){this.nameAndPass=name;
+    }
     public String getType() {
         return type;
     }

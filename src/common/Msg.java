@@ -23,4 +23,8 @@ public class Msg implements Serializable {
     public String getCommand() {
         return command;
     }
+
+    public void setCommand(String cmd) {this.command = cmd;}
+
+    
 }

@@ -6,6 +6,7 @@ import common.Msg;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -33,14 +34,14 @@ public class ClientController {
     // Client Methods
 
     public void regClient(String name, String pass){
-        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB()));
+        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB(), myClient.readerPort()));
         myClient.setRegistedFlagTrue();
         myClient.startThreadHB();   //The HeartBeat Thread will start only when the userID is prepared
         return;
     }
 
     public void loginClient(String name,String pass){
-        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB()));
+        myClient.getMyUserID().sethBeat(new ClientHeartBeat(name+pass,myClient.getServerPortHB(),myClient.readerPort()));
         myClient.getMyUserID().setNameAndPassword(name+pass);
         myClient.setRegistedFlagTrue();
         return;
@@ -100,6 +101,8 @@ public class ClientController {
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("CONNECT"))
             command = new String ("CONNECT" + " " + argCommand.get(1) + " " + argCommand.get(2));
+        else if(argCommand.get(0).equalsIgnoreCase("CHAT"))
+            command = new String("CHAT"+" "+argCommand.get(1)+" "+argCommand.get(2));
 
         try {
             //Create a Serializable Message with the command to send to DirServer
@@ -123,7 +126,7 @@ public class ClientController {
 
             if (serverPort != 0) {
                 try {
-                    socketToRemServer = new Socket("127.0.0.1", serverPort);
+                    socketToRemServer = new Socket(myClient.getServerAddr(), serverPort);
                     Msg msg = new Msg("Just Connect to this Server", myClient.getMyUserID().gethBeat()); //Create Serializable Msg
 
                     objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
@@ -133,7 +136,7 @@ public class ClientController {
 
                     objectInput = new ObjectInputStream(socketToRemServer.getInputStream());
                     msg = (Msg) objectInput.readObject();
-                    System.out.println(msg.toString());
+                    //System.out.println(msg.toString());
 
                 } catch (IOException e) {
                     return false;
@@ -154,16 +157,15 @@ public class ClientController {
             //Read Message from RemServer
             in = new ObjectInputStream(socketToRemServer.getInputStream());
             msg = (Msg) in.readObject();
-
-            System.out.println("recebi mensagem de " + msg.gethBeat().getName());
+            System.out.println(msg.getCommand());
+            System.out.println("recebi mensagem de " + msg.gethBeat().getName().toString());
+            System.out.println();
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        System.out.println("teste recepção");
         return msg.toString();
     }
 
@@ -218,12 +220,9 @@ public class ClientController {
                         if (argCommand.size() == 3) {
 
                             this.sendMsgToRemServer(argCommand);
-
-                            System.out.println("Cheguei aqui");
-
-                            //String answer = this.receiveAnswerMsgRemServer();
-
-                            //System.out.println(ServerName + answer);
+                            System.out.println();
+                            System.out.print("Answer:       ");
+                            this.receiveAnswerMsgRemServer();
 
                             continue;
 
