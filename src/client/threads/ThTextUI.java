@@ -61,8 +61,6 @@ public class ThTextUI extends Thread {
                     }
                     else if(argCommand.get(0).equalsIgnoreCase("TEST")){
 
-
-
                         //String nomeCliente = new String("NomeCliente");
                         //File dir = new File("../SMDProject/cliFolders/"+ nomeCliente);
                         /*

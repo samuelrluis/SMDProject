@@ -41,6 +41,8 @@ public class RemoteServer {
 
     }
 
+
+
 //TODO e preciso arrumar estas funçoes no controlador
     private void awaitsForNewClient(){
 
@@ -82,7 +84,7 @@ public class RemoteServer {
     }
 
     public String getName(){
-        return name;
+        return this.name;
     }
 
     public DatagramSocket getSocketUDP() {

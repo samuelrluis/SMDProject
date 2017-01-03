@@ -30,7 +30,6 @@ public class ThSendHeartBeat extends Thread {
             b0ut = new ByteArrayOutputStream();                 //Create an array of byte in OutputStream
             out = new ObjectOutputStream(b0ut);                 //Place the ArrayOutputStream in the OBjectOutputSream
             out.writeObject(heartBeat);                         //Write the Heartbeat on the object
-
             packetHeartBeat=new DatagramPacket(b0ut.toByteArray(),b0ut.size(),serverAddr,serverPortToDirectory); //Create a Packet
 
         }catch(SocketException e){
