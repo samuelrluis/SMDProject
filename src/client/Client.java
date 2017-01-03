@@ -55,8 +55,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-<<<<<<< HEAD
-=======
+
 
     private void setUpRMIService(){
         String registry = "localhost";
@@ -74,7 +73,7 @@ public class Client {
             e.printStackTrace();
         }
     }
->>>>>>> 61053dde05cbb40a704a184b4808bfbe41b86791
+
 
     // Client Threads Create
 
