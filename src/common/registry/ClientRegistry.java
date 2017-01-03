@@ -77,7 +77,6 @@ public class ClientRegistry extends Registry implements Serializable  {
 
     public boolean checkCliOnFile (String nameAndPass, String path){
 
-
         ArrayList<ClientRegistry> recordList = new ArrayList<>();
         try {
             try {

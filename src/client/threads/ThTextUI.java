@@ -6,8 +6,12 @@ import client.ClientController;
 import common.registry.ClientRegistry;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by diogomiguel on 25/11/16.
@@ -49,28 +53,164 @@ public class ThTextUI extends Thread {
 
                 try{
                     if(argCommand.get(0).equalsIgnoreCase("EXIT")){
-                        if (myClient.getLoginFlag() == true) {
+                        if (myClient.getLoginFlag() == false) {
                             System.out.println("You have to logout first!");
                             continue;
                         }else
                             System.exit(0);
                     }
+                    else if(argCommand.get(0).equalsIgnoreCase("TEST")){
+
+
+
+                        //String nomeCliente = new String("NomeCliente");
+                        //File dir = new File("../SMDProject/cliFolders/"+ nomeCliente);
+                        /*
+                         //TODO Criar diretoria
+                        if(dir.mkdir()){
+                            System.out.println("Criado com sucesso");
+                        }
+                        */
+
+                        //TODO Verificar se existe diretoria
+                        /*
+                        if(dir.exists()){
+                            System.out.println("Existe!");
+                        }
+                        */
+
+                        //TODO Listar subpastas na diretoria
+                        /*
+                        File dir = new File("../SMDProject/cliFolders");
+                        String[] directories = dir.list(new FilenameFilter() {
+                            @Override
+                            public boolean accept(File current, String name) {
+                                return new File(current, name).isDirectory();
+                            }
+                        });
+                        System.out.println(Arrays.toString(directories));
+                        */
+                        //TODO Listar ficheiros e subpastas na diretoria
+                        /*
+                        File dir = new File("../SMDProject/cliFolders");
+                        String[] files = dir.list();
+                        if (files.length == 0) {
+                            System.out.println("The directory is empty");
+                        } else {
+                            for (String aFile : files) {
+                                System.out.println(aFile);
+                            }
+                        }
+                        */
+                        //TODO criar ficheiro
+                        /*
+                        String nomeFicheiro = new String("nomeFicheiro");
+                        File file = new File("../SMDProject/cliFolders/"+ nomeFicheiro +".txt");
+                        if (!file.exists()) {
+                            file.createNewFile();
+                        }
+                        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        bw.write("Estou a escrever num ficheiro novo");
+                        bw.close();
+                        */
+                        //TODO copiar ficheiro de uma diretoria para outra
+                        /*
+                        InputStream inStream = null;
+                        OutputStream outStream = null;
+
+                        try{
+
+                            String nomeFicheiro = new String("nomeFicheiro");
+                            String nomePasta = new String("1stFolder");
+                            inStream = new FileInputStream("../SMDProject/cliFolders/" + nomeFicheiro + ".txt");
+                            File file = new File("../SMDProject/cliFolders/" + nomePasta + "/" + nomeFicheiro + ".txt");
+                            if (!file.exists()) {
+                                file.createNewFile();
+                            }
+                            outStream = new FileOutputStream("../SMDProject/cliFolders/1stFolder/" + nomeFicheiro + ".txt");
+                            byte[] buffer = new byte[1024];
+                            int length;
+
+                            while ((length = inStream.read(buffer)) > 0){
+                                outStream.write(buffer, 0, length);
+                            }
+                            inStream.close();
+                            outStream.close();
+                            System.out.println("File is copied successful!");
+                        }catch(IOException e){
+                            e.printStackTrace();
+                        }
+                        */
+                       //TODO renomiar o ficheiro
+                        /*
+                        try{
+                            String nomeFicheiroOriginal = new String("nomeFicheiro");
+                            String nomeFicheiroModificado = new String("ficheiroNomeModificado");
+                            File afile =new File("../SMDProject/cliFolders/"+ nomeFicheiroOriginal + ".txt");
+
+                            if(afile.renameTo(new File("../SMDProject/cliFolders/"+ nomeFicheiroModificado + ".txt"))){
+                                System.out.println("File is moved successful!");
+                            }else{
+                                System.out.println("File is failed to move!");
+                            }
+
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                        */
+                        //TODO apagar ficheiro
+                        /*
+                        String nomeFicheiro = new String("nomeFicheiro");
+                        File dir = new File("../SMDProject/cliFolders/"+ nomeFicheiro + ".txt");
+                        if(dir.delete()){
+                            System.out.println("Apagou com sucesso");
+                        }
+                        */
+                        //TODO apagar diretoria (vazia)
+                        /*
+                        File file = new File("../SMDProject/cliFolders/1stFolder/pastaSemNome");
+                        if(file.delete()){
+                            System.out.println("apagado com sucesso");
+                        }
+                        */
+                        //TODO renomiar diretorias
+                        /*
+                        File dirOriginal =new File("../SMDProject/cliFolders/NomeCliente/pastaSemNome");
+                        File dirModificada =new File("../SMDProject/cliFolders/NomeCliente/pastaPasta");
+                        if ( dirOriginal.isDirectory() ) {
+                            dirOriginal.renameTo(dirModificada);
+                            System.out.println("Modificada com sucesso");
+                        }
+                        */
+
+
+
+
+
+
+
+
+
+                    }
 
                 else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                     if (myClient.getRegistedFlag() == false) {
                         if (argCommand.size() == 3) {
-
+                            myClient.setRegistedFlagTrue();
                             myClientController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
                             myClientController.sendPacketToDirServer(argCommand);
                             String answer = myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
-                            myClient.setRegistedFlagTrue();
-
+                            if(answer.equalsIgnoreCase("Login successfully")) {
+                                myClient.setRegistedFlagTrue();
+                                continue;
+                            }
                             continue;
-
-                        } else
+                        }
+                        else {
                             System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
-
+                        }
                     } else {
                         System.out.println("You are already registered");
                         continue;
@@ -91,10 +231,10 @@ public class ThTextUI extends Thread {
                             myClientController.sendPacketToDirServer(argCommand);
                             String answer= myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
-                            if(answer.compareTo("Login successfully!")==0) {
+                            if(answer.equalsIgnoreCase("Login successfully")) {
                                 myClientController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                                myClient.setloginFlagTrue();
                                 myClient.setRegistedFlagTrue();
+                                myClient.setloginFlagTrue();
                                 continue;
                             }
                         }
@@ -108,7 +248,7 @@ public class ThTextUI extends Thread {
                         continue;
                     }
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGOUT")){
-                    if (myClient.getRegistedFlag() == false) {
+                    if (myClient.getLoginFlag()== false) {
                         System.out.println("You are not Logged");
                             continue;
                     }else
@@ -119,9 +259,6 @@ public class ThTextUI extends Thread {
                     }
                 }
 
-
-
-
                 else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
 
                     //TODO----------------------------TRATAR COMANDOS PARA O SERVREMOTO------------------------------------
@@ -130,8 +267,7 @@ public class ThTextUI extends Thread {
                     //TODO dpois caso o cliente queira sair ha um comando "EXIT" damos um break e volta para aqui e pode se ligar a outro servRemoto
                     //-----------------------------------------------------------------------------------------------------
 
-
-                        if(myClient.getRegistedFlag()==false) {
+                        if(myClient.getLoginFlag()==false) {
                             System.out.println("To use this command you need to be logged in");
                             continue;
                         }
@@ -151,7 +287,7 @@ public class ThTextUI extends Thread {
 
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
-                    if(myClient.getRegistedFlag()==false){
+                    if(myClient.getLoginFlag()==false){
                        System.out.println("To use this command you need to be logged in");
                        continue;
                     }else{
@@ -162,7 +298,7 @@ public class ThTextUI extends Thread {
                     String answer= myClientController.receiveAnswerPacketDirServer();
                     System.out.println(answer);
                 } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
-                if(myClient.getRegistedFlag()==false){
+                if(myClient.getLoginFlag()==false){
                         System.out.println("To use this command you need to be logged in");
                         continue;
                     }
@@ -171,7 +307,7 @@ public class ThTextUI extends Thread {
                         String answer= myClientController.receiveAnswerPacketDirServer();
                         System.out.println(answer);
                 } else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
-                        if(myClient.getRegistedFlag()==false){
+                        if(myClient.getLoginFlag()==false){
                             System.out.println("To use this command you need to be logged in");
                             continue;
                         }
