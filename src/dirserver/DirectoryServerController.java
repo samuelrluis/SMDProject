@@ -47,7 +47,10 @@ public class DirectoryServerController {
         //--------------------------- Trata comandos ----------------------------//
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-                ClientRegistry cli = new ClientRegistry(hBeat, 2222);
+
+                ClientRegistry cli = new ClientRegistry(hBeat,111);
+
+                //ClientRegistry cli = new ClientRegistry(hBeat, 2222);
 
                 if(cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == false) {
                     cli.writeObjectToFile("../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj");

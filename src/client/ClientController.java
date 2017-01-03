@@ -136,7 +136,7 @@ public class ClientController {
 
                     objectInput = new ObjectInputStream(socketToRemServer.getInputStream());
                     msg = (Msg) objectInput.readObject();
-                    System.out.println(msg.toString());
+                    //System.out.println(msg.toString());
 
                 } catch (IOException e) {
                     return false;
@@ -157,16 +157,15 @@ public class ClientController {
             //Read Message from RemServer
             in = new ObjectInputStream(socketToRemServer.getInputStream());
             msg = (Msg) in.readObject();
-
-            System.out.println("recebi mensagem de " + msg.gethBeat().getName());
+            System.out.println(msg.getCommand());
+            System.out.println("recebi mensagem de " + msg.gethBeat().getName().toString());
+            System.out.println();
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        System.out.println("teste recepção");
         return msg.toString();
     }
 
@@ -221,12 +220,9 @@ public class ClientController {
                         if (argCommand.size() == 3) {
 
                             this.sendMsgToRemServer(argCommand);
-
-                            System.out.println("Cheguei aqui");
-
-                            //String answer = this.receiveAnswerMsgRemServer();
-
-                            //System.out.println(ServerName + answer);
+                            System.out.println();
+                            System.out.print("Answer:       ");
+                            this.receiveAnswerMsgRemServer();
 
                             continue;
 
