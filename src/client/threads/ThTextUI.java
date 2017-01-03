@@ -49,7 +49,7 @@ public class ThTextUI extends Thread {
 
                 try{
                     if(argCommand.get(0).equalsIgnoreCase("EXIT")){
-                        if (myClient.getLoginFlag() == true) {
+                        if (myClient.getLoginFlag() == false) {
                             System.out.println("You have to logout first!");
                             continue;
                         }else
@@ -59,18 +59,20 @@ public class ThTextUI extends Thread {
                 else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                     if (myClient.getRegistedFlag() == false) {
                         if (argCommand.size() == 3) {
-
+                            myClient.setRegistedFlagTrue();
                             myClientController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
                             myClientController.sendPacketToDirServer(argCommand);
                             String answer = myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
-                            myClient.setRegistedFlagTrue();
-
+                            if(answer.equalsIgnoreCase("Login successfully")) {
+                                myClient.setRegistedFlagTrue();
+                                continue;
+                            }
                             continue;
-
-                        } else
+                        }
+                        else {
                             System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
-
+                        }
                     } else {
                         System.out.println("You are already registered");
                         continue;
@@ -91,10 +93,10 @@ public class ThTextUI extends Thread {
                             myClientController.sendPacketToDirServer(argCommand);
                             String answer= myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
-                            if(answer.compareTo("Login successfully!")==0) {
+                            if(answer.equalsIgnoreCase("Login successfully")) {
                                 myClientController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                                myClient.setloginFlagTrue();
                                 myClient.setRegistedFlagTrue();
+                                myClient.setloginFlagTrue();
                                 continue;
                             }
                         }
@@ -108,7 +110,7 @@ public class ThTextUI extends Thread {
                         continue;
                     }
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGOUT")){
-                    if (myClient.getRegistedFlag() == false) {
+                    if (myClient.getLoginFlag()== false) {
                         System.out.println("You are not Logged");
                             continue;
                     }else
@@ -119,9 +121,6 @@ public class ThTextUI extends Thread {
                     }
                 }
 
-
-
-
                 else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
 
                     //TODO----------------------------TRATAR COMANDOS PARA O SERVREMOTO------------------------------------
@@ -130,8 +129,7 @@ public class ThTextUI extends Thread {
                     //TODO dpois caso o cliente queira sair ha um comando "EXIT" damos um break e volta para aqui e pode se ligar a outro servRemoto
                     //-----------------------------------------------------------------------------------------------------
 
-
-                        if(myClient.getRegistedFlag()==false) {
+                        if(myClient.getLoginFlag()==false) {
                             System.out.println("To use this command you need to be logged in");
                             continue;
                         }
@@ -151,7 +149,7 @@ public class ThTextUI extends Thread {
 
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
-                    if(myClient.getRegistedFlag()==false){
+                    if(myClient.getLoginFlag()==false){
                        System.out.println("To use this command you need to be logged in");
                        continue;
                     }else{
@@ -162,7 +160,7 @@ public class ThTextUI extends Thread {
                     String answer= myClientController.receiveAnswerPacketDirServer();
                     System.out.println(answer);
                 } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
-                if(myClient.getRegistedFlag()==false){
+                if(myClient.getLoginFlag()==false){
                         System.out.println("To use this command you need to be logged in");
                         continue;
                     }
@@ -171,7 +169,7 @@ public class ThTextUI extends Thread {
                         String answer= myClientController.receiveAnswerPacketDirServer();
                         System.out.println(answer);
                 } else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
-                        if(myClient.getRegistedFlag()==false){
+                        if(myClient.getLoginFlag()==false){
                             System.out.println("To use this command you need to be logged in");
                             continue;
                         }
