@@ -6,7 +6,6 @@ import common.Msg;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ public class ClientController {
 
     Socket socketToRemServer = null;
     ObjectOutputStream objectOutput = null;
+    ObjectInputStream objectInput = null;
 
     ClientController(Client x){
         myClient=x;
@@ -70,7 +70,6 @@ public class ClientController {
         String answer = new String(packetReadDir.getData(),0,packetReadDir.getLength());
         return answer;
     }
-
 
     public void sendCommandRMI(ArrayList<String> argCommand){
         if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){
@@ -132,6 +131,10 @@ public class ClientController {
                     objectOutput.flush();
                     System.out.println("Enviou msg TCP");
 
+                    objectInput = new ObjectInputStream(socketToRemServer.getInputStream());
+                    msg = (Msg) objectInput.readObject();
+                    System.out.println(msg.toString());
+
                 } catch (IOException e) {
                     return false;
                 }
@@ -143,63 +146,51 @@ public class ClientController {
 
     // RemoteServer Comunication Methods
 
-    public String receiveAnswerPacketRemServer(){
+    public String receiveAnswerMsgRemServer(){
 
-        DatagramSocket socketToRem;
-        DatagramPacket packetReadRem;
-
-        packetReadRem = new DatagramPacket(new byte[MAX_SIZE], MAX_SIZE);
-        socketToRem = myClient.getSocketRemServer();
-
+        ObjectInputStream in;
+        Msg msg = null;
         try {
-            socketToRem.receive(packetReadRem);
+            //Read Message from RemServer
+            in = new ObjectInputStream(socketToRemServer.getInputStream());
+            msg = (Msg) in.readObject();
+
+            System.out.println("recebi mensagem de " + msg.gethBeat().getName());
+
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        String answer = new String(packetReadRem.getData(),0,packetReadRem.getLength());
-        return answer;
+        System.out.println("teste recepção");
+        return msg.toString();
     }
 
-    public void sendPacketToRemServer(ArrayList<String> argCommand){
+    public void sendMsgToRemServer(ArrayList<String> argCommand){
 
         String command = null;
 
-        //socketToRem =  myClient.getSocketRemServer();
-
+        Socket socketToRem =  myClient.getSocketRemServer();
 
         if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
 
-
         //if (this.remoteServerPort != 0) {
 
         try {
-
+            objectOutput = new ObjectOutputStream(socketToRemServer.getOutputStream());
             Msg msg = new Msg(command,myClient.getMyUserID().gethBeat());
 
-            //b0ut = new ByteArrayOutputStream();
-            //out = new ObjectOutputStream(socketToRemServer.getOutputStream());
             objectOutput.writeObject(msg);
             objectOutput.flush();
 
             System.out.println("Enviou msg TCP para o porto: " + remoteServerPort);
-
-
-            //packetToRem = new DatagramPacket(b0ut.toByteArray(),b0ut.size(),myClient.getServerAddr(), this.remoteServerPort);
-            //socketToRem.send(packetToRem);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //}
-
-
-
-
     }
 
     public void comandToRemServer(String ServerName){
@@ -226,13 +217,13 @@ public class ClientController {
                     } else if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                         if (argCommand.size() == 3) {
 
-                            this.sendPacketToRemServer(argCommand);
+                            this.sendMsgToRemServer(argCommand);
 
                             System.out.println("Cheguei aqui");
 
-                            String answer = this.receiveAnswerPacketRemServer();
+                            //String answer = this.receiveAnswerMsgRemServer();
 
-                            System.out.println(ServerName + answer);
+                            //System.out.println(ServerName + answer);
 
                             continue;
 
@@ -248,8 +239,8 @@ public class ClientController {
                         //TODO se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
 
                         if (argCommand.size() == 3) {
-                            this.sendPacketToRemServer(argCommand);
-                            String answer= this.receiveAnswerPacketRemServer();
+                            this.sendMsgToRemServer(argCommand);
+                            String answer= this.receiveAnswerMsgRemServer();
                             System.out.println(answer);
                         }
                         else {

@@ -46,6 +46,8 @@ public class RemoteServerController {
         //---------------------- trata comandos ----------------------
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
+
+
                 //TODO implementar registos dos clientes neste servidor remoto,
                 //TODO(temos de decidir se usamos o mesmo mecanismo que no servDiretoria e gravamos no ficheiro ou se usamos so um arrayList)
                 /*
