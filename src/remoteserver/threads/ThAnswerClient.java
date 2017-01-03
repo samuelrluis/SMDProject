@@ -20,7 +20,6 @@ public class ThAnswerClient extends Thread {
 
     //Common
     private Msg msg;
-
     private ServerSocket socketTCP;
     private Socket socketToClient;
 
@@ -38,21 +37,20 @@ public class ThAnswerClient extends Thread {
 
         try{
             System.out.println("My port is: " + socketTCP.getLocalPort());
-
             while(true){
                 //Read Message from CLient
-                System.out.println("Ja respondi e ja estou a espera");
+                //System.out.println("Ja respondi e ja estou a espera");
                 in = new ObjectInputStream(socketToClient.getInputStream());
                 msg = (Msg) in.readObject();
                 System.out.println("recebi mensagem de " + msg.gethBeat().getName());
-
-                //controller = new RemoteServerController();
+                controller = new RemoteServerController();
+                msg.setCommand(controller.receivedCommand(msg));
+                
                 out = new ObjectOutputStream(socketToClient.getOutputStream());
+                System.out.println(msg.getCommand());
                 out.writeObject(msg);
                 out.flush();
-
                 //test
-                System.out.println(msg.getCommand().toString());
                 //controller.receivedCommand(msg);
             }
         } catch(IOException e){
