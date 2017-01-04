@@ -7,10 +7,7 @@ import common.registry.ClientRegistry;
 import common.registry.ServerRegistry;
 import dirserver.DirectoryServer;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
@@ -32,12 +29,13 @@ public class RemoteServerController {
     private DatagramSocket socket;
 
 
-    public String receivedCommand(Msg message) {
+    public String receivedCommand(Msg message, RemoteServer Serv) {
         ArrayList<String> argCommand = new ArrayList<>();
         String commandStr = message.getCommand();
         ClientHeartBeat hBeat = message.gethBeat();
         StringTokenizer tok = new StringTokenizer(commandStr, " ");
-
+        ClientRegistry cliR = new ClientRegistry();
+        myServ=Serv;
         while (tok.hasMoreTokens()) {
             String token = tok.nextToken();
             argCommand.add(token);
@@ -45,23 +43,40 @@ public class RemoteServerController {
         //---------------------- trata comandos ----------------------
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-                //TODO implementar registos dos clientes neste servidor remoto,
-
-                return "COCOCOCOCOCOOCOCOCOCOCOOCOCOCOC";
-            } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
-                //TODO falta implementar a verificaçao no ficheiro de registos
-                /*
-                ClientRegistry cli = new ClientRegistry();
-                if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj") == true) {
-                    packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
-                } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/remoteserver/savefiles/saveCliRegistry.obj") == false) {
-                    packetWrite = new DatagramPacket("Login failed".getBytes(), "Login failed".length(), packetRead.getAddress(), packetRead.getPort());
+                File dir = new File("../SMDProject/cliFolders/"+ argCommand.get(1));
+                if(dir.exists()){
+                    System.out.println("Existe!");
                 }
-                socket.send(packetWrite);
-/               */
+                else if (!dir.exists()){
+                    if(dir.mkdir()){
+                        System.out.println("Foi criada uma diretoria parao cliente");
+                    }
+                }
+                if (cliR.checkCliOnFile(argCommand.get(1)+ argCommand.get(2), "../SMDProject/servFolder/"+ myServ.getName() +".obj") == false) {
+                    cliR= new ClientRegistry(message.gethBeat(),System.nanoTime());
+                    cliR.writeObjectToFile("../SMDProject/servFolder/"+ myServ.getName() +".obj");
+                    return "Registado com Sucesso.";
 
-                // A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
-                // se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
+                }else if(cliR.checkCliOnFile(argCommand.get(1)+argCommand.get(2), "../SMDProject/servFolder/"+ myServ.getName() +".obj") == true){
+                    return "Nao e possivel registar, Ja existe um User com este nome.";
+                }
+
+            } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
+                if (cliR.checkCliOnFile(argCommand.get(1)+ argCommand.get(2), "../SMDProject/servFolder/"+ myServ.getName() +".obj") == true) {
+                    File dir = new File("../SMDProject/cliFolders/" + argCommand.get(1));
+                    if (!dir.exists()) {
+                        return "A conteceu um erro grave,alguem removeu a sua diretoria!";
+                    }
+                    else{
+                        cliR= new ClientRegistry(message.gethBeat(),System.nanoTime());
+                        myServ.addClientToArray(cliR);
+                        return "Login efectuado com sucesso!";
+                    }
+                }else if (cliR.checkCliOnFile(argCommand.get(1)+ argCommand.get(2), "../SMDProject/servFolder/"+ myServ.getName() +".obj") == false) {
+                    return "Utilizador nao registado ou com credenciais erradas";
+                }
+
+
 
             } else if (argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
                 //mostrar todos os conteudos da diretoria
@@ -160,7 +175,7 @@ public class RemoteServerController {
         }
     }
 
-
+/*
 
     public void answeringDatagram(){
 
@@ -188,7 +203,7 @@ public class RemoteServerController {
             }
         }
     }
-
+*/
 
 
 
