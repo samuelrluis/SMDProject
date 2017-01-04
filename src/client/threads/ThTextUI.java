@@ -36,6 +36,8 @@ public class ThTextUI extends Thread {
         String commandStr;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
+
+
         while(true){
             ArrayList<String> argCommand = new ArrayList<>();
             int x=0;

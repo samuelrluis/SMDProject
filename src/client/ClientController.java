@@ -158,7 +158,7 @@ public class ClientController {
             in = new ObjectInputStream(socketToRemServer.getInputStream());
             msg = (Msg) in.readObject();
             System.out.println(msg.getCommand());
-            System.out.println("recebi mensagem de " + msg.gethBeat().getName().toString());
+            System.out.println("recebi mensagem de " + msg.gethBeatSer().getName().toString());
             System.out.println();
 
         } catch (IOException e) {

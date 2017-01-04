@@ -3,6 +3,8 @@
  */
 package remoteserver;
 
+import common.heartbeat.HeartBeat;
+import common.heartbeat.ServerHeartBeat;
 import common.registry.ClientRegistry;
 import common.registry.ServerRegistry;
 import remoteserver.threads.ThAnswerClient;
@@ -27,20 +29,21 @@ public class RemoteServer {
     private ServerSocket serverSocketTcp = null; //TCP
     private DatagramPacket serverPacket = null;
     private RemoteServerController myController= null;
+    private ServerHeartBeat myHeartServer;
     DatagramSocket serverSocketUdp = null; //UDP
     InetAddress myAddress=null;
     private Socket socketToClient = null;
     int myTcpPort,serverDirPort,myUdpPort;
 
-
     RemoteServer(String name, InetAddress address, int udp){
-
+        cliRegistries = new ArrayList<ClientRegistry>();
         this.name=name;
         myAddress=address;
         myUdpPort=0;
         myTcpPort=0;
         serverDirPort=udp;
         myController = new RemoteServerController();
+        myHeartServer = null;
 
     }
 
@@ -66,7 +69,7 @@ public class RemoteServer {
         System.out.println("dirport: "+serverDirPort);
         System.out.println("udpPort: "+myUdpPort);
         System.out.println("tcpPort: "+myTcpPort);
-        threadHeartbeat=new ThSendHeartBeat(myAddress,serverDirPort,myUdpPort,myTcpPort,this.getName());
+        threadHeartbeat=new ThSendHeartBeat(myAddress,serverDirPort,myHeartServer);
         threadHeartbeat.start();
 
     }
@@ -78,7 +81,7 @@ public class RemoteServer {
             serverSocketUdp = new DatagramSocket();
             myTcpPort=serverSocketTcp.getLocalPort();
             myUdpPort=serverSocketUdp.getLocalPort();
-
+            myHeartServer = new ServerHeartBeat(this.name,this.myUdpPort,this.myTcpPort);
             createThreadUdp();
             awaitsForNewClient();
 
@@ -112,7 +115,15 @@ public class RemoteServer {
     }
 
     public ServerSocket getServerSocketTcp() {return this.serverSocketTcp;}
+
     public Socket getSocketToClient() {return this.socketToClient;}
+
+    public ServerHeartBeat getMyHeartServer() {return myHeartServer;}
+
+    public boolean addClientToArray (ClientRegistry cli) {
+        return this.cliRegistries.add(cli);
+    }
+
 
     public static void main(String[] args) {
         RemoteServer remServer;
@@ -133,6 +144,14 @@ public class RemoteServer {
                 System.out.println("The values of the port in the arguments are wrong");
 
             remServer=new RemoteServer(name,serverAddr,serverPortToDirectory);
+            File file = new File("../SMDProject/servFolder/"+ remServer.getName() +".obj");
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                }catch (IOException e){
+                    System.out.println("Nao Foi Possivel criar ficheiro");
+                }
+            }
             remServer.runServer();
 
         }catch(UnknownHostException e){

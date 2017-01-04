@@ -49,10 +49,10 @@ public class ThAnswerClient extends Thread {
                 in = new ObjectInputStream(socketToClient.getInputStream());
                 msg = (Msg) in.readObject();
                 System.out.println("recebi mensagem de " + msg.gethBeat().getName());
-                //msgAnswer = new Msg()
+                msgAnswer = new Msg(controller.receivedCommand(msg,myServer),msg.gethBeat(),myServer.getMyHeartServer()); //TODO enviar heartBeat do remServer
                 out = new ObjectOutputStream(socketToClient.getOutputStream());
-                System.out.println(msg.getCommand());
-                out.writeObject(msg);
+                System.out.println(msgAnswer.getCommand());
+                out.writeObject(msgAnswer);
                 out.flush();
                 //test
                 //controller.receivedCommand(msg);
