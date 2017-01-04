@@ -99,7 +99,8 @@ public class RemoteServerController {
                         return new File(current, name).isDirectory();
                     }
                 });
-                System.out.println(Arrays.toString(directories));
+
+                return Arrays.toString(directories);
 
 
             }else if (argCommand.get(0).equalsIgnoreCase("UPLOAD")){
