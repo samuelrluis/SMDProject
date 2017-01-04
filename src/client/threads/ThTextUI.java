@@ -61,8 +61,9 @@ public class ThTextUI extends Thread {
                     }
                     else if(argCommand.get(0).equalsIgnoreCase("TEST")){
 
-                        //String nomeCliente = new String("NomeCliente");
+                        //String nomeCliente = new String("NomeCliente2");
                         //File dir = new File("../SMDProject/cliFolders/"+ nomeCliente);
+
                         /*
                          //TODO Criar diretoria
                         if(dir.mkdir()){
@@ -78,6 +79,7 @@ public class ThTextUI extends Thread {
                         */
 
                         //TODO Listar subpastas na diretoria
+
                         /*
                         File dir = new File("../SMDProject/cliFolders");
                         String[] directories = dir.list(new FilenameFilter() {
@@ -88,6 +90,7 @@ public class ThTextUI extends Thread {
                         });
                         System.out.println(Arrays.toString(directories));
                         */
+
                         //TODO Listar ficheiros e subpastas na diretoria
                         /*
                         File dir = new File("../SMDProject/cliFolders");
@@ -100,6 +103,7 @@ public class ThTextUI extends Thread {
                             }
                         }
                         */
+
                         //TODO criar ficheiro
                         /*
                         String nomeFicheiro = new String("nomeFicheiro");
@@ -112,6 +116,7 @@ public class ThTextUI extends Thread {
                         bw.write("Estou a escrever num ficheiro novo");
                         bw.close();
                         */
+
                         //TODO copiar ficheiro de uma diretoria para outra
                         /*
                         InputStream inStream = null;
@@ -140,6 +145,7 @@ public class ThTextUI extends Thread {
                             e.printStackTrace();
                         }
                         */
+
                        //TODO renomiar o ficheiro
                         /*
                         try{
@@ -157,6 +163,7 @@ public class ThTextUI extends Thread {
                             e.printStackTrace();
                         }
                         */
+
                         //TODO apagar ficheiro
                         /*
                         String nomeFicheiro = new String("nomeFicheiro");
@@ -165,6 +172,7 @@ public class ThTextUI extends Thread {
                             System.out.println("Apagou com sucesso");
                         }
                         */
+
                         //TODO apagar diretoria (vazia)
                         /*
                         File file = new File("../SMDProject/cliFolders/1stFolder/pastaSemNome");
@@ -172,6 +180,7 @@ public class ThTextUI extends Thread {
                             System.out.println("apagado com sucesso");
                         }
                         */
+
                         //TODO renomiar diretorias
                         /*
                         File dirOriginal =new File("../SMDProject/cliFolders/NomeCliente/pastaSemNome");
@@ -181,13 +190,6 @@ public class ThTextUI extends Thread {
                             System.out.println("Modificada com sucesso");
                         }
                         */
-
-
-
-
-
-
-
 
 
                     }

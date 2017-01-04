@@ -47,6 +47,7 @@ public class ThSendHeartBeat extends Thread {
                 socketHeartBeatUDP.send(packetHeartBeat);    //Send the Packet
                 System.out.print("... ");
                 Thread.sleep(10000);
+
                 //TODO isto é para alterar para 30secs
             } catch (IOException e) {
                 e.printStackTrace();
