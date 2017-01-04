@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -84,6 +85,22 @@ public class RemoteServerController {
                 //(so da diretoria dos cliente em questao, nao pode ser visivel as diretorias dos outros clientes)
                 //Comando SHOWDIR mostra a pasta base
                 // Comando SHOWDIR+"espaço"+"caminho" mostra os doc's nessa pasta especifica
+
+                String path = "../SMDProject/cliFolders/";
+                path = path.concat(argCommand.get(1));
+
+                System.out.println(path);
+
+                //TODO SHOWDIR
+                File dir = new File(path);
+                String[] directories = dir.list(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File current, String name) {
+                        return new File(current, name).isDirectory();
+                    }
+                });
+                System.out.println(Arrays.toString(directories));
+
 
             }else if (argCommand.get(0).equalsIgnoreCase("UPLOAD")){
                 //TODO upload ficheiro, utilizar protocolo TCP

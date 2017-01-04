@@ -72,22 +72,6 @@ public class DirectoryServerController {
                 }
                 socket.send(packetWrite);
 
-            } else if (argCommand.get(0).equalsIgnoreCase("SHOWDIR")) {
-
-                String path = "../SMDProject/cliFolders/";
-                path = path.concat(argCommand.get(1));
-
-                //TODO SHOWDIR
-                File dir = new File(path);
-                String[] directories = dir.list(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File current, String name) {
-                        return new File(current, name).isDirectory();
-                    }
-                });
-                System.out.println(Arrays.toString(directories));
-
-
             } else if (argCommand.get(0).equalsIgnoreCase("SLIST")) {
                 System.out.println("List of Servers \n" + Serv.getListServ());
                 packetWrite = new DatagramPacket((Serv.getListServ()).getBytes(), (Serv.getListServ()).length(), packetRead.getAddress(), packetRead.getPort());

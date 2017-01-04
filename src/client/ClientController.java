@@ -242,6 +242,9 @@ public class ClientController {
                         //TODO se nao existir tem de ser criada, se existir é aberta/mostrada a area de trabalho desse cliente
 
                         if (argCommand.size() == 3) {
+
+                            myClient.setClientUsername(argCommand.get(1));
+
                             this.sendMsgToRemServer(argCommand);
                             String answer= this.receiveAnswerMsgRemServer();
                             System.out.println(answer);
