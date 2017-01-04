@@ -192,11 +192,7 @@ public class ThTextUI extends Thread {
                             System.out.println("Modificada com sucesso");
                         }
                         */
-<<<<<<< HEAD
 
-
-=======
->>>>>>> ddf2565529717db8a6b0c6fcf303f1d647683b12
                     }
 
                 else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
