@@ -158,7 +158,7 @@ public class ClientController {
             in = new ObjectInputStream(socketToRemServer.getInputStream());
             msg = (Msg) in.readObject();
             System.out.println(msg.getCommand());
-            System.out.println("recebi mensagem de " + msg.gethBeatSer().getName().toString());
+            //System.out.println("recebi mensagem de " + msg.gethBeatSer().getName().toString());
             System.out.println();
 
         } catch (IOException e) {
@@ -181,6 +181,10 @@ public class ClientController {
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("SHOWDIR"))
             command = new String("SHOWDIR" + " " + argCommand.get(1));
+        else if(argCommand.get(0).equalsIgnoreCase("SHOWFILES"))
+            command = new String("SHOWFILES" + " " + argCommand.get(1));
+        else if(argCommand.get(0).equalsIgnoreCase("NEWFILE"))
+            command = new String("NEWFILE" + " " + argCommand.get(1) + " " + argCommand.get(2));
 
         //if (this.remoteServerPort != 0) {
 
@@ -196,6 +200,8 @@ public class ClientController {
             e.printStackTrace();
         }
     }
+
+    // ------------- Comandos para o Remote Server ----------------
 
     public void comandToRemServer(String ServerName){
         String commandStr;
@@ -235,7 +241,8 @@ public class ClientController {
 
                         continue;
 
-                    }else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
+                    }else if (argCommand.get(0).equalsIgnoreCase("LOGIN"))
+                    {
                         //TODO falta implementar a verificaçao no ficheiro de registos
                         //mais notas:
                         //TODO A quando o login tem de ser verificado se exite ja uma diretoria do respetivo cliente,
@@ -269,9 +276,39 @@ public class ClientController {
                             this.sendMsgToRemServer(argCommand);
                             String answer= this.receiveAnswerMsgRemServer();
                             System.out.println(answer);
-                        }
-                        else {
+                        }else {
                             System.out.println("SYNTAX ERROR FOR COMMAND SHOWDIR");
+                        }
+                        continue;
+
+                    }else if(argCommand.get(0).equalsIgnoreCase("SHOWFILES")){ // TODO não sei o que se passa com isto
+
+                        if (argCommand.size() == 1) {
+
+                            argCommand.add(1, myClient.getClientUsername());
+
+                            this.sendMsgToRemServer(argCommand);
+                            String answer = this.receiveAnswerMsgRemServer();
+                            System.out.println(answer);
+                        }else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND SHOWFILES");
+                        }
+                        continue;
+
+                    }else if (argCommand.get(0).equalsIgnoreCase("NEWFILE")){
+
+                        if(argCommand.size() == 2){
+
+                            argCommand.add(2, myClient.getClientUsername()); // Adiciona o Username á 3ª posicao
+
+                            System.out.println(argCommand.get(0)+argCommand.get(1)+argCommand.get(2));
+
+                            this.sendMsgToRemServer(argCommand);
+                            String answer = this.receiveAnswerMsgRemServer();
+                            System.out.println(answer);
+
+                        }else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND NEWFILE");
                         }
                         continue;
 

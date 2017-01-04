@@ -86,24 +86,89 @@ public class RemoteServerController {
                 //Comando SHOWDIR mostra a pasta base
                 // Comando SHOWDIR+"espaço"+"caminho" mostra os doc's nessa pasta especifica
 
-                String path = "../SMDProject/cliFolders/";
-                path = path.concat(argCommand.get(1));
+                if(argCommand.size() == 2) {
+                    String path = "../SMDProject/cliFolders/";
+                    path = path.concat(argCommand.get(1));
 
-                System.out.println(path);
+                    System.out.println(path);
 
-                //TODO SHOWDIR
-                File dir = new File(path);
-                String[] directories = dir.list(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File current, String name) {
-                        return new File(current, name).isDirectory();
+                    File dir = new File(path);
+                    String[] directories = dir.list(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File current, String name) {
+                            return new File(current, name).isDirectory();
+                        }
+                    });
+
+                    return Arrays.toString(directories);
+
+                }
+
+
+
+            }else if (argCommand.get(0).equalsIgnoreCase("SHOWFILES")){ // TODO não sei o que se passa com isto
+
+                if (argCommand.size()==2){
+
+                    String response = new String();
+
+                    String path = "../SMDProject/cliFolders/";
+                    path = path.concat(argCommand.get(1));
+                    path = path.concat("/");
+
+                    System.out.println(path);
+
+                    File dir = new File(path);
+                    String[] files = dir.list();
+
+                    if (files.length == 0) {
+                        System.out.println("The directory is empty");
+                    } else {
+                        for (String aFile : files) {
+                            System.out.println(aFile);
+                            response.concat(aFile);
+                        }
+
+                        return response;
                     }
-                });
-
-                return Arrays.toString(directories);
 
 
-            }else if (argCommand.get(0).equalsIgnoreCase("UPLOAD")){
+                }
+
+            }else if (argCommand.get(0).equalsIgnoreCase("NEWFILE")){
+
+                if (argCommand.size()==3) {
+
+
+
+                    System.out.println(argCommand.get(0)+argCommand.get(1)+argCommand.get(2));
+
+                    String path = "../SMDProject/cliFolders/";
+                    path = path.concat(argCommand.get(2)); // Monta o caminho com o Username
+                    path = path.concat("/");
+
+                    System.out.println(path);
+
+                    File file = new File(path + argCommand.get(1) + ".txt");
+
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+
+                    FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write("Estou a escrever num ficheiro novo");
+                    bw.close();
+
+                    String response = "Ficheiro criado com sucesso!";
+
+                    return response;
+
+                }
+
+            }
+
+            else if (argCommand.get(0).equalsIgnoreCase("UPLOAD")){
                 //TODO upload ficheiro, utilizar protocolo TCP
 
             }else if (argCommand.get(0).equalsIgnoreCase("DOWNLOAD")){

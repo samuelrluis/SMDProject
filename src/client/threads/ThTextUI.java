@@ -67,20 +67,20 @@ public class ThTextUI extends Thread {
                         //File dir = new File("../SMDProject/cliFolders/"+ nomeCliente);
 
                         /*
-                         //TODO Criar diretoria
+                         //TODO Criar diretoria DONE!
                         if(dir.mkdir()){
                             System.out.println("Criado com sucesso");
                         }
                         */
 
-                        //TODO Verificar se existe diretoria
+                        //TODO Verificar se existe diretoria DONE!
                         /*
                         if(dir.exists()){
                             System.out.println("Existe!");
                         }
                         */
 
-                        //TODO Listar subpastas na diretoria
+                        //TODO Listar subpastas na diretoria DONE!
 
                         /*
                         File dir = new File("../SMDProject/cliFolders");
@@ -93,8 +93,9 @@ public class ThTextUI extends Thread {
                         System.out.println(Arrays.toString(directories));
                         */
 
-                        //TODO Listar ficheiros e subpastas na diretoria
                         /*
+                        //TODO Listar ficheiros e subpastas na diretoria DONE!
+
                         File dir = new File("../SMDProject/cliFolders");
                         String[] files = dir.list();
                         if (files.length == 0) {
@@ -106,7 +107,7 @@ public class ThTextUI extends Thread {
                         }
                         */
 
-                        //TODO criar ficheiro
+                        //TODO criar ficheiro DONE!
                         /*
                         String nomeFicheiro = new String("nomeFicheiro");
                         File file = new File("../SMDProject/cliFolders/"+ nomeFicheiro +".txt");
