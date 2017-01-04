@@ -43,7 +43,7 @@ public class RemoteServerController {
         //---------------------- trata comandos ----------------------
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-                File dir = new File("../SMDProject/cliFolders/"+ argCommand.get(1));
+                File dir = new File("../SMDProject/cliFolders/"+myServ.getName() +"/"+ argCommand.get(1));
                 if(dir.exists()){
                     System.out.println("Existe!");
                 }
