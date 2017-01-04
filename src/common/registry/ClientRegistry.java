@@ -1,5 +1,6 @@
 package common.registry;
 
+import client.Client;
 import common.heartbeat.ClientHeartBeat;
 
 import java.io.*;

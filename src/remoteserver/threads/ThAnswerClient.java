@@ -2,6 +2,7 @@ package remoteserver.threads;
 
 
 import common.Msg;
+import remoteserver.RemoteServer;
 import remoteserver.RemoteServerController;
 import sun.plugin2.message.Message;
 
@@ -9,6 +10,7 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.Remote;
 
 /**
  * Created by Samuel on 03/11/2016.
@@ -19,14 +21,17 @@ public class ThAnswerClient extends Thread {
     public static final int MAX_SIZE = 4000;
 
     //Common
+    private RemoteServer myServer = null;
     private Msg msg;
     private ServerSocket socketTCP;
     private Socket socketToClient;
+    private RemoteServerController myController = null;
 
-
-    public ThAnswerClient(ServerSocket socket,Socket socketToClient){
-        this.socketTCP=socket;
-        this.socketToClient=socketToClient;
+    public ThAnswerClient(RemoteServer server){
+        this.myServer = server;
+        this.socketTCP = myServer.getServerSocketTcp();
+        this.socketToClient = myServer.getSocketToClient();
+        this.myController = myServer.getRemoteServerController();
     }
 
     @Override
@@ -34,7 +39,8 @@ public class ThAnswerClient extends Thread {
         RemoteServerController controller;
         ObjectInputStream in;
         ObjectOutputStream out;
-
+        controller = new RemoteServerController();
+        Msg msgAnswer;
         try{
             System.out.println("My port is: " + socketTCP.getLocalPort());
             while(true){
@@ -43,12 +49,10 @@ public class ThAnswerClient extends Thread {
                 in = new ObjectInputStream(socketToClient.getInputStream());
                 msg = (Msg) in.readObject();
                 System.out.println("recebi mensagem de " + msg.gethBeat().getName());
-                controller = new RemoteServerController();
-                msg.setCommand(controller.receivedCommand(msg));
-                
+                msgAnswer = new Msg(controller.receivedCommand(msg,myServer),msg.gethBeat(),myServer.getMyHeartServer()); //TODO enviar heartBeat do remServer
                 out = new ObjectOutputStream(socketToClient.getOutputStream());
-                System.out.println(msg.getCommand());
-                out.writeObject(msg);
+                System.out.println(msgAnswer.getCommand());
+                out.writeObject(msgAnswer);
                 out.flush();
                 //test
                 //controller.receivedCommand(msg);

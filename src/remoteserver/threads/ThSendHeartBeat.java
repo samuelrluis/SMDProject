@@ -23,10 +23,10 @@ public class ThSendHeartBeat extends Thread {
     ByteArrayOutputStream b0ut;
     ObjectOutputStream out;
 
-    public ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, int uPort , int tPort, String name){
+    public ThSendHeartBeat(InetAddress serverAddr, int serverPortToDirectory, ServerHeartBeat myHeatBeat){
         try{
             socketHeartBeatUDP = new DatagramSocket();          //Create Socket to send the HeartBeat
-            heartBeat=new ServerHeartBeat(name,uPort,tPort);    //Create the HeartBeat Serializable Object
+            heartBeat = myHeatBeat;    //Create the HeartBeat Serializable Object
             b0ut = new ByteArrayOutputStream();                 //Create an array of byte in OutputStream
             out = new ObjectOutputStream(b0ut);                 //Place the ArrayOutputStream in the OBjectOutputSream
             out.writeObject(heartBeat);                         //Write the Heartbeat on the object
