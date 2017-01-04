@@ -179,6 +179,8 @@ public class ClientController {
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
+        else if(argCommand.get(0).equalsIgnoreCase("SHOWDIR"))
+            command = new String("SHOWDIR" + " " + argCommand.get(1));
 
         //if (this.remoteServerPort != 0) {
 
@@ -224,6 +226,8 @@ public class ClientController {
                             System.out.print("Answer:       ");
                             this.receiveAnswerMsgRemServer();
 
+                            myClient.setClientUsername(argCommand.get(1));
+
                             continue;
 
                         } else
@@ -254,6 +258,18 @@ public class ClientController {
                         //TODO (so da diretoria dos cliente em questao, nao pode ser visivel as diretorias dos outros clientes)
                         //TODO Comando SHOWDIR mostra a pasta base
                         //TODO Comando SHOWDIR+"espaço"+"caminho" mostra os doc's nessa pasta especifica
+
+                        if (argCommand.size() == 1) {
+
+                            argCommand.add(1,myClient.getClientUsername());
+
+                            this.sendMsgToRemServer(argCommand);
+                            String answer= this.receiveAnswerMsgRemServer();
+                            System.out.println(answer);
+                        }
+                        else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND SHOWDIR");
+                        }
                         continue;
 
                     }else if (argCommand.get(0).equalsIgnoreCase("UPLOAD")){
