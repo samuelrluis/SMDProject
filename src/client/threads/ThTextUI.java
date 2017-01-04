@@ -217,6 +217,16 @@ public class ThTextUI extends Thread {
                         continue;
                     }
                 }
+                    // TODO ainda não acabado
+                    else if(argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
+                        if(myClient.getLoginFlag()==false){
+                            System.out.println("To use this command you need to be logged in");
+                            continue;
+                        }else{
+                            myClientController.sendPacketToDirServer(argCommand);
+                        }
+
+                    }
 
                 else if (argCommand.get(0).equalsIgnoreCase("CHAT")) {
                     if(myClient.getLoginFlag()==false){
