@@ -142,7 +142,7 @@ public class RemoteServer {
 
             if(serverPortToDirectory<0 )
                 System.out.println("The values of the port in the arguments are wrong");
-
+            //cria o .obj
             remServer=new RemoteServer(name,serverAddr,serverPortToDirectory);
             File file = new File("../SMDProject/servFolder/"+ remServer.getName() +".obj");
             if (!file.exists()) {
@@ -152,6 +152,17 @@ public class RemoteServer {
                     System.out.println("Nao Foi Possivel criar ficheiro");
                 }
             }
+            //cria a diretoria para as diretorias dos clientes
+            File dir = new File("../SMDProject/cliFolders/"+ remServer.getName());
+            if (!dir.exists()) {
+                try {
+                    dir.mkdir();
+                }catch (Exception e){
+                    System.out.println("Nao Foi Possivel criar a pasta");
+                }
+            }
+
+
             remServer.runServer();
 
         }catch(UnknownHostException e){
