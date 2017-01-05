@@ -126,7 +126,7 @@ public class RemoteServerController {
                     } else {
                         for (String aFile : files) {
                             System.out.println(aFile);
-                            response.concat(aFile);
+                            response = response.concat(aFile);
                         }
 
                         return response;
@@ -178,9 +178,58 @@ public class RemoteServerController {
                 //implementar movimentaçao de ficheiros entre diretorias
                 //MOVFILE+"espaço"+"caminho"+"espaço"+"caminho"
 
+
+
             }else if (argCommand.get(0).equalsIgnoreCase("COPYFILE")){
                 //implementar copia de ficheiros entre diretorias
                 //COPYFILE+"espaço"+"caminho"+"espaço"+"caminho"
+
+                String originDir = argCommand.get(1);
+                String destinationDir = argCommand.get(2);
+                String username = argCommand.get(3);
+
+                String originFullPath = "../SMDProject/cliFolders/";
+                originFullPath = originFullPath.concat(username);
+                originFullPath = originFullPath.concat("/");
+                originFullPath = originFullPath.concat(originDir);
+                originFullPath = originFullPath.concat(".txt");
+
+                String destinationFullPath = "../SMDProject/cliFolders/";
+                destinationFullPath = destinationFullPath.concat(username);
+                destinationFullPath = destinationFullPath.concat("/");
+                destinationFullPath = destinationFullPath.concat(destinationDir);
+                destinationFullPath = destinationFullPath.concat("/");
+                destinationFullPath = destinationFullPath.concat(originDir);
+                destinationFullPath = destinationFullPath.concat(".txt");
+
+                System.out.println("Origem:\n" + originFullPath);
+                System.out.println("Destino:\n" + destinationFullPath);
+
+                InputStream inStream = null;
+                OutputStream outStream = null;
+
+                try{
+
+                    inStream = new FileInputStream(originFullPath);
+                    File file = new File(originFullPath);
+
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+
+                    outStream = new FileOutputStream(destinationFullPath);
+                    byte[] buffer = new byte[1024];
+                    int length;
+
+                    while ((length = inStream.read(buffer)) > 0){
+                        outStream.write(buffer, 0, length);
+                    }
+                    inStream.close();
+                    outStream.close();
+                    System.out.println("File is copied successful!");
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
 
             }else if (argCommand.get(0).equalsIgnoreCase("DELFILE")) {
                 //eliminar ficheiro

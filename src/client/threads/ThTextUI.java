@@ -120,7 +120,7 @@ public class ThTextUI extends Thread {
                         bw.close();
                         */
 
-                        //TODO copiar ficheiro de uma diretoria para outra
+                        //TODO copiar ficheiro de uma diretoria para outra DONE!
                         /*
                         InputStream inStream = null;
                         OutputStream outStream = null;
@@ -129,11 +129,14 @@ public class ThTextUI extends Thread {
 
                             String nomeFicheiro = new String("nomeFicheiro");
                             String nomePasta = new String("1stFolder");
+
                             inStream = new FileInputStream("../SMDProject/cliFolders/" + nomeFicheiro + ".txt");
                             File file = new File("../SMDProject/cliFolders/" + nomePasta + "/" + nomeFicheiro + ".txt");
+
                             if (!file.exists()) {
                                 file.createNewFile();
                             }
+
                             outStream = new FileOutputStream("../SMDProject/cliFolders/1stFolder/" + nomeFicheiro + ".txt");
                             byte[] buffer = new byte[1024];
                             int length;
