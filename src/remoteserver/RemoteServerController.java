@@ -234,17 +234,82 @@ public class RemoteServerController {
             }else if (argCommand.get(0).equalsIgnoreCase("DELFILE")) {
                 //eliminar ficheiro
 
+                String filename = argCommand.get(1);
+                String username = argCommand.get(2);
+
+                String path = "../SMDProject/cliFolders/";
+                path = path.concat(username);
+                path = path.concat("/");
+
+                String nomeFicheiro = new String(filename);
+                File dir = new File(path + nomeFicheiro + ".txt");
+                if(dir.delete()){
+                    System.out.println("Apagou com sucesso");
+                }
+
             }else if (argCommand.get(0).equalsIgnoreCase("DELDIR")) {
                 //eliminar ficheiro
                 //ATENÇAO SO VALIDO PARA DIRETORIAS VAZIAS
+
+                String dirname = argCommand.get(1);
+                String username = argCommand.get(2);
+
+                String path = "../SMDProject/cliFolders/";
+                path = path.concat(username);
+                path = path.concat("/");
+                path = path.concat(dirname);
+
+                File file = new File(path);
+                if(file.delete()){
+                    System.out.println("Diretoria Apagada com Sucesso!");
+                    return "Diretoria Apagada com Sucesso!";
+                }
 
             }else if (argCommand.get(0).equalsIgnoreCase("RENAMEFILE")) {
                 // mudar nome de ficheiro
                 // RENAMEFILE+"espaço"+"nomeFile"+"espaço"+"nomeFile"
 
+                String filename = argCommand.get(1);
+                String newfilename = argCommand.get(2);
+                String username = argCommand.get(3);
+                username = username.concat("/");
+
+                String path = "../SMDProject/cliFolders/";
+
+                try{
+
+                    File afile =new File(path + username + filename + ".txt");
+
+                    if(afile.renameTo(new File(path + username + newfilename + ".txt"))){
+                        System.out.println("File renamed successful!");
+                    }else{
+                        System.out.println("File is failed rename!");
+                    }
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
             }else if (argCommand.get(0).equalsIgnoreCase("RENAMEDIR")) {
                 //TODO mudar nome de diretoria
                 //TODO RENAMEDIR+"espaço"+"nomeDir"+"espaço"+"nomeDir"
+
+                String dirname = argCommand.get(1);
+                String newdirname = argCommand.get(2);
+                String username = argCommand.get(3);
+                username = username.concat("/");
+
+                String path = "../SMDProject/cliFolders/";
+                path = path.concat(username);
+
+                File dirOriginal =new File(path + dirname);
+                File dirModificada =new File(path + newdirname);
+                if ( dirOriginal.isDirectory() ) {
+                    dirOriginal.renameTo(dirModificada);
+                    System.out.println("Modificada com sucesso");
+
+                }
+
             }else if (argCommand.get(0).equalsIgnoreCase("CREATEDIR")) {
                 //mudar nome de diretoria
 

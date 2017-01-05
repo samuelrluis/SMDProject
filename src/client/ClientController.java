@@ -185,10 +185,19 @@ public class ClientController {
             command = new String("SHOWFILES" + " " + argCommand.get(1));
         else if(argCommand.get(0).equalsIgnoreCase("NEWFILE"))
             command = new String("NEWFILE" + " " + argCommand.get(1) + " " + argCommand.get(2));
-        else if(argCommand.get(0).equalsIgnoreCase("MOVFILE"))
+        else if(argCommand.get(0).equalsIgnoreCase("MOVFILE")) //TODO Não Implementado!!!
             command = new String("MOVFILE" + " " + argCommand.get(1) + " " + argCommand.get(2) + " " + argCommand.get(3));
         else if(argCommand.get(0).equalsIgnoreCase("COPYFILE"))
             command = new String("COPYFILE" + " " + argCommand.get(1) + " " + argCommand.get(2) + " " + argCommand.get(3));
+        else if(argCommand.get(0).equalsIgnoreCase("RENAMEFILE"))
+            command = new String("RENAMEFILE" + " " + argCommand.get(1) + " " + argCommand.get(2) + " " + argCommand.get(3));
+        else if(argCommand.get(0).equalsIgnoreCase("DELFILE"))
+            command = new String("DELFILE" + " " + argCommand.get(1) + " " + argCommand.get(2));
+        else if(argCommand.get(0).equalsIgnoreCase("DELDIR"))
+            command = new String("DELDIR" + " " + argCommand.get(1) + " " + argCommand.get(2));
+        else if(argCommand.get(0).equalsIgnoreCase("RENAMEDIR"))
+            command = new String("RENAMEDIR" + " " + argCommand.get(1) + " " + argCommand.get(2) + " " + argCommand.get(3));
+
 
         //if (this.remoteServerPort != 0) {
 
@@ -362,21 +371,65 @@ public class ClientController {
 
                     }else if (argCommand.get(0).equalsIgnoreCase("DELFILE")) {
                         //TODO eliminar ficheiro
+                        if(argCommand.size() == 2){
+
+                            argCommand.add(2, myClient.getClientUsername()); // Adiciona o Username á 3ª posicao
+
+                            this.sendMsgToRemServer(argCommand);
+                            String answer = this.receiveAnswerMsgRemServer();
+                            System.out.println(answer);
+
+                        }else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND DELFILE");
+                        }
                         continue;
 
                     }else if (argCommand.get(0).equalsIgnoreCase("DELDIR")) {
                         //TODO eliminar ficheiro
                         //TODO ATENÇAO SO VALIDO PARA DIRETORIAS VAZIAS
+                        if(argCommand.size() == 2){
+
+                            argCommand.add(2, myClient.getClientUsername()); // Adiciona o Username á 3ª posicao
+
+                            this.sendMsgToRemServer(argCommand);
+                            String answer = this.receiveAnswerMsgRemServer();
+                            System.out.println(answer);
+
+                        }else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND DELDIR");
+                        }
                         continue;
 
                     }else if (argCommand.get(0).equalsIgnoreCase("RENAMEFILE")) {
                         //TODO mudar nome de ficheiro
                         //TODO RENAMEFILE+"espaço"+"nomeFile"+"espaço"+"nomeFile"
+                        if(argCommand.size() == 3){
+
+                            argCommand.add(3, myClient.getClientUsername()); // Adiciona o Username á 4ª posicao
+
+                            this.sendMsgToRemServer(argCommand);
+                            String answer = this.receiveAnswerMsgRemServer();
+                            System.out.println(answer);
+
+                        }else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND RENAMEFILE");
+                        }
                         continue;
 
                     }else if (argCommand.get(0).equalsIgnoreCase("RENAMEDIR")) {
                         //TODO mudar nome de diretoria
                         //TODO RENAMEDIR+"espaço"+"nomeDir"+"espaço"+"nomeDir"
+                        if(argCommand.size() == 3){
+
+                            argCommand.add(3, myClient.getClientUsername()); // Adiciona o Username á 4ª posicao
+
+                            this.sendMsgToRemServer(argCommand);
+                            String answer = this.receiveAnswerMsgRemServer();
+                            System.out.println(answer);
+
+                        }else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND RENAMEDIR");
+                        }
                         continue;
 
                     }else if (argCommand.get(0).equalsIgnoreCase("CREATEDIR")) {
