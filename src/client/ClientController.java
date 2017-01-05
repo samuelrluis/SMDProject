@@ -185,6 +185,10 @@ public class ClientController {
             command = new String("SHOWFILES" + " " + argCommand.get(1));
         else if(argCommand.get(0).equalsIgnoreCase("NEWFILE"))
             command = new String("NEWFILE" + " " + argCommand.get(1) + " " + argCommand.get(2));
+        else if(argCommand.get(0).equalsIgnoreCase("MOVFILE"))
+            command = new String("MOVFILE" + " " + argCommand.get(1) + " " + argCommand.get(2) + " " + argCommand.get(3));
+        else if(argCommand.get(0).equalsIgnoreCase("COPYFILE"))
+            command = new String("COPYFILE" + " " + argCommand.get(1) + " " + argCommand.get(2) + " " + argCommand.get(3));
 
         //if (this.remoteServerPort != 0) {
 
@@ -323,11 +327,37 @@ public class ClientController {
                     } else if (argCommand.get(0).equalsIgnoreCase("MOVFILE")){
                         //TODO implementar movimentaçao de ficheiros entre diretorias
                         //TODO MOVFILE+"espaço"+"caminho"+"espaço"+"caminho"
+                        if(argCommand.size() == 3){
+
+                            argCommand.add(3, myClient.getClientUsername()); // Adiciona o Username á 4ª posicao
+
+                            System.out.println(argCommand.get(0)+argCommand.get(1)+argCommand.get(2)+argCommand.get(3));
+
+                            this.sendMsgToRemServer(argCommand);
+                            String answer = this.receiveAnswerMsgRemServer();
+                            System.out.println(answer);
+
+                        }else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND MOVFILE");
+                        }
                         continue;
 
                     }else if (argCommand.get(0).equalsIgnoreCase("COPYFILE")){
                         //TODO implementar copia de ficheiros entre diretorias
                         //TODO COPYFILE+"espaço"+"caminho"+"espaço"+"caminho"
+                        if(argCommand.size() == 3){
+
+                            argCommand.add(3, myClient.getClientUsername()); // Adiciona o Username á 4ª posicao
+
+                            System.out.println(argCommand.get(0)+argCommand.get(1)+argCommand.get(2)+argCommand.get(3));
+
+                            this.sendMsgToRemServer(argCommand);
+                            String answer = this.receiveAnswerMsgRemServer();
+                            System.out.println(answer);
+
+                        }else {
+                            System.out.println("SYNTAX ERROR FOR COMMAND COPYFILE");
+                        }
                         continue;
 
                     }else if (argCommand.get(0).equalsIgnoreCase("DELFILE")) {
