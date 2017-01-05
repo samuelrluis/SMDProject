@@ -47,6 +47,11 @@ public class ThSendHeartBeat extends Thread {
                 socketHeartBeatUDP.send(packetHeartBeat);    //Send the Packet
                 System.out.print("... ");
                 Thread.sleep(10000);
+
+                //TODO falta acabar de implementar isto
+                //TODO quando o servidor é desligado manda mensagem ao HB para desaparecer da lista de servidores
+                Runtime.getRuntime().addShutdownHook(new ShutdownHook(packetHeartBeat, socketHeartBeatUDP));
+
                 //TODO isto é para alterar para 30secs
             } catch (IOException e) {
                 e.printStackTrace();

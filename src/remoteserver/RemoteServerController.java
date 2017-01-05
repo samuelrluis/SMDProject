@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -85,7 +86,89 @@ public class RemoteServerController {
                 //Comando SHOWDIR mostra a pasta base
                 // Comando SHOWDIR+"espaço"+"caminho" mostra os doc's nessa pasta especifica
 
-            }else if (argCommand.get(0).equalsIgnoreCase("UPLOAD")){
+                if(argCommand.size() == 2) {
+                    String path = "../SMDProject/cliFolders/";
+                    path = path.concat(argCommand.get(1));
+
+                    System.out.println(path);
+
+                    File dir = new File(path);
+                    String[] directories = dir.list(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File current, String name) {
+                            return new File(current, name).isDirectory();
+                        }
+                    });
+
+                    return Arrays.toString(directories);
+
+                }
+
+
+
+            }else if (argCommand.get(0).equalsIgnoreCase("SHOWFILES")){ // TODO não sei o que se passa com isto
+
+                if (argCommand.size()==2){
+
+                    String response = new String();
+
+                    String path = "../SMDProject/cliFolders/";
+                    path = path.concat(argCommand.get(1));
+                    path = path.concat("/");
+
+                    System.out.println(path);
+
+                    File dir = new File(path);
+                    String[] files = dir.list();
+
+                    if (files.length == 0) {
+                        System.out.println("The directory is empty");
+                    } else {
+                        for (String aFile : files) {
+                            System.out.println(aFile);
+                            response = response.concat(aFile);
+                        }
+
+                        return response;
+                    }
+
+
+                }
+
+            }else if (argCommand.get(0).equalsIgnoreCase("NEWFILE")){
+
+                if (argCommand.size()==3) {
+
+
+
+                    System.out.println(argCommand.get(0)+argCommand.get(1)+argCommand.get(2));
+
+                    String path = "../SMDProject/cliFolders/";
+                    path = path.concat(argCommand.get(2)); // Monta o caminho com o Username
+                    path = path.concat("/");
+
+                    System.out.println(path);
+
+                    File file = new File(path + argCommand.get(1) + ".txt");
+
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+
+                    FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write("Estou a escrever num ficheiro novo");
+                    bw.close();
+
+                    String response = "Ficheiro criado com sucesso!";
+
+                    return response;
+
+                }
+
+            }
+
+            else if (argCommand.get(0).equalsIgnoreCase("UPLOAD")){
                 //TODO upload ficheiro, utilizar protocolo TCP
 
             }else if (argCommand.get(0).equalsIgnoreCase("DOWNLOAD")){
@@ -95,24 +178,138 @@ public class RemoteServerController {
                 //implementar movimentaçao de ficheiros entre diretorias
                 //MOVFILE+"espaço"+"caminho"+"espaço"+"caminho"
 
+
+
             }else if (argCommand.get(0).equalsIgnoreCase("COPYFILE")){
                 //implementar copia de ficheiros entre diretorias
                 //COPYFILE+"espaço"+"caminho"+"espaço"+"caminho"
 
+                String originDir = argCommand.get(1);
+                String destinationDir = argCommand.get(2);
+                String username = argCommand.get(3);
+
+                String originFullPath = "../SMDProject/cliFolders/";
+                originFullPath = originFullPath.concat(username);
+                originFullPath = originFullPath.concat("/");
+                originFullPath = originFullPath.concat(originDir);
+                originFullPath = originFullPath.concat(".txt");
+
+                String destinationFullPath = "../SMDProject/cliFolders/";
+                destinationFullPath = destinationFullPath.concat(username);
+                destinationFullPath = destinationFullPath.concat("/");
+                destinationFullPath = destinationFullPath.concat(destinationDir);
+                destinationFullPath = destinationFullPath.concat("/");
+                destinationFullPath = destinationFullPath.concat(originDir);
+                destinationFullPath = destinationFullPath.concat(".txt");
+
+                System.out.println("Origem:\n" + originFullPath);
+                System.out.println("Destino:\n" + destinationFullPath);
+
+                InputStream inStream = null;
+                OutputStream outStream = null;
+
+                try{
+
+                    inStream = new FileInputStream(originFullPath);
+                    File file = new File(originFullPath);
+
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+
+                    outStream = new FileOutputStream(destinationFullPath);
+                    byte[] buffer = new byte[1024];
+                    int length;
+
+                    while ((length = inStream.read(buffer)) > 0){
+                        outStream.write(buffer, 0, length);
+                    }
+                    inStream.close();
+                    outStream.close();
+                    System.out.println("File is copied successful!");
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
+
             }else if (argCommand.get(0).equalsIgnoreCase("DELFILE")) {
                 //eliminar ficheiro
+
+                String filename = argCommand.get(1);
+                String username = argCommand.get(2);
+
+                String path = "../SMDProject/cliFolders/";
+                path = path.concat(username);
+                path = path.concat("/");
+
+                String nomeFicheiro = new String(filename);
+                File dir = new File(path + nomeFicheiro + ".txt");
+                if(dir.delete()){
+                    System.out.println("Apagou com sucesso");
+                }
 
             }else if (argCommand.get(0).equalsIgnoreCase("DELDIR")) {
                 //eliminar ficheiro
                 //ATENÇAO SO VALIDO PARA DIRETORIAS VAZIAS
 
+                String dirname = argCommand.get(1);
+                String username = argCommand.get(2);
+
+                String path = "../SMDProject/cliFolders/";
+                path = path.concat(username);
+                path = path.concat("/");
+                path = path.concat(dirname);
+
+                File file = new File(path);
+                if(file.delete()){
+                    System.out.println("Diretoria Apagada com Sucesso!");
+                    return "Diretoria Apagada com Sucesso!";
+                }
+
             }else if (argCommand.get(0).equalsIgnoreCase("RENAMEFILE")) {
                 // mudar nome de ficheiro
                 // RENAMEFILE+"espaço"+"nomeFile"+"espaço"+"nomeFile"
 
+                String filename = argCommand.get(1);
+                String newfilename = argCommand.get(2);
+                String username = argCommand.get(3);
+                username = username.concat("/");
+
+                String path = "../SMDProject/cliFolders/";
+
+                try{
+
+                    File afile =new File(path + username + filename + ".txt");
+
+                    if(afile.renameTo(new File(path + username + newfilename + ".txt"))){
+                        System.out.println("File renamed successful!");
+                    }else{
+                        System.out.println("File is failed rename!");
+                    }
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
             }else if (argCommand.get(0).equalsIgnoreCase("RENAMEDIR")) {
                 //TODO mudar nome de diretoria
                 //TODO RENAMEDIR+"espaço"+"nomeDir"+"espaço"+"nomeDir"
+
+                String dirname = argCommand.get(1);
+                String newdirname = argCommand.get(2);
+                String username = argCommand.get(3);
+                username = username.concat("/");
+
+                String path = "../SMDProject/cliFolders/";
+                path = path.concat(username);
+
+                File dirOriginal =new File(path + dirname);
+                File dirModificada =new File(path + newdirname);
+                if ( dirOriginal.isDirectory() ) {
+                    dirOriginal.renameTo(dirModificada);
+                    System.out.println("Modificada com sucesso");
+
+                }
+
             }else if (argCommand.get(0).equalsIgnoreCase("CREATEDIR")) {
                 //mudar nome de diretoria
 

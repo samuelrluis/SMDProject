@@ -63,134 +63,7 @@ public class ThTextUI extends Thread {
                     }
                     else if(argCommand.get(0).equalsIgnoreCase("TEST")){
 
-                        //String nomeCliente = new String("NomeCliente");
-                        //File dir = new File("../SMDProject/cliFolders/"+ nomeCliente);
-                        /*
-                         //TODO Criar diretoria
-                        if(dir.mkdir()){
-                            System.out.println("Criado com sucesso");
-                        }
-                        */
-
-                        //TODO Verificar se existe diretoria
-                        /*
-                        if(dir.exists()){
-                            System.out.println("Existe!");
-                        }
-                        */
-
-                        //TODO Listar subpastas na diretoria
-                        /*
-                        File dir = new File("../SMDProject/cliFolders");
-                        String[] directories = dir.list(new FilenameFilter() {
-                            @Override
-                            public boolean accept(File current, String name) {
-                                return new File(current, name).isDirectory();
-                            }
-                        });
-                        System.out.println(Arrays.toString(directories));
-                        */
-                        //TODO Listar ficheiros e subpastas na diretoria
-                        /*
-                        File dir = new File("../SMDProject/cliFolders");
-                        String[] files = dir.list();
-                        if (files.length == 0) {
-                            System.out.println("The directory is empty");
-                        } else {
-                            for (String aFile : files) {
-                                System.out.println(aFile);
-                            }
-                        }
-                        */
-                        //TODO criar ficheiro
-                        /*
-                        String nomeFicheiro = new String("nomeFicheiro");
-                        File file = new File("../SMDProject/cliFolders/"+ nomeFicheiro +".txt");
-                        if (!file.exists()) {
-                            file.createNewFile();
-                        }
-                        FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                        BufferedWriter bw = new BufferedWriter(fw);
-                        bw.write("Estou a escrever num ficheiro novo");
-                        bw.close();
-                        */
-                        //TODO copiar ficheiro de uma diretoria para outra
-                        /*
-                        InputStream inStream = null;
-                        OutputStream outStream = null;
-
-                        try{
-
-                            String nomeFicheiro = new String("nomeFicheiro");
-                            String nomePasta = new String("1stFolder");
-                            inStream = new FileInputStream("../SMDProject/cliFolders/" + nomeFicheiro + ".txt");
-                            File file = new File("../SMDProject/cliFolders/" + nomePasta + "/" + nomeFicheiro + ".txt");
-                            if (!file.exists()) {
-                                file.createNewFile();
-                            }
-                            outStream = new FileOutputStream("../SMDProject/cliFolders/1stFolder/" + nomeFicheiro + ".txt");
-                            byte[] buffer = new byte[1024];
-                            int length;
-
-                            while ((length = inStream.read(buffer)) > 0){
-                                outStream.write(buffer, 0, length);
-                            }
-                            inStream.close();
-                            outStream.close();
-                            System.out.println("File is copied successful!");
-                        }catch(IOException e){
-                            e.printStackTrace();
-                        }
-                        */
-                       //TODO renomiar o ficheiro
-                        /*
-                        try{
-                            String nomeFicheiroOriginal = new String("nomeFicheiro");
-                            String nomeFicheiroModificado = new String("ficheiroNomeModificado");
-                            File afile =new File("../SMDProject/cliFolders/"+ nomeFicheiroOriginal + ".txt");
-
-                            if(afile.renameTo(new File("../SMDProject/cliFolders/"+ nomeFicheiroModificado + ".txt"))){
-                                System.out.println("File is moved successful!");
-                            }else{
-                                System.out.println("File is failed to move!");
-                            }
-
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
-                        */
-                        //TODO apagar ficheiro
-                        /*
-                        String nomeFicheiro = new String("nomeFicheiro");
-                        File dir = new File("../SMDProject/cliFolders/"+ nomeFicheiro + ".txt");
-                        if(dir.delete()){
-                            System.out.println("Apagou com sucesso");
-                        }
-                        */
-                        //TODO apagar diretoria (vazia)
-                        /*
-                        File file = new File("../SMDProject/cliFolders/1stFolder/pastaSemNome");
-                        if(file.delete()){
-                            System.out.println("apagado com sucesso");
-                        }
-                        */
-                        //TODO renomiar diretorias
-                        /*
-                        File dirOriginal =new File("../SMDProject/cliFolders/NomeCliente/pastaSemNome");
-                        File dirModificada =new File("../SMDProject/cliFolders/NomeCliente/pastaPasta");
-                        if ( dirOriginal.isDirectory() ) {
-                            dirOriginal.renameTo(dirModificada);
-                            System.out.println("Modificada com sucesso");
-                        }
-                        */
-
-
-
-
-
-
-
-
+                        System.out.println("TODOS OS COMANDOS ESTÃO IMPLEMENTADOS");
 
                     }
 
@@ -216,13 +89,34 @@ public class ThTextUI extends Thread {
                         continue;
                     }
                 }
+                    // TODO ainda não acabado
+                    else if(argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
+                        if(myClient.getLoginFlag()==false){
+                            System.out.println("To use this command you need to be logged in");
+                            continue;
+                        }else{
+                            myClientController.sendPacketToDirServer(argCommand);
+                        }
+
+                    }
 
                 else if (argCommand.get(0).equalsIgnoreCase("CHAT")) {
-                    myClientController.sendPacketToDirServer(argCommand);
+                    if(myClient.getLoginFlag()==false){
+                        System.out.println("To use this command you need to be logged in");
+                        continue;
+                    }else{
+                        myClientController.sendPacketToDirServer(argCommand);
+                    }
+
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){
+                    if(myClient.getLoginFlag()==false){
+                        System.out.println("To use this command you need to be logged in");
+                        continue;
+                    }else{
                         myClientController.sendCommandRMI(argCommand);
+                    }
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
@@ -295,12 +189,11 @@ public class ThTextUI extends Thread {
                        System.out.println("To use this command you need to be logged in");
                        continue;
                     }else{
-
+                        //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
+                        myClientController.sendPacketToDirServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketDirServer();
+                        System.out.println(answer);
                     }
-                    //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
-                    myClientController.sendPacketToDirServer(argCommand);
-                    String answer= myClientController.receiveAnswerPacketDirServer();
-                    System.out.println(answer);
                 } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
                 if(myClient.getLoginFlag()==false){
                         System.out.println("To use this command you need to be logged in");
@@ -312,7 +205,7 @@ public class ThTextUI extends Thread {
                         System.out.println(answer);
                 } else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
                         if(myClient.getLoginFlag()==false){
-                            System.out.println("To use this command you need to be logged in");
+                            System.out.println("You can't see the logged clients without login");
                             continue;
                         }
                     //TODO implementar msgs, para um cliente especifico "CLIMSG"+"espaço"+"idDoCli"+"texto", em difusao "CLIMSG"+"espaço"+"texto"

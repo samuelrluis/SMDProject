@@ -39,6 +39,9 @@ public class Client {
     private boolean registedFlag = false;
     private boolean loginFlag = false;
 
+    private String clientUsername;
+
+
 
     Client(InetAddress serverAddress, Integer serverPort, Integer serverPortCommand){
 
@@ -171,6 +174,14 @@ public class Client {
 
     public int readerPort() {
         return readerPort;
+    }
+
+    public String getClientUsername() {
+        return clientUsername;
+    }
+
+    public void setClientUsername(String clientUsername) {
+        this.clientUsername = clientUsername;
     }
 
     public static void main(String args[]){

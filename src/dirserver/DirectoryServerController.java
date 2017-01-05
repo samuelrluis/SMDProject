@@ -6,13 +6,12 @@ import common.heartbeat.ServerHeartBeat;
 import common.registry.ClientRegistry;
 import common.registry.ServerRegistry;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -60,23 +59,31 @@ public class DirectoryServerController {
                     packetWrite = new DatagramPacket("Registered failed".getBytes(), "Registered failed".length(), packetRead.getAddress(), packetRead.getPort());
                 }
                 socket.send(packetWrite);
+
+
             } else if (argCommand.get(0).equalsIgnoreCase("LOGIN")) {
                 ClientRegistry cli = new ClientRegistry();
                 cli.setAddress(packetRead.getAddress());
+
                 if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == true) {
                     packetWrite = new DatagramPacket("Login successfully".getBytes(), "Login successfully".length(), packetRead.getAddress(), packetRead.getPort());
                 } else if (cli.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/src/dirserver/savefiles/saveCliRegistry.obj") == false) {
                     packetWrite = new DatagramPacket("Login failed".getBytes(), "Login failed".length(), packetRead.getAddress(), packetRead.getPort());
                 }
                 socket.send(packetWrite);
+
             } else if (argCommand.get(0).equalsIgnoreCase("SLIST")) {
                 System.out.println("List of Servers \n" + Serv.getListServ());
                 packetWrite = new DatagramPacket((Serv.getListServ()).getBytes(), (Serv.getListServ()).length(), packetRead.getAddress(), packetRead.getPort());
                 socket.send(packetWrite);
+
+
             } else if (argCommand.get(0).equalsIgnoreCase("CLIST")) {
                 System.out.println("List of Clients \n" + Serv.getListClient());
                 packetWrite = new DatagramPacket((Serv.getListClient()).getBytes(), (Serv.getListClient()).length(), packetRead.getAddress(), packetRead.getPort());
                 socket.send(packetWrite);
+
+
             }else if(argCommand.get(0).equalsIgnoreCase("CHAT")){
                     InetAddress addr = null;
                     int port = 0;
