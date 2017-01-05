@@ -171,13 +171,18 @@ public class ClientController {
 
     public void sendMsgToRemServer(ArrayList<String> argCommand){
 
-        String command = null;
 
-        Socket socketToRem =  myClient.getSocketRemServer();
+        DatagramSocket socketToRem;
+        DatagramPacket packetToRem;
+        ByteArrayOutputStream b0ut;
+        ObjectOutputStream out;
+        String command = new String();
 
-        if(argCommand.get(0).equalsIgnoreCase("REGISTER"))
+        //Socket socketToRem =  myClient.getSocketRemServer();
+
+        if(argCommand.get(0).equalsIgnoreCase("REGISTER")){
             command = new String("REGISTER" + " " + argCommand.get(1) + " " +argCommand.get(2));
-        else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
+        }else if(argCommand.get(0).equalsIgnoreCase("LOGIN"))
             command = new String("LOGIN" + " " + argCommand.get(1) + " " +argCommand.get(2));
         else if(argCommand.get(0).equalsIgnoreCase("SHOWDIR"))
             command = new String("SHOWDIR" + " " + argCommand.get(1));
