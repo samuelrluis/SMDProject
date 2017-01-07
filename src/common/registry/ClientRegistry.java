@@ -1,8 +1,10 @@
 package common.registry;
 
+import client.Client;
 import common.heartbeat.ClientHeartBeat;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 /**
@@ -12,15 +14,17 @@ public class ClientRegistry extends Registry implements Serializable  {
 
     private Boolean login;
     private ClientHeartBeat hBeat;
+    private InetAddress myAddress;
 
     public ClientRegistry(){
         hBeat = null;
         login = false;
     }
 
-    public ClientRegistry(ClientHeartBeat hBeat, long entry){
+    public ClientRegistry(ClientHeartBeat hBeat, long entry ){
         this.hBeat = hBeat;
         this.entryTime = entry;
+
     }
 
     public String getName() {
@@ -72,12 +76,9 @@ public class ClientRegistry extends Registry implements Serializable  {
             ListObj= (ArrayList<ClientRegistry>) ois.readObject();
         }catch (Exception e){}
         return ListObj;
-
     }
 
     public boolean checkCliOnFile (String nameAndPass, String path){
-
-
         ArrayList<ClientRegistry> recordList = new ArrayList<>();
         try {
             try {
@@ -97,9 +98,19 @@ public class ClientRegistry extends Registry implements Serializable  {
         return false;
     }
 
+    public InetAddress getMyAddress() {
+        return myAddress;
+    }
+
+    public void setAddress(InetAddress address) {
+        this.myAddress = address;
+    }
+
     public void sethBeat(ClientHeartBeat hBeat) {
         this.hBeat = hBeat;
     }
+
+
 }
 
 

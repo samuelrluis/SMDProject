@@ -6,8 +6,12 @@ import client.ClientController;
 import common.registry.ClientRegistry;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by diogomiguel on 25/11/16.
@@ -32,6 +36,8 @@ public class ThTextUI extends Thread {
         String commandStr;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
+
+
         while(true){
             ArrayList<String> argCommand = new ArrayList<>();
             int x=0;
@@ -49,40 +55,68 @@ public class ThTextUI extends Thread {
 
                 try{
                     if(argCommand.get(0).equalsIgnoreCase("EXIT")){
-                        if (myClient.getLoginFlag() == true) {
+                        if (myClient.getLoginFlag() == false) {
                             System.out.println("You have to logout first!");
                             continue;
                         }else
                             System.exit(0);
                     }
+                    else if(argCommand.get(0).equalsIgnoreCase("TEST")){
+
+                        System.out.println("TODOS OS COMANDOS ESTÃO IMPLEMENTADOS");
+
+                    }
 
                 else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                     if (myClient.getRegistedFlag() == false) {
                         if (argCommand.size() == 3) {
-
+                            myClient.setRegistedFlagTrue();
                             myClientController.regClient(argCommand.get(1).toString(), argCommand.get(2).toString());
                             myClientController.sendPacketToDirServer(argCommand);
                             String answer = myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
-                            myClient.setRegistedFlagTrue();
-
+                            if(answer.equalsIgnoreCase("Login successfully")) {
+                                myClient.setRegistedFlagTrue();
+                                continue;
+                            }
                             continue;
-
-                        } else
+                        }
+                        else {
                             System.out.println("SYNTAX ERROR FOR COMMAND REGISTER");
-
+                        }
                     } else {
                         System.out.println("You are already registered");
                         continue;
                     }
                 }
+                    // TODO ainda não acabado
+                    else if(argCommand.get(0).equalsIgnoreCase("SHOWDIR")){
+                        if(myClient.getLoginFlag()==false){
+                            System.out.println("To use this command you need to be logged in");
+                            continue;
+                        }else{
+                            myClientController.sendPacketToDirServer(argCommand);
+                        }
+
+                    }
 
                 else if (argCommand.get(0).equalsIgnoreCase("CHAT")) {
-                    myClientController.sendPacketToDirServer(argCommand);
+                    if(myClient.getLoginFlag()==false){
+                        System.out.println("To use this command you need to be logged in");
+                        continue;
+                    }else{
+                        myClientController.sendPacketToDirServer(argCommand);
+                    }
+
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("SLISTRMI")){
+                    if(myClient.getLoginFlag()==false){
+                        System.out.println("To use this command you need to be logged in");
+                        continue;
+                    }else{
                         myClientController.sendCommandRMI(argCommand);
+                    }
                 }
 
                 else if(argCommand.get(0).equalsIgnoreCase("MAN")) {
@@ -95,10 +129,10 @@ public class ThTextUI extends Thread {
                             myClientController.sendPacketToDirServer(argCommand);
                             String answer= myClientController.receiveAnswerPacketDirServer();
                             System.out.println(answer);
-                            if(answer.compareTo("Login successfully!")==0) {
+                            if(answer.equalsIgnoreCase("Login successfully")) {
                                 myClientController.loginClient(argCommand.get(1).toString(), argCommand.get(2).toString());
-                                myClient.setloginFlagTrue();
                                 myClient.setRegistedFlagTrue();
+                                myClient.setloginFlagTrue();
                                 continue;
                             }
                         }
@@ -112,7 +146,7 @@ public class ThTextUI extends Thread {
                         continue;
                     }
                 }else if(argCommand.get(0).equalsIgnoreCase("LOGOUT")){
-                    if (myClient.getRegistedFlag() == false) {
+                    if (myClient.getLoginFlag()== false) {
                         System.out.println("You are not Logged");
                             continue;
                     }else
@@ -123,9 +157,6 @@ public class ThTextUI extends Thread {
                     }
                 }
 
-
-
-
                 else if(argCommand.get(0).equalsIgnoreCase("CONNECT")){
 
                     //TODO----------------------------TRATAR COMANDOS PARA O SERVREMOTO------------------------------------
@@ -134,8 +165,7 @@ public class ThTextUI extends Thread {
                     //TODO dpois caso o cliente queira sair ha um comando "EXIT" damos um break e volta para aqui e pode se ligar a outro servRemoto
                     //-----------------------------------------------------------------------------------------------------
 
-
-                        if(myClient.getRegistedFlag()==false) {
+                        if(myClient.getLoginFlag()==false) {
                             System.out.println("To use this command you need to be logged in");
                             continue;
                         }
@@ -155,18 +185,17 @@ public class ThTextUI extends Thread {
 
 
                 }else if(argCommand.get(0).equalsIgnoreCase("SLIST")) {
-                    if(myClient.getRegistedFlag()==false){
+                    if(myClient.getLoginFlag()==false){
                        System.out.println("To use this command you need to be logged in");
                        continue;
                     }else{
-
+                        //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
+                        myClientController.sendPacketToDirServer(argCommand);
+                        String answer= myClientController.receiveAnswerPacketDirServer();
+                        System.out.println(answer);
                     }
-                    //TODO receber arrayList com objetos do tipo remoteServ (E preciso os portos e IP para estabelecer uma ligaçao direta com os servidores)
-                    myClientController.sendPacketToDirServer(argCommand);
-                    String answer= myClientController.receiveAnswerPacketDirServer();
-                    System.out.println(answer);
                 } else if(argCommand.get(0).equalsIgnoreCase("CLIST")) {
-                if(myClient.getRegistedFlag()==false){
+                if(myClient.getLoginFlag()==false){
                         System.out.println("To use this command you need to be logged in");
                         continue;
                     }
@@ -175,8 +204,8 @@ public class ThTextUI extends Thread {
                         String answer= myClientController.receiveAnswerPacketDirServer();
                         System.out.println(answer);
                 } else if (argCommand.get(0).equalsIgnoreCase("CLIMSG")){
-                        if(myClient.getRegistedFlag()==false){
-                            System.out.println("To use this command you need to be logged in");
+                        if(myClient.getLoginFlag()==false){
+                            System.out.println("You can't see the logged clients without login");
                             continue;
                         }
                     //TODO implementar msgs, para um cliente especifico "CLIMSG"+"espaço"+"idDoCli"+"texto", em difusao "CLIMSG"+"espaço"+"texto"

@@ -39,6 +39,9 @@ public class Client {
     private boolean registedFlag = false;
     private boolean loginFlag = false;
 
+    private String clientUsername;
+
+
 
     Client(InetAddress serverAddress, Integer serverPort, Integer serverPortCommand){
 
@@ -46,7 +49,7 @@ public class Client {
         this.serverAddr=serverAddress;
         this.serverPortHB=serverPort;
         this.serverPortCommand = serverPortCommand;
-        //setUpRMIService();
+        setUpRMIService();
         myClientController =new ClientController(this);
 
         try {
@@ -58,6 +61,26 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+
+    private void setUpRMIService(){
+        String registry = "localhost";
+        String registrartion = "rmi://"+registry+"/RemoteServices";
+
+        Remote remoteService = null;
+        try {
+            remoteService = Naming.lookup(registrartion);
+            remoteInterface = (RemoteServices) remoteService;
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     // Client Threads Create
 
@@ -151,6 +174,14 @@ public class Client {
 
     public int readerPort() {
         return readerPort;
+    }
+
+    public String getClientUsername() {
+        return clientUsername;
+    }
+
+    public void setClientUsername(String clientUsername) {
+        this.clientUsername = clientUsername;
     }
 
     public static void main(String args[]){
