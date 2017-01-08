@@ -29,13 +29,6 @@ public class DirectoryServerRMI extends java.rmi.server.UnicastRemoteObject
         notifyListeners();
     }
 
-    @Override
-    public void removeListener(ServerListener listener) throws RemoteException {
-        if (!listenersList.isEmpty()){
-            listenersList.remove(listener);
-        }
-    }
-
     public void notifyListeners() throws RemoteException{
         //System.out.println("Observadores: " + observers.size());
         for (int i=0;i < listenersList.size(); i++){

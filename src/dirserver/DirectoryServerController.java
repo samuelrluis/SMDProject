@@ -162,13 +162,15 @@ public class DirectoryServerController {
         }
     }
 
-    private void receiveHeartBeatServer(ServerHeartBeat hBeat ){
+    private void receiveHeartBeatServer(ServerHeartBeat hBeat,InetAddress remServerAddress){
         int i=0;
         Boolean foundReg=false;
         ArrayList<ServerRegistry> serverRegistries = Serv.getServerRegistries();
 
-        if(serverRegistries.size()==0)
+        if(serverRegistries.size()==0){
             serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
+            serverRegistries.get(0).setAddress(remServerAddress);
+        }
 
         else{
             while(i<serverRegistries.size()) {
@@ -182,6 +184,7 @@ public class DirectoryServerController {
 
             if(foundReg==false)
                 serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
+                serverRegistries.get(i).setAddress(remServerAddress);
                 notifyListenersRMI();
             }
         }
@@ -209,7 +212,7 @@ public class DirectoryServerController {
                 Object message = in.readObject();
 
                 if(message instanceof ServerHeartBeat)
-                    receiveHeartBeatServer((ServerHeartBeat) message); //This will receive th HB from Server
+                    receiveHeartBeatServer((ServerHeartBeat) message,packetRead.getAddress()); //This will receive th HB from Server
                 else if(message instanceof ClientHeartBeat)
                     receivedHeartBeatClient((ClientHeartBeat) message,packetRead.getAddress()); //This will receive th HB from Client
                 else if(message instanceof Msg)
@@ -231,7 +234,8 @@ public class DirectoryServerController {
 
         if(Serv.getServerRegistries().size()>0){
             for(int i = 0;i<Serv.getServerRegistries().size();i++) {
-                List.append(Serv.getServerRegistries().get(i).getName()+"\n");
+                List.append(Serv.getServerRegistries().get(i).getName() + Serv.getServerRegistries().get(i).getMyAddress() +
+                       " " + Serv.getServerRegistries().get(i).gethBeat().getTcpPort() + "\n");
             }
             return List.toString();
         }else
