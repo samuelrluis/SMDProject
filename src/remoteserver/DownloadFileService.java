@@ -33,14 +33,7 @@ public class DownloadFileService  extends UnicastRemoteObject implements RemoteF
 
         try{
 
-            /*try {
-                System.out.print("Metodo invocado pelo cliente " + UnicastRemoteObject.getClientHost());
-                System.out.println(" e tratado pela thread " + Thread.currentThread().getName());
-            } catch (ServerNotActiveException ex) {}
-            */
-            /*
-             * Verifica se o ficheiro solicitado existe e encontra-se por baixo da localDirectory
-             */
+
             requestedCanonicalFilePath = new File(localDirectory+File.separator+fileName).getCanonicalPath();
 
             if(!requestedCanonicalFilePath.startsWith(localDirectory.getCanonicalPath()+File.separator)){
@@ -49,15 +42,11 @@ public class DownloadFileService  extends UnicastRemoteObject implements RemoteF
                 return null;
             }
 
-            /*
-             * Abre o ficheiro solicitado para leitura.
-             */
+
             requestedFileInputStream = new FileInputStream(requestedCanonicalFilePath);
             System.out.println("Ficheiro " + requestedCanonicalFilePath + " aberto para leitura.");
 
-            /*
-             * Obtem um bloco de bytes do ficheiro, omitindo os primeiros offset bytes.
-             */
+
             requestedFileInputStream.skip(offset);
             nbytes = requestedFileInputStream.read(fileChunk);
 
@@ -65,10 +54,7 @@ public class DownloadFileService  extends UnicastRemoteObject implements RemoteF
                 return null;
             }
 
-            /*
-             * Se fileChunk nao esta' totalmente preenchido (MAX_CHUNCK_SIZE), recorre-se
-             * a um array auxiliar com tamanho correspondente ao numero de bytes efectivamente lidos.
-             */
+
             if(nbytes < fileChunk.length){
 
                 byte [] aux = new byte[nbytes];

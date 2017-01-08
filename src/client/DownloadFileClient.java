@@ -23,12 +23,6 @@ public class DownloadFileClient {
         byte [] b;
         long offset;
 
-        /*
-         * Trata os argumentos da linha de comando
-         */
-
-
-
         objectUrl = "rmi://"+local+"/GetRemoteFile";
         localDirectory = new File(path.trim());
         fileName = fName.trim();
@@ -49,23 +43,14 @@ public class DownloadFileClient {
 
         try{
 
-            /*
-             * Cria o ficheiro local
-             */
             localFilePath = new File(localDirectory.getPath()+File.separator+fileName).getCanonicalPath();
             localFileOutputStream = new FileOutputStream(localFilePath);
 
             System.out.println("Ficheiro " + localFilePath + " criado.");
 
-            /*
-             * Obtem a referencia remota para o servico com nome "GetRemoteFile"
-             */
             RemoteFileInterface fileService = (RemoteFileInterface)Naming.lookup(objectUrl);
 
-            /*
-             * Obtem e guarda localmente os varios blocos do ficheiro pretendido.
-             * Para o efeito, invoca o metodo getFileChunk no servico remoto para obter cada bloco.
-             */
+
             offset = 0;
 
             while((b = fileService.getFileChunk(fileName, offset)) !=null ){

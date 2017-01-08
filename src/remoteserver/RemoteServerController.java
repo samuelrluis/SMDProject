@@ -61,7 +61,7 @@ public class RemoteServerController {
         //---------------------- trata comandos ----------------------
         try {
             if (argCommand.get(0).equalsIgnoreCase("REGISTER")) {
-                File dir = new File("../SMDProject/cliFolders/" + myServ.getName() + "/" + argCommand.get(1));
+                File dir = new File("../SMDProject/cliFolders/" + myServ.getName() + "/" + argCommand.get(1)+argCommand.get(2));
                 if (dir.exists()) {
                     System.out.println("Existe!");
                 } else if (!dir.exists()) {
@@ -71,6 +71,7 @@ public class RemoteServerController {
                 }
                 if (cliR.checkCliOnFile(argCommand.get(1) + argCommand.get(2), "../SMDProject/servFolder/" + myServ.getName() + ".obj") == false) {
                     cliR = new ClientRegistry(message.gethBeat(), System.nanoTime());
+                    cliR.gethBeat().setName(argCommand.get(1)+argCommand.get(2));
                     cliR.writeObjectToFile("../SMDProject/servFolder/" + myServ.getName() + ".obj");
                     return "Registado com Sucesso.";
 
