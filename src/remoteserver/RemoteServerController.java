@@ -102,7 +102,7 @@ public class RemoteServerController {
                 // Comando SHOWDIR+"espaço"+"caminho" mostra os doc's nessa pasta especifica
 
                 if (argCommand.size() == 2) {
-                    String path = "../SMDProject/cliFolders/";
+                    String path = "../SMDProject/cliFolders/" + myServ.getName() + "/";
                     path = path.concat(argCommand.get(1));
 
                     System.out.println(path);
@@ -126,7 +126,7 @@ public class RemoteServerController {
 
                     String response = new String();
 
-                    String path = "../SMDProject/cliFolders/";
+                    String path = "../SMDProject/cliFolders/" + myServ.getName() + "/";
                     path = path.concat(argCommand.get(1));
                     path = path.concat("/");
 
@@ -140,7 +140,7 @@ public class RemoteServerController {
                     } else {
                         for (String aFile : files) {
                             System.out.println(aFile);
-                            response = response.concat(aFile);
+                            response = response.concat(aFile + "\n");
                         }
 
                         return response;
@@ -156,7 +156,7 @@ public class RemoteServerController {
 
                     System.out.println(argCommand.get(0) + argCommand.get(1) + argCommand.get(2));
 
-                    String path = "../SMDProject/cliFolders/";
+                    String path = "../SMDProject/cliFolders/" + myServ.getName() + "/";
                     path = path.concat(argCommand.get(2)); // Monta o caminho com o Username
                     path = path.concat("/");
 
@@ -272,13 +272,13 @@ public class RemoteServerController {
                 String destinationDir = argCommand.get(2);
                 String username = argCommand.get(3);
 
-                String originFullPath = "../SMDProject/cliFolders/";
+                String originFullPath = "../SMDProject/cliFolders/" + myServ.getName() + "/";
                 originFullPath = originFullPath.concat(username);
                 originFullPath = originFullPath.concat("/");
                 originFullPath = originFullPath.concat(originDir);
                 originFullPath = originFullPath.concat(".txt");
 
-                String destinationFullPath = "../SMDProject/cliFolders/";
+                String destinationFullPath = "../SMDProject/cliFolders/" + myServ.getName() + "/";
                 destinationFullPath = destinationFullPath.concat(username);
                 destinationFullPath = destinationFullPath.concat("/");
                 destinationFullPath = destinationFullPath.concat(destinationDir);
@@ -321,7 +321,7 @@ public class RemoteServerController {
                 String filename = argCommand.get(1);
                 String username = argCommand.get(2);
 
-                String path = "../SMDProject/cliFolders/";
+                String path = "../SMDProject/cliFolders/" + myServ.getName() + "/";
                 path = path.concat(username);
                 path = path.concat("/");
 
@@ -338,7 +338,7 @@ public class RemoteServerController {
                 String dirname = argCommand.get(1);
                 String username = argCommand.get(2);
 
-                String path = "../SMDProject/cliFolders/";
+                String path = "../SMDProject/cliFolders/" + myServ.getName() + "/";
                 path = path.concat(username);
                 path = path.concat("/");
                 path = path.concat(dirname);
@@ -358,7 +358,7 @@ public class RemoteServerController {
                 String username = argCommand.get(3);
                 username = username.concat("/");
 
-                String path = "../SMDProject/cliFolders/";
+                String path = "../SMDProject/cliFolders/" + myServ.getName() + "/";
 
                 try{
 
@@ -383,7 +383,7 @@ public class RemoteServerController {
                 String username = argCommand.get(3);
                 username = username.concat("/");
 
-                String path = "../SMDProject/cliFolders/";
+                String path = "../SMDProject/cliFolders/" + myServ.getName() + "/";
                 path = path.concat(username);
 
                 File dirOriginal =new File(path + dirname);

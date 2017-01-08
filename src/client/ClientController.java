@@ -250,7 +250,8 @@ public class ClientController {
                             System.out.print("Answer:       ");
                             this.receiveAnswerMsgRemServer();
 
-                            myClient.setClientUsername(argCommand.get(1));
+                            myClient.setClientUsername(argCommand.get(1)+argCommand.get(2));
+                            System.out.println(myClient.getClientUsername());
 
                             continue;
 
@@ -273,6 +274,8 @@ public class ClientController {
                             this.sendMsgToRemServer(argCommand);
                             String answer= this.receiveAnswerMsgRemServer();
                             System.out.println(answer);
+
+                            myClient.setClientUsername(argCommand.get(1)+argCommand.get(2));
                         }
                         else {
                             System.out.println("SYNTAX ERROR FOR COMMAND LOGIN");
