@@ -38,6 +38,7 @@ import java.util.ArrayList;
          serverRegistries=new ArrayList<>();
 
          manageRegsThread = new ThManageRegs(serverRegistries);
+         manageRegsThread.start();
      }
 
      private void setRMIService(String serverAddr){

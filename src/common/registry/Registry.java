@@ -30,4 +30,8 @@ public abstract class Registry implements Serializable{
     public void setTcpPort(int tcpPort) {
         this.tcpPort = tcpPort;
     }
+
+    public long getEntryTime() {
+        return entryTime;
+    }
 }
