@@ -336,6 +336,21 @@ public class ClientController {
 
                     }else if (argCommand.get(0).equalsIgnoreCase("DOWNLOAD")){
                         //TODO download ficheiro, utilizar protocolo TCP
+
+                        DownloadFileClient DownFile = new DownloadFileClient();
+
+                        DownFile.FileDownload("localhost","/Users/MarceloCortesao/Desktop",argCommand.get(1));
+
+
+
+
+
+
+
+
+
+
+
                         continue;
 
                     } else if (argCommand.get(0).equalsIgnoreCase("MOVFILE")){
