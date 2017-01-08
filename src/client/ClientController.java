@@ -347,13 +347,6 @@ public class ClientController {
 
 
 
-
-
-
-
-
-
-
                         continue;
 
                     } else if (argCommand.get(0).equalsIgnoreCase("MOVFILE")){

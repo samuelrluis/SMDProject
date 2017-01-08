@@ -52,7 +52,7 @@ import java.util.ArrayList;
          }
 
          RemoteRef location = RemoteServicesInstance.getRef();
-         System.out.println(location.remoteToString());
+         //System.out.println(location.remoteToString());
 
          if(serverAddr!=null)
              registry = serverAddr;

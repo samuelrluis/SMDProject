@@ -5,6 +5,7 @@ import remoteserver.RemoteFileInterface;
 
 import java.io.*;
 import java.rmi.*;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * Created by MarceloCortesao on 07/01/17.
@@ -23,7 +24,7 @@ public class DownloadFileClient {
         byte [] b;
         long offset;
 
-        objectUrl = "rmi://"+local+"/GetRemoteFile";
+        objectUrl = "rmi://localhost/DownloadFile";
         localDirectory = new File(path.trim());
         fileName = fName.trim();
 
