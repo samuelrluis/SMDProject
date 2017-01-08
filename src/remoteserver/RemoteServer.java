@@ -16,6 +16,8 @@ import java.util.ArrayList;
 
 public class RemoteServer {
 
+    public static final  String SERVICE_NAME = "GetRemoteFile";
+
     //RemoteServer
     RemoteServerController remoteServerController;
     ThSendHeartBeat threadHeartbeat;
@@ -34,6 +36,7 @@ public class RemoteServer {
     InetAddress myAddress=null;
     private Socket socketToClient = null;
     int myTcpPort,serverDirPort,myUdpPort;
+
 
     RemoteServer(String name, InetAddress address, int udp){
         cliRegistries = new ArrayList<ClientRegistry>();

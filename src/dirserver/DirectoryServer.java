@@ -28,12 +28,17 @@ import java.util.ArrayList;
      private DatagramSocket socketUDP=null;
      private DatagramPacket packet = null;
 
+     private ThManageRegs manageRegsThread = null; //Thread that will manage the server registries
+
      public DirectoryServer(){
          createSocket();
          createPacket();
          Scontroller=new DirectoryServerController(this);
          cliRegistries=new ArrayList<>();
          serverRegistries=new ArrayList<>();
+
+         manageRegsThread = new ThManageRegs(serverRegistries,Scontroller);
+         manageRegsThread.start();
      }
 
      private void setRMIService(String serverAddr){
@@ -87,6 +92,7 @@ import java.util.ArrayList;
      }
 
      private void runDirServer(){
+         Scontroller.setRMIService(RemoteServicesInstance);
          Scontroller.answeringDatagram();
      }
 

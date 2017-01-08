@@ -80,8 +80,6 @@ public class Client {
         }
     }
 
-
-
     // Client Threads Create
 
     public void createThreads(){
@@ -192,7 +190,6 @@ public class Client {
         int serverPortHB = -1 , serverPortCommand=-1;
 
         try {
-
             if(args.length!=3){
                 System.out.println("Sintax Error [DIRIP][UDP_PORT_FOR HB][UDP_PORT_FOR_COMMAND]");
                 System.exit(0);
