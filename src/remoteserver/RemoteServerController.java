@@ -203,10 +203,6 @@ public class RemoteServerController {
 
                 }
 
-       /*
-        * Lanca o rmiregistry localmente no porto TCP por omissao (1099) ou, caso este ja' se encontre
-        * a correr, obtem uma referencia.
-        */
                 try {
 
                     Registry r;
@@ -228,16 +224,16 @@ public class RemoteServerController {
             /*
              * Cria o servico
              */
-                    DownloadFileService timeService = new DownloadFileService(localDirectory);
+                    DownloadFileService DownloadService = new DownloadFileService(localDirectory);
 
-                    System.out.println("Servico GetRemoteFile criado e em execucao (" + timeService.getRef().remoteToString() + "...");
+                    System.out.println("Servico GetRemoteFile criado e em execucao (" + DownloadService.getRef().remoteToString() + "...");
 
             /*
              * Regista o servico no rmiregistry local para que os clientes possam localiza'-lo, ou seja,
              * obter a sua referencia remota (endereco IP, porto de escuta, etc.).
              */
 
-                    r.bind(myServ.SERVICE_NAME, timeService);
+                    r.rebind(myServ.SERVICE_NAME, DownloadService);
 
                     System.out.println("Servico " + myServ.SERVICE_NAME + " registado no registry...");
 

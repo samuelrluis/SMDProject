@@ -11,7 +11,7 @@ import java.rmi.registry.LocateRegistry;
  */
 public class DownloadFileService  extends UnicastRemoteObject implements RemoteFileInterface
 {
-    public static final String SERVICE_NAME = "GetRemoteFile";
+    //public static final String SERVICE_NAME = "GetRemoteFile";
     public static final int MAX_CHUNCK_SIZE = 10000; //bytes
 
     protected File localDirectory;

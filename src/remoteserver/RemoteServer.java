@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class RemoteServer {
 
-    public static final  String SERVICE_NAME = "GetRemoteFile";
+    public static final  String SERVICE_NAME = "DownloadFile";
 
     //RemoteServer
     RemoteServerController remoteServerController;

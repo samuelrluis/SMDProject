@@ -61,11 +61,6 @@ public class ThTextUI extends Thread {
                         }else
                             System.exit(0);
                     }
-                    else if(argCommand.get(0).equalsIgnoreCase("TEST")){
-
-                        System.out.println("TODOS OS COMANDOS ESTÃO IMPLEMENTADOS");
-
-                    }
 
                 else if(argCommand.get(0).equalsIgnoreCase("REGISTER")) {
                     if (myClient.getRegistedFlag() == false) {
