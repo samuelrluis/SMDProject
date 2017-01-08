@@ -10,8 +10,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThManageRegs extends Thread{
     private ArrayList<ServerRegistry> myRegistries;
-    ThManageRegs(ArrayList<ServerRegistry> serverRegistries){
+    private DirectoryServerController Scontroller = null;
+
+    ThManageRegs(ArrayList<ServerRegistry> serverRegistries,DirectoryServerController Scontroller){
         myRegistries = serverRegistries;
+        this.Scontroller = Scontroller;
     }
 
     @Override
@@ -24,7 +27,6 @@ public class ThManageRegs extends Thread{
                 for (int i = 0; i < myRegistries.size(); i++) {
                     if(!compareTime(myRegistries.get(i).getEntryTime())){
                         myRegistries.remove(i);
-                        System.out.println("foi removido" + myRegistries.get(i).getName());
                     }
                 }
 

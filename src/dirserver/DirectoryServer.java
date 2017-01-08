@@ -37,7 +37,7 @@ import java.util.ArrayList;
          cliRegistries=new ArrayList<>();
          serverRegistries=new ArrayList<>();
 
-         manageRegsThread = new ThManageRegs(serverRegistries);
+         manageRegsThread = new ThManageRegs(serverRegistries,Scontroller);
          manageRegsThread.start();
      }
 
@@ -92,6 +92,7 @@ import java.util.ArrayList;
      }
 
      private void runDirServer(){
+         Scontroller.setRMIService(RemoteServicesInstance);
          Scontroller.answeringDatagram();
      }
 

@@ -3,6 +3,7 @@ package monitor;
 import dirserver.RemoteServices;
 import dirserver.ServerListener;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -18,10 +19,24 @@ public class Monitor extends UnicastRemoteObject
 
     private static RemoteServices monitor = null;
 
-    public Monitor() throws RemoteException {}
+
+    public Monitor() throws RemoteException {
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            @Override
+            public void run()
+            {
+                System.out.println("fechei");
+            }
+        });
+    }
 
     @Override
     public void printServersList() throws RemoteException {
+        System.out.println();
+        System.out.println();
+        System.out.println("Server's List");
+        System.out.println(monitor.getListServRMI());
 
     }
 
@@ -36,17 +51,14 @@ public class Monitor extends UnicastRemoteObject
         String dirAddr = args[0];
 
         try{
-            String registration ="rmi://"+dirAddr+"/ServerListener";
+            String registration ="rmi://"+dirAddr+"/RemoteServices";
             Remote remoteInterface = Naming.lookup(registration);
             monitor = (RemoteServices)remoteInterface;
             monitor.addListener(monitorServers);
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (NotBoundException e) {
             e.printStackTrace();
         }
-
-
     }
 }

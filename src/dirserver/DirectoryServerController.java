@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
@@ -25,6 +26,7 @@ public class DirectoryServerController {
     private DatagramPacket packetRead;
     private DatagramPacket packetWrite;
     private DatagramSocket socket = null;
+    private DirectoryServerRMI remoteServices = null;
 
     public DirectoryServerController(DirectoryServer x){
         Serv=x;
@@ -139,6 +141,7 @@ public class DirectoryServerController {
             clientRegistry = new ClientRegistry(hBeat, System.nanoTime());
             clientRegistry.setAddress(cliAddr);
             cliRegestries.add(clientRegistry);
+
         }
 
         else{
@@ -179,8 +182,21 @@ public class DirectoryServerController {
 
             if(foundReg==false)
                 serverRegistries.add(new ServerRegistry(hBeat, System.nanoTime()));
+                notifyListenersRMI();
             }
         }
+
+    public void notifyListenersRMI(){
+        try {
+            remoteServices.notifyListeners();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setRMIService(DirectoryServerRMI rem){
+        remoteServices = rem;
+    }
 
     public void answeringDatagram(){
 
